@@ -22243,7 +22243,7 @@ function MaterialManager() {
 
 	this.getStrategy = function () {
 
-		_strategies.get( _this.$mode );
+		return _strategies.get( _this.$mode );
 
 	};
 
