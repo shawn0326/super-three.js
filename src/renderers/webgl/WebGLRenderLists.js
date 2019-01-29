@@ -38,6 +38,12 @@ function reversePainterSortStable( a, b ) {
 
 		return b.z - a.z;
 
+	} else if ( a.material.id !== b.material.id ) {
+
+		// @THREE-Modification
+		// Prevent unstable sequencing.
+		return a.material.id - b.material.id;
+
 	} else {
 
 		return a.id - b.id;

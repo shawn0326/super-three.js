@@ -6002,7 +6002,7 @@
 
 	var alphamap_pars_fragment = "#ifdef USE_ALPHAMAP\n\tuniform sampler2D alphaMap;\n#endif";
 
-	var alphatest_fragment = "#ifdef ALPHATEST\n\tif ( diffuseColor.a < ALPHATEST ) discard;\n#endif";
+	var alphatest_fragment = "#ifdef ALPHATEST\n\tif ( diffuseColor.a < ALPHATEST ) {\n\t\tdiscard;\n\t} else {\n\t\tdiffuseColor.a = opacity;\n\t}\n#endif";
 
 	var aomap_fragment = "#ifdef USE_AOMAP\n\tfloat ambientOcclusion = ( texture2D( aoMap, vUv2 ).r - 1.0 ) * aoMapIntensity + 1.0;\n\treflectedLight.indirectDiffuse *= ambientOcclusion;\n\t#if defined( USE_ENVMAP ) && defined( PHYSICAL )\n\t\tfloat dotNV = saturate( dot( geometry.normal, geometry.viewDir ) );\n\t\treflectedLight.indirectSpecular *= computeSpecularOcclusion( dotNV, ambientOcclusion, material.specularRoughness );\n\t#endif\n#endif";
 
@@ -6148,9 +6148,9 @@
 
 	var skinbase_vertex = "#ifdef USE_SKINNING\n\tmat4 boneMatX = getBoneMatrix( skinIndex.x );\n\tmat4 boneMatY = getBoneMatrix( skinIndex.y );\n\tmat4 boneMatZ = getBoneMatrix( skinIndex.z );\n\tmat4 boneMatW = getBoneMatrix( skinIndex.w );\n#endif";
 
-	var skinning_pars_vertex = "#ifdef USE_SKINNING\n\tuniform mat4 bindMatrix;\n\tuniform mat4 bindMatrixInverse;\n\t#ifdef BONE_TEXTURE\n\t\tuniform sampler2D boneTexture;\n\t\tuniform int boneTextureSize;\n\t\tmat4 getBoneMatrix( const in float i ) {\n\t\t\tfloat j = i * 4.0;\n\t\t\tfloat x = mod( j, float( boneTextureSize ) );\n\t\t\tfloat y = floor( j / float( boneTextureSize ) );\n\t\t\tfloat dx = 1.0 / float( boneTextureSize );\n\t\t\tfloat dy = 1.0 / float( boneTextureSize );\n\t\t\ty = dy * ( y + 0.5 );\n\t\t\tvec4 v1 = texture2D( boneTexture, vec2( dx * ( x + 0.5 ), y ) );\n\t\t\tvec4 v2 = texture2D( boneTexture, vec2( dx * ( x + 1.5 ), y ) );\n\t\t\tvec4 v3 = texture2D( boneTexture, vec2( dx * ( x + 2.5 ), y ) );\n\t\t\tvec4 v4 = texture2D( boneTexture, vec2( dx * ( x + 3.5 ), y ) );\n\t\t\tmat4 bone = mat4( v1, v2, v3, v4 );\n\t\t\treturn bone;\n\t\t}\n\t#else\n\t\tuniform mat4 boneMatrices[ MAX_BONES ];\n\t\tmat4 getBoneMatrix( const in float i ) {\n\t\t\tmat4 bone = boneMatrices[ int(i) ];\n\t\t\treturn bone;\n\t\t}\n\t#endif\n#endif";
+	var skinning_pars_vertex = "#ifdef USE_SKINNING\n\tuniform mat4 bindMatrix;\n\tuniform mat4 bindMatrixInverse;\n\tuniform mat4 localBindMatrixInverse;\n\t#ifdef BONE_TEXTURE\n\t\tuniform sampler2D boneTexture;\n\t\tuniform int boneTextureSize;\n\t\tmat4 getBoneMatrix( const in float i ) {\n\t\t\tfloat j = i * 4.0;\n\t\t\tfloat x = mod( j, float( boneTextureSize ) );\n\t\t\tfloat y = floor( j / float( boneTextureSize ) );\n\t\t\tfloat dx = 1.0 / float( boneTextureSize );\n\t\t\tfloat dy = 1.0 / float( boneTextureSize );\n\t\t\ty = dy * ( y + 0.5 );\n\t\t\tvec4 v1 = texture2D( boneTexture, vec2( dx * ( x + 0.5 ), y ) );\n\t\t\tvec4 v2 = texture2D( boneTexture, vec2( dx * ( x + 1.5 ), y ) );\n\t\t\tvec4 v3 = texture2D( boneTexture, vec2( dx * ( x + 2.5 ), y ) );\n\t\t\tvec4 v4 = texture2D( boneTexture, vec2( dx * ( x + 3.5 ), y ) );\n\t\t\tmat4 bone = mat4( v1, v2, v3, v4 );\n\t\t\treturn bone;\n\t\t}\n\t#else\n\t\tuniform mat4 boneMatrices[ MAX_BONES ];\n\t\tmat4 getBoneMatrix( const in float i ) {\n\t\t\tmat4 bone = boneMatrices[ int(i) ];\n\t\t\treturn bone;\n\t\t}\n\t#endif\n#endif";
 
-	var skinning_vertex = "#ifdef USE_SKINNING\n\tvec4 skinVertex = bindMatrix * vec4( transformed, 1.0 );\n\tvec4 skinned = vec4( 0.0 );\n\tskinned += boneMatX * skinVertex * skinWeight.x;\n\tskinned += boneMatY * skinVertex * skinWeight.y;\n\tskinned += boneMatZ * skinVertex * skinWeight.z;\n\tskinned += boneMatW * skinVertex * skinWeight.w;\n\ttransformed = ( bindMatrixInverse * skinned ).xyz;\n#endif";
+	var skinning_vertex = "#ifdef USE_SKINNING\n\tvec4 skinVertex = bindMatrix * vec4( transformed, 1.0 );\n\tvec4 skinned = vec4( 0.0 );\n\tskinned += boneMatX * skinVertex * skinWeight.x;\n\tskinned += boneMatY * skinVertex * skinWeight.y;\n\tskinned += boneMatZ * skinVertex * skinWeight.z;\n\tskinned += boneMatW * skinVertex * skinWeight.w;\n\ttransformed = ( localBindMatrixInverse * skinned ).xyz;\n#endif";
 
 	var skinnormal_vertex = "#ifdef USE_SKINNING\n\tmat4 skinMatrix = mat4( 0.0 );\n\tskinMatrix += skinWeight.x * boneMatX;\n\tskinMatrix += skinWeight.y * boneMatY;\n\tskinMatrix += skinWeight.z * boneMatZ;\n\tskinMatrix += skinWeight.w * boneMatW;\n\tskinMatrix  = bindMatrixInverse * skinMatrix * bindMatrix;\n\tobjectNormal = vec4( skinMatrix * vec4( objectNormal, 0.0 ) ).xyz;\n#endif";
 
@@ -6180,7 +6180,7 @@
 
 	var background_vert = "varying vec2 vUv;\nuniform mat3 uvTransform;\nvoid main() {\n\tvUv = ( uvTransform * vec3( uv, 1 ) ).xy;\n\tgl_Position = vec4( position.xy, 1.0, 1.0 );\n}";
 
-	var cube_frag = "uniform samplerCube tCube;\nuniform float tFlip;\nuniform float opacity;\nvarying vec3 vWorldDirection;\nvoid main() {\n\tvec4 texColor = textureCube( tCube, vec3( tFlip * vWorldDirection.x, vWorldDirection.yz ) );\n\tgl_FragColor = mapTexelToLinear( texColor );\n\tgl_FragColor.a *= opacity;\n\t#include <tonemapping_fragment>\n\t#include <encodings_fragment>\n}";
+	var cube_frag = "uniform samplerCube tCube;\nuniform float tFlip;\nuniform float opacity;\nuniform mat4 colorMatrix;\nvarying vec3 vWorldDirection;\nvoid main() {\n\tvec4 texColor = textureCube( tCube, vec3( tFlip * vWorldDirection.x, vWorldDirection.yz ) );\n\tgl_FragColor = colorMatrix * mapTexelToLinear( texColor );\n\tgl_FragColor.a *= opacity;\n\t#include <tonemapping_fragment>\n\t#include <encodings_fragment>\n}";
 
 	var cube_vert = "varying vec3 vWorldDirection;\n#include <common>\nvoid main() {\n\tvWorldDirection = transformDirection( position, modelMatrix );\n\t#include <begin_vertex>\n\t#include <project_vertex>\n\tgl_Position.z = gl_Position.w;\n}";
 
@@ -7039,8 +7039,10 @@
 
 			map: { value: null },
 			uvTransform: { value: new Matrix3() },
+			uvTransform1: { value: new Matrix3() }, // @THREE-Modification
 
 			alphaMap: { value: null },
+			alphaMap1: { value: null }, // @THREE-Modification
 
 		},
 
@@ -7429,7 +7431,8 @@
 			uniforms: {
 				tCube: { value: null },
 				tFlip: { value: - 1 },
-				opacity: { value: 1.0 }
+				opacity: { value: 1.0 },
+				colorMatrix: { value: new Matrix4() } // @THREE-Modification
 			},
 
 			vertexShader: ShaderChunk.cube_vert,
@@ -14684,6 +14687,18 @@
 				boxMesh.material.uniforms.tCube.value = texture;
 				boxMesh.material.uniforms.tFlip.value = ( background.isWebGLRenderTargetCube ) ? 1 : - 1;
 
+				// @THREE-Modification
+				// Support color transform for background cube texture
+				if ( texture.colorMatrix ) {
+
+					boxMesh.material.uniforms.colorMatrix.value.copy( texture.colorMatrix );
+
+				} else {
+
+					boxMesh.material.uniforms.colorMatrix.value.identity();
+
+				}
+
 				if ( currentBackground !== background ||
 				     currentBackgroundVersion !== texture.version ) {
 
@@ -17778,6 +17793,12 @@
 
 			return b.z - a.z;
 
+		} else if ( a.material.id !== b.material.id ) {
+
+			// @THREE-Modification
+			// Prevent unstable sequencing.
+			return a.material.id - b.material.id;
+
 		} else {
 
 			return a.id - b.id;
@@ -19993,7 +20014,8 @@
 
 		function textureNeedsGenerateMipmaps( texture, isPowerOfTwo ) {
 
-			return texture.generateMipmaps && isPowerOfTwo &&
+			// @THREE-Modification
+			return texture.generateMipmaps && ( isPowerOfTwo || capabilities.isWebGL2 ) &&
 				texture.minFilter !== NearestFilter && texture.minFilter !== LinearFilter;
 
 		}
@@ -20034,6 +20056,24 @@
 				if ( glType === 5126 ) return 34836;
 				if ( glType === 5131 ) return 34842;
 				if ( glType === 5121 ) return 32856;
+
+			}
+
+			// @THREE-Modification
+			// support depth texture
+
+			if ( glFormat === 6402 ) {
+
+				if ( glType === 5123 ) return 33189;
+				if ( glType === 5125 ) return 33190;
+				if ( glType === 5126 ) return 36012;
+
+			}
+
+			if ( glFormat === 34041 ) {
+
+				if ( glType === 34042 ) return 35056;
+				if ( glType === 36269 ) return 36013;
 
 			}
 
@@ -20148,6 +20188,10 @@
 				if ( renderTargetProperties.__webglDepthbuffer ) _gl.deleteRenderbuffer( renderTargetProperties.__webglDepthbuffer );
 
 			}
+
+			// @THREE-Modification
+			// dispose sampling render buffer
+			if ( renderTargetProperties.__webglSamplingbuffer ) _gl.deleteRenderbuffer( renderTargetProperties.__webglSamplingbuffer );
 
 			properties.remove( renderTarget.texture );
 			properties.remove( renderTarget );
@@ -20346,7 +20390,8 @@
 
 			var extension;
 
-			if ( isPowerOfTwoImage ) {
+			// @THREE-Modification
+			if ( isPowerOfTwoImage || capabilities.isWebGL2 ) {
 
 				_gl.texParameteri( textureType, 10242, utils.convert( texture.wrapS ) );
 				_gl.texParameteri( textureType, 10243, utils.convert( texture.wrapT ) );
@@ -20450,53 +20495,58 @@
 
 			if ( texture.isDepthTexture ) {
 
-				// populate depth texture with dummy data
+				// @THREE-Modification
+				if ( ! capabilities.isWebGL2 ) {
 
-				glInternalFormat = 6402;
+					// populate depth texture with dummy data
 
-				if ( texture.type === FloatType ) {
+					glInternalFormat = 6402;
 
-					if ( ! capabilities.isWebGL2 ) throw new Error( 'Float Depth Texture only supported in WebGL2.0' );
-					glInternalFormat = 36012;
+					if ( texture.type === FloatType ) {
 
-				} else if ( capabilities.isWebGL2 ) {
+						if ( ! capabilities.isWebGL2 ) throw new Error( 'Float Depth Texture only supported in WebGL2.0' );
+						glInternalFormat = 36012;
 
-					// WebGL 2.0 requires signed internalformat for glTexImage2D
-					glInternalFormat = 33189;
+					} else if ( capabilities.isWebGL2 ) {
 
-				}
-
-				if ( texture.format === DepthFormat && glInternalFormat === 6402 ) {
-
-					// The error INVALID_OPERATION is generated by texImage2D if format and internalformat are
-					// DEPTH_COMPONENT and type is not UNSIGNED_SHORT or UNSIGNED_INT
-					// (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
-					if ( texture.type !== UnsignedShortType && texture.type !== UnsignedIntType ) {
-
-						console.warn( 'THREE.WebGLRenderer: Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.' );
-
-						texture.type = UnsignedShortType;
-						glType = utils.convert( texture.type );
+						// WebGL 2.0 requires signed internalformat for glTexImage2D
+						glInternalFormat = 33189;
 
 					}
 
-				}
+					if ( texture.format === DepthFormat && glInternalFormat === 6402 ) {
 
-				// Depth stencil textures need the DEPTH_STENCIL internal format
-				// (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
-				if ( texture.format === DepthStencilFormat ) {
+						// The error INVALID_OPERATION is generated by texImage2D if format and internalformat are
+						// DEPTH_COMPONENT and type is not UNSIGNED_SHORT or UNSIGNED_INT
+						// (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
+						if ( texture.type !== UnsignedShortType && texture.type !== UnsignedIntType ) {
 
-					glInternalFormat = 34041;
+							console.warn( 'THREE.WebGLRenderer: Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.' );
 
-					// The error INVALID_OPERATION is generated by texImage2D if format and internalformat are
-					// DEPTH_STENCIL and type is not UNSIGNED_INT_24_8_WEBGL.
+							texture.type = UnsignedShortType;
+							glType = utils.convert( texture.type );
+
+						}
+
+					}
+
+					// Depth stencil textures need the DEPTH_STENCIL internal format
 					// (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
-					if ( texture.type !== UnsignedInt248Type ) {
+					if ( texture.format === DepthStencilFormat ) {
 
-						console.warn( 'THREE.WebGLRenderer: Use UnsignedInt248Type for DepthStencilFormat DepthTexture.' );
+						glInternalFormat = 34041;
 
-						texture.type = UnsignedInt248Type;
-						glType = utils.convert( texture.type );
+						// The error INVALID_OPERATION is generated by texImage2D if format and internalformat are
+						// DEPTH_STENCIL and type is not UNSIGNED_INT_24_8_WEBGL.
+						// (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
+						if ( texture.type !== UnsignedInt248Type ) {
+
+							console.warn( 'THREE.WebGLRenderer: Use UnsignedInt248Type for DepthStencilFormat DepthTexture.' );
+
+							texture.type = UnsignedInt248Type;
+							glType = utils.convert( texture.type );
+
+						}
 
 					}
 
@@ -20608,6 +20658,37 @@
 		// Setup storage for target texture and bind it to correct framebuffer
 		function setupFrameBufferTexture( framebuffer, renderTarget, attachment, textureTarget ) {
 
+			// @THREE-Modification
+			// Support Multiple Sampling
+			// Now just for Render Target 2D, CubeRenderTarget not supported.
+			if ( renderTarget.multipleSampling > 0 ) {
+
+				if ( capabilities.isWebGL2 ) {
+
+					if ( textureTarget === 3553 ) {
+
+						var renderTargetProperties = properties.get( renderTarget );
+						renderTargetProperties.__webglSamplingbuffer = _gl.createRenderbuffer();
+						_gl.bindFramebuffer( 36160, framebuffer );
+						_gl.bindRenderbuffer( 36161, renderTargetProperties.__webglSamplingbuffer );
+						_gl.renderbufferStorageMultisample( 36161, Math.min( renderTarget.multipleSampling, 8 ), 32856, renderTarget.width, renderTarget.height );
+						_gl.framebufferRenderbuffer( 36160, attachment, 36161, renderTargetProperties.__webglSamplingbuffer );
+						return;
+
+					} else {
+
+						console.warn( "CubeRenderTarget not support Multiple Sampling Now!" );
+
+					}
+
+				} else {
+
+					console.warn( "WebGL1.0 not support Multiple Sampling!" );
+
+				}
+
+			}
+
 			var glFormat = utils.convert( renderTarget.texture.format );
 			var glType = utils.convert( renderTarget.texture.type );
 			var glInternalFormat = getInternalFormat( glFormat, glType );
@@ -20625,12 +20706,32 @@
 
 			if ( renderTarget.depthBuffer && ! renderTarget.stencilBuffer ) {
 
-				_gl.renderbufferStorage( 36161, 33189, renderTarget.width, renderTarget.height );
+				if ( capabilities.isWebGL2 && renderTarget.multipleSampling > 0 ) {
+
+					// @THREE-Modification
+					_gl.renderbufferStorageMultisample( 36161, Math.min( renderTarget.multipleSampling, 8 ), 33189, renderTarget.width, renderTarget.height );
+
+				} else {
+
+					_gl.renderbufferStorage( 36161, 33189, renderTarget.width, renderTarget.height );
+
+				}
+
 				_gl.framebufferRenderbuffer( 36160, 36096, 36161, renderbuffer );
 
 			} else if ( renderTarget.depthBuffer && renderTarget.stencilBuffer ) {
 
-				_gl.renderbufferStorage( 36161, 34041, renderTarget.width, renderTarget.height );
+				if ( capabilities.isWebGL2 && renderTarget.multipleSampling > 0 ) {
+
+					// @THREE-Modification
+					_gl.renderbufferStorageMultisample( 36161, Math.min( renderTarget.multipleSampling, 8 ), _gl.DEPTH24_STENCIL8, renderTarget.width, renderTarget.height );
+
+				} else {
+
+					_gl.renderbufferStorage( 36161, 34041, renderTarget.width, renderTarget.height );
+
+				}
+
 				_gl.framebufferRenderbuffer( 36160, 33306, 36161, renderbuffer );
 
 			} else {
@@ -22124,6 +22225,42 @@
 
 	}
 
+	// @THREE-Modification
+	// for material strategy
+	function MaterialManager() {
+
+		var _strategies = new Map();
+
+		this.$mode = 0;
+
+		var _this = this;
+
+		this.setMode = function ( mode ) {
+
+			_this.$mode = mode;
+
+		};
+
+		this.addStrategy = function ( mode, method ) {
+
+			_strategies.set( mode, method );
+
+		};
+
+		this.getStrategy = function () {
+
+			_strategies.get( _this.$mode );
+
+		};
+
+		this.hasStrategy = function ( mode ) {
+
+			return _strategies.has( mode );
+
+		};
+
+	}
+
 	/**
 	 * @author supereggbert / http://www.paulbrunt.co.uk/
 	 * @author mrdoob / http://mrdoob.com/
@@ -22397,6 +22534,10 @@
 
 		this.shadowMap = shadowMap;
 
+		// @THREE-Modification
+		var materialManager = new MaterialManager();
+		this.materialManager = materialManager;
+
 		// API
 
 		this.getContext = function () {
@@ -22596,6 +22737,31 @@
 			vr.dispose();
 
 			animation.stop();
+
+		};
+
+		// @THREE-Modification
+		// blit render target (frame buffer)
+		this.blitRenderTarget = function ( read, draw ) {
+
+			if ( ! capabilities.isWebGL2 ) {
+
+				console.warn( "WebGL1 not support blitFramebuffer" );
+
+				return;
+
+			}
+
+			var readBuffer = properties.get( read ).__webglFramebuffer;
+			var drawBuffer = properties.get( draw ).__webglFramebuffer;
+			_gl.bindFramebuffer( _gl.READ_FRAMEBUFFER, readBuffer );
+			_gl.bindFramebuffer( _gl.DRAW_FRAMEBUFFER, drawBuffer );
+			_gl.clearBufferfv( _gl.COLOR, 0, [ 0.0, 0.0, 0.0, 0.0 ] );
+			_gl.blitFramebuffer(
+				0, 0, read.width, read.height,
+				0, 0, draw.width, draw.height,
+				16384, 9728
+			);
 
 		};
 
@@ -23296,7 +23462,9 @@
 
 					if ( object.isSkinnedMesh ) {
 
-						object.skeleton.update();
+						// @THREE-Modification
+						// Pass object as argument.
+						object.skeleton.update( object );
 
 					}
 
@@ -23412,6 +23580,26 @@
 		}
 
 		function renderObject( object, scene, camera, geometry, material, group ) {
+
+			// @THREE-Modification
+			// use materialManager to replace material.
+			if ( materialManager.$mode !== 0 ) {
+
+				var replaceMaterial = materialManager.getStrategy().call( object, this, scene, camera, geometry, material, group );
+
+				if ( replaceMaterial === null ) {
+
+					return;
+
+				}
+
+				if ( replaceMaterial ) {
+
+					material = replaceMaterial;
+
+				}
+
+			}
 
 			object.onBeforeRender( _this, scene, camera, geometry, material, group );
 			currentRenderState = renderStates.get( scene, _currentArrayCamera || camera );
@@ -23789,6 +23977,14 @@
 
 					var bones = skeleton.bones;
 
+					// @THREE-Modification
+					// skeleton fix
+					var localBindMatrixInverse = object.bindMatrixInverse.clone();
+					localBindMatrixInverse.elements[ 12 ] = 0;
+					localBindMatrixInverse.elements[ 13 ] = 0;
+					localBindMatrixInverse.elements[ 14 ] = 0;
+					p_uniforms.setValue( _gl, 'localBindMatrixInverse', localBindMatrixInverse );
+
 					if ( capabilities.floatVertexTextures ) {
 
 						if ( skeleton.boneTexture === undefined ) {
@@ -23951,6 +24147,10 @@
 
 			}
 
+			// @THREE-Modification
+			// for gup picker
+			p_uniforms.setValue( _gl, 'baseId', material.baseId );
+
 			if ( material.isShaderMaterial && material.uniformsNeedUpdate === true ) {
 
 				WebGLUniforms.upload( _gl, materialProperties.uniformsList, m_uniforms, _this );
@@ -24105,6 +24305,34 @@
 				}
 
 				uniforms.uvTransform.value.copy( uvScaleMap.matrix );
+
+			}
+
+			// @THREE-Modification
+			// Separat UVTransform for alphaMap
+			if ( material.alphaMap ) {
+
+				if ( material.alphaMap.matrixAutoUpdate === true ) {
+
+					material.alphaMap.updateMatrix();
+
+				}
+
+				uniforms.uvTransform1.value.copy( material.alphaMap.matrix );
+
+			}
+
+			// @THREE-Modification
+			// Separat UVTransform for alphaMap
+			if ( material.alphaMap1 ) {
+
+				if ( material.alphaMap1.matrixAutoUpdate === true ) {
+
+					material.alphaMap1.updateMatrix();
+
+				}
+
+				uniforms.uvTransform1.value.copy( material.alphaMap1.matrix );
 
 			}
 
@@ -25703,7 +25931,7 @@
 			var offsetMatrix = new Matrix4();
 			var identityMatrix = new Matrix4();
 
-			return function update() {
+			return function update( object ) {
 
 				var bones = this.bones;
 				var boneInverses = this.boneInverses;
@@ -25712,6 +25940,11 @@
 
 				// flatten bone matrices to array
 
+				// @THREE-Modification
+				// skeleton fix
+				var _worldPosition = new THREE.Vector3();
+				object.getWorldPosition( _worldPosition );
+
 				for ( var i = 0, il = bones.length; i < il; i ++ ) {
 
 					// compute the offset between the current and the original transform
@@ -25719,6 +25952,14 @@
 					var matrix = bones[ i ] ? bones[ i ].matrixWorld : identityMatrix;
 
 					offsetMatrix.multiplyMatrices( matrix, boneInverses[ i ] );
+
+					// @THREE-Modification
+					// skeleton fix
+					var _m = offsetMatrix.elements;
+					_m[ 12 ] -= _worldPosition.x;
+					_m[ 13 ] -= _worldPosition.y;
+					_m[ 14 ] -= _worldPosition.z;
+
 					offsetMatrix.toArray( boneMatrices, i * 16 );
 
 				}

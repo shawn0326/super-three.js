@@ -3,6 +3,8 @@ export default /* glsl */`
 
 	uniform mat4 bindMatrix;
 	uniform mat4 bindMatrixInverse;
+	// @THREE-Modification
+	uniform mat4 localBindMatrixInverse;
 
 	#ifdef BONE_TEXTURE
 

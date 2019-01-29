@@ -9,7 +9,9 @@ export default /* glsl */`
 	skinned += boneMatZ * skinVertex * skinWeight.z;
 	skinned += boneMatW * skinVertex * skinWeight.w;
 
-	transformed = ( bindMatrixInverse * skinned ).xyz;
+	// @THREE-Modification
+	// transformed = ( bindMatrixInverse * skinned ).xyz;
+	transformed = ( localBindMatrixInverse * skinned ).xyz;
 
 #endif
 `;

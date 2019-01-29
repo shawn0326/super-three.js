@@ -118,7 +118,7 @@ Object.assign( Skeleton.prototype, {
 		var offsetMatrix = new Matrix4();
 		var identityMatrix = new Matrix4();
 
-		return function update() {
+		return function update( object ) {
 
 			var bones = this.bones;
 			var boneInverses = this.boneInverses;
@@ -127,6 +127,11 @@ Object.assign( Skeleton.prototype, {
 
 			// flatten bone matrices to array
 
+			// @THREE-Modification
+			// skeleton fix
+			var _worldPosition = new THREE.Vector3();
+			object.getWorldPosition( _worldPosition );
+
 			for ( var i = 0, il = bones.length; i < il; i ++ ) {
 
 				// compute the offset between the current and the original transform
@@ -134,6 +139,14 @@ Object.assign( Skeleton.prototype, {
 				var matrix = bones[ i ] ? bones[ i ].matrixWorld : identityMatrix;
 
 				offsetMatrix.multiplyMatrices( matrix, boneInverses[ i ] );
+
+				// @THREE-Modification
+				// skeleton fix
+				var _m = offsetMatrix.elements;
+				_m[ 12 ] -= _worldPosition.x;
+				_m[ 13 ] -= _worldPosition.y;
+				_m[ 14 ] -= _worldPosition.z;
+
 				offsetMatrix.toArray( boneMatrices, i * 16 );
 
 			}

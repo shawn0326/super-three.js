@@ -43,6 +43,8 @@ import { WebGLUtils } from './webgl/WebGLUtils.js';
 import { WebVRManager } from './webvr/WebVRManager.js';
 import { WebXRManager } from './webvr/WebXRManager.js';
 
+import { MaterialManager } from '../MaterialManager.js';
+
 /**
  * @author supereggbert / http://www.paulbrunt.co.uk/
  * @author mrdoob / http://mrdoob.com/
@@ -316,6 +318,10 @@ function WebGLRenderer( parameters ) {
 
 	this.shadowMap = shadowMap;
 
+	// @THREE-Modification
+	var materialManager = new MaterialManager();
+	this.materialManager = materialManager;
+
 	// API
 
 	this.getContext = function () {
@@ -515,6 +521,31 @@ function WebGLRenderer( parameters ) {
 		vr.dispose();
 
 		animation.stop();
+
+	};
+
+	// @THREE-Modification
+	// blit render target (frame buffer)
+	this.blitRenderTarget = function ( read, draw ) {
+
+		if ( ! capabilities.isWebGL2 ) {
+
+			console.warn( "WebGL1 not support blitFramebuffer" );
+
+			return;
+
+		}
+
+		var readBuffer = properties.get( read ).__webglFramebuffer;
+		var drawBuffer = properties.get( draw ).__webglFramebuffer;
+		_gl.bindFramebuffer( _gl.READ_FRAMEBUFFER, readBuffer );
+		_gl.bindFramebuffer( _gl.DRAW_FRAMEBUFFER, drawBuffer );
+		_gl.clearBufferfv( _gl.COLOR, 0, [ 0.0, 0.0, 0.0, 0.0 ] );
+		_gl.blitFramebuffer(
+			0, 0, read.width, read.height,
+			0, 0, draw.width, draw.height,
+			_gl.COLOR_BUFFER_BIT, _gl.NEAREST
+		);
 
 	};
 
@@ -1215,7 +1246,9 @@ function WebGLRenderer( parameters ) {
 
 				if ( object.isSkinnedMesh ) {
 
-					object.skeleton.update();
+					// @THREE-Modification
+					// Pass object as argument.
+					object.skeleton.update( object );
 
 				}
 
@@ -1331,6 +1364,26 @@ function WebGLRenderer( parameters ) {
 	}
 
 	function renderObject( object, scene, camera, geometry, material, group ) {
+
+		// @THREE-Modification
+		// use materialManager to replace material.
+		if ( materialManager.$mode !== 0 ) {
+
+			var replaceMaterial = materialManager.getStrategy().call( object, this, scene, camera, geometry, material, group );
+
+			if ( replaceMaterial === null ) {
+
+				return;
+
+			}
+
+			if ( replaceMaterial ) {
+
+				material = replaceMaterial;
+
+			}
+
+		}
 
 		object.onBeforeRender( _this, scene, camera, geometry, material, group );
 		currentRenderState = renderStates.get( scene, _currentArrayCamera || camera );
@@ -1708,6 +1761,14 @@ function WebGLRenderer( parameters ) {
 
 				var bones = skeleton.bones;
 
+				// @THREE-Modification
+				// skeleton fix
+				var localBindMatrixInverse = object.bindMatrixInverse.clone();
+				localBindMatrixInverse.elements[ 12 ] = 0;
+				localBindMatrixInverse.elements[ 13 ] = 0;
+				localBindMatrixInverse.elements[ 14 ] = 0;
+				p_uniforms.setValue( _gl, 'localBindMatrixInverse', localBindMatrixInverse );
+
 				if ( capabilities.floatVertexTextures ) {
 
 					if ( skeleton.boneTexture === undefined ) {
@@ -1870,6 +1931,10 @@ function WebGLRenderer( parameters ) {
 
 		}
 
+		// @THREE-Modification
+		// for gup picker
+		p_uniforms.setValue( _gl, 'baseId', material.baseId );
+
 		if ( material.isShaderMaterial && material.uniformsNeedUpdate === true ) {
 
 			WebGLUniforms.upload( _gl, materialProperties.uniformsList, m_uniforms, _this );
@@ -2024,6 +2089,34 @@ function WebGLRenderer( parameters ) {
 			}
 
 			uniforms.uvTransform.value.copy( uvScaleMap.matrix );
+
+		}
+
+		// @THREE-Modification
+		// Separat UVTransform for alphaMap
+		if ( material.alphaMap ) {
+
+			if ( material.alphaMap.matrixAutoUpdate === true ) {
+
+				material.alphaMap.updateMatrix();
+
+			}
+
+			uniforms.uvTransform1.value.copy( material.alphaMap.matrix );
+
+		}
+
+		// @THREE-Modification
+		// Separat UVTransform for alphaMap
+		if ( material.alphaMap1 ) {
+
+			if ( material.alphaMap1.matrixAutoUpdate === true ) {
+
+				material.alphaMap1.updateMatrix();
+
+			}
+
+			uniforms.uvTransform1.value.copy( material.alphaMap1.matrix );
 
 		}
 

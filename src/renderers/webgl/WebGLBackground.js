@@ -94,6 +94,18 @@ function WebGLBackground( renderer, state, objects, premultipliedAlpha ) {
 			boxMesh.material.uniforms.tCube.value = texture;
 			boxMesh.material.uniforms.tFlip.value = ( background.isWebGLRenderTargetCube ) ? 1 : - 1;
 
+			// @THREE-Modification
+			// Support color transform for background cube texture
+			if ( texture.colorMatrix ) {
+
+				boxMesh.material.uniforms.colorMatrix.value.copy( texture.colorMatrix );
+
+			} else {
+
+				boxMesh.material.uniforms.colorMatrix.value.identity();
+
+			}
+
 			if ( currentBackground !== background ||
 			     currentBackgroundVersion !== texture.version ) {
 

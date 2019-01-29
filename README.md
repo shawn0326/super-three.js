@@ -89,3 +89,26 @@ If everything went well you should see [this](https://jsfiddle.net/f2Lommf5/).
 [dev-dependencies-url]: https://david-dm.org/mrdoob/three.js#info=devDependencies
 [lgtm]: https://img.shields.io/lgtm/grade/javascript/g/mrdoob/three.js.svg?label=code%20quality
 [lgtm-url]: https://lgtm.com/projects/g/mrdoob/three.js/
+
+### Modification ###
+
+All modifications are marked by `// @THREE-Modification`.
+
+* RenderList sort: Prevent unstable sequencing.
+* WebGLTextures: Support NPOT texture in WebGL2.
+* WebGLTextures: getInternalFormat support depth texture in WebGL2.
+* WebGLTextures: Support RenderTarget.multipleSampling & WebGLRenderer.blitRenderTarget() (for MSAA etc) in WebGL2.
+* WebGLRenderer: Skeleton percision fix.
+* WebGLRenderer: GPU picker support. (Remove this later)
+* WebGLRenderer: Separat UVTransform for alphaMap.
+* WebGLRenderer: Add **MaterialManager** to switch material on runtime.
+* WebGLBackground: Support color transform for background cube texture.
+* alphatest_fragment: Prevent alpha test edge gradient.
+
+### 开发规范 ###
+
+* 只添加必要的修改，非必要的修改可以通过扩展实现。
+* 必须是能够独立运行的修改，不依赖任何外部库。
+* 修改的代码前用`// @THREE-Modification`标注，以便于全局搜索。
+* 如果有新扩展的功能或者新修改的BUG，请在本文件的`Modification`部分增加修改说明。
+* 修改遵照threejs本身的编程规范，发布前请运行`npm run lint`检查。

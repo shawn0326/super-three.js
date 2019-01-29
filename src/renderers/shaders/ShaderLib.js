@@ -5,6 +5,8 @@ import { UniformsLib } from './UniformsLib.js';
 import { Color } from '../../math/Color.js';
 import { Matrix3 } from '../../math/Matrix3.js';
 
+import { Matrix4 } from '../../math/Matrix4.js'; // @THREE-Modification
+
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
@@ -213,7 +215,8 @@ var ShaderLib = {
 		uniforms: {
 			tCube: { value: null },
 			tFlip: { value: - 1 },
-			opacity: { value: 1.0 }
+			opacity: { value: 1.0 },
+			colorMatrix: { value: new Matrix4() } // @THREE-Modification
 		},
 
 		vertexShader: ShaderChunk.cube_vert,
