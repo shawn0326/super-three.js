@@ -23575,27 +23575,32 @@ function WebGLRenderer( parameters ) {
 
 	function renderObject( object, scene, camera, geometry, material, group ) {
 
+		var replaceMaterial;
+
+		// @THREE-Modification
+		// to be delete
+		replaceMaterial = object.onBeforeRender( _this, scene, camera, geometry, material, group );
+
 		// @THREE-Modification
 		// use materialManager to replace material.
 		if ( materialManager.$mode !== 0 ) {
 
-			var replaceMaterial = materialManager.getStrategy().call( object, this, scene, camera, geometry, material, group );
-
-			if ( replaceMaterial === null ) {
-
-				return;
-
-			}
-
-			if ( replaceMaterial ) {
-
-				material = replaceMaterial;
-
-			}
+			replaceMaterial = materialManager.getStrategy().call( object, this, scene, camera, geometry, material, group );
 
 		}
 
-		object.onBeforeRender( _this, scene, camera, geometry, material, group );
+		if ( replaceMaterial === null ) {
+
+			return;
+
+		}
+
+		if ( replaceMaterial ) {
+
+			material = replaceMaterial;
+
+		}
+		
 		currentRenderState = renderStates.get( scene, _currentArrayCamera || camera );
 
 		object.modelViewMatrix.multiplyMatrices( camera.matrixWorldInverse, object.matrixWorld );
