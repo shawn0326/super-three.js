@@ -524,31 +524,6 @@ function WebGLRenderer( parameters ) {
 
 	};
 
-	// @THREE-Modification
-	// blit render target (frame buffer)
-	this.blitRenderTarget = function ( read, draw ) {
-
-		if ( ! capabilities.isWebGL2 ) {
-
-			console.warn( "WebGL1 not support blitFramebuffer" );
-
-			return;
-
-		}
-
-		var readBuffer = properties.get( read ).__webglFramebuffer;
-		var drawBuffer = properties.get( draw ).__webglFramebuffer;
-		_gl.bindFramebuffer( _gl.READ_FRAMEBUFFER, readBuffer );
-		_gl.bindFramebuffer( _gl.DRAW_FRAMEBUFFER, drawBuffer );
-		_gl.clearBufferfv( _gl.COLOR, 0, [ 0.0, 0.0, 0.0, 0.0 ] );
-		_gl.blitFramebuffer(
-			0, 0, read.width, read.height,
-			0, 0, draw.width, draw.height,
-			_gl.COLOR_BUFFER_BIT, _gl.NEAREST
-		);
-
-	};
-
 	// Events
 
 	function onContextLost( event ) {
@@ -1104,7 +1079,7 @@ function WebGLRenderer( parameters ) {
 		currentRenderList = renderLists.get( scene, camera );
 		currentRenderList.init();
 
-		projectObject( scene, camera, _this.sortObjects );
+		projectObject( scene, camera, 0, _this.sortObjects );
 
 		if ( _this.sortObjects === true ) {
 
@@ -1164,11 +1139,17 @@ function WebGLRenderer( parameters ) {
 
 		}
 
-		// Generate mipmap if we're using any kind of mipmap filtering
+		//
 
 		if ( renderTarget ) {
 
+			// Generate mipmap if we're using any kind of mipmap filtering
+
 			textures.updateRenderTargetMipmap( renderTarget );
+
+			// resolve multisample renderbuffers to a single-sample texture if necessary
+
+			textures.updateMultisampleRenderTarget( renderTarget );
 
 		}
 
@@ -1195,7 +1176,7 @@ function WebGLRenderer( parameters ) {
 
 	};
 
-	function projectObject( object, camera, sortObjects ) {
+	function projectObject( object, camera, groupOrder, sortObjects ) {
 
 		if ( object.visible === false ) return;
 
@@ -1203,7 +1184,11 @@ function WebGLRenderer( parameters ) {
 
 		if ( visible ) {
 
-			if ( object.isLight ) {
+			if ( object.isGroup ) {
+
+				groupOrder = object.renderOrder;
+
+			} else if ( object.isLight ) {
 
 				currentRenderState.pushLight( object );
 
@@ -1227,7 +1212,7 @@ function WebGLRenderer( parameters ) {
 					var geometry = objects.update( object );
 					var material = object.material;
 
-					currentRenderList.push( object, geometry, material, _vector3.z, null );
+					currentRenderList.push( object, geometry, material, groupOrder, _vector3.z, null );
 
 				}
 
@@ -1240,7 +1225,7 @@ function WebGLRenderer( parameters ) {
 
 				}
 
-				currentRenderList.push( object, null, object.material, _vector3.z, null );
+				currentRenderList.push( object, null, object.material, groupOrder, _vector3.z, null );
 
 			} else if ( object.isMesh || object.isLine || object.isPoints ) {
 
@@ -1275,7 +1260,7 @@ function WebGLRenderer( parameters ) {
 
 							if ( groupMaterial && groupMaterial.visible ) {
 
-								currentRenderList.push( object, geometry, groupMaterial, _vector3.z, group );
+								currentRenderList.push( object, geometry, groupMaterial, groupOrder, _vector3.z, group );
 
 							}
 
@@ -1283,7 +1268,7 @@ function WebGLRenderer( parameters ) {
 
 					} else if ( material.visible ) {
 
-						currentRenderList.push( object, geometry, material, _vector3.z, null );
+						currentRenderList.push( object, geometry, material, groupOrder, _vector3.z, null );
 
 					}
 
@@ -1297,7 +1282,7 @@ function WebGLRenderer( parameters ) {
 
 		for ( var i = 0, l = children.length; i < l; i ++ ) {
 
-			projectObject( children[ i ], camera, sortObjects );
+			projectObject( children[ i ], camera, groupOrder, sortObjects );
 
 		}
 
@@ -1390,7 +1375,7 @@ function WebGLRenderer( parameters ) {
 			material = replaceMaterial;
 
 		}
-		
+
 		currentRenderState = renderStates.get( scene, _currentArrayCamera || camera );
 
 		object.modelViewMatrix.multiplyMatrices( camera.matrixWorldInverse, object.matrixWorld );
@@ -2587,6 +2572,10 @@ function WebGLRenderer( parameters ) {
 
 				framebuffer = __webglFramebuffer[ renderTarget.activeCubeFace ];
 				isCube = true;
+
+			} else if ( renderTarget.isWebGLMultisampleRenderTarget ) {
+
+				framebuffer = properties.get( renderTarget ).__webglMultisampledFramebuffer;
 
 			} else {
 

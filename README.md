@@ -95,9 +95,9 @@ If everything went well you should see [this](https://jsfiddle.net/f2Lommf5/).
 All modifications are marked by `// @THREE-Modification`.
 
 * RenderList sort: Prevent unstable sequencing.
-* WebGLTextures: Support NPOT texture in WebGL2.
+* ~~WebGLTextures: Support NPOT texture in WebGL2.~~(implemented in r101)
 * WebGLTextures: getInternalFormat support depth texture in WebGL2.
-* WebGLTextures: Support RenderTarget.multipleSampling & WebGLRenderer.blitRenderTarget() (for MSAA etc) in WebGL2.
+* ~~WebGLTextures: Support RenderTarget.multipleSampling & WebGLRenderer.blitRenderTarget() (for MSAA etc) in WebGL2.~~(implemented in r101)
 * WebGLRenderer: Skeleton percision fix.
 * WebGLRenderer: GPU picker support. (Remove this later)
 * WebGLRenderer: Separat UVTransform for alphaMap.
