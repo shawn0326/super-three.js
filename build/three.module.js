@@ -20819,7 +20819,8 @@ function WebGLTextures( _gl, extensions, state, properties, capabilities, utils,
 
 				var samples = getRenderTargetSamples( renderTarget );
 
-				_gl.renderbufferStorageMultisample( 36161, samples, 34041, renderTarget.width, renderTarget.height );
+				// @THREE-Modification
+				_gl.renderbufferStorageMultisample( 36161, samples, _gl.DEPTH24_STENCIL8, renderTarget.width, renderTarget.height );
 
 			} else {
 
