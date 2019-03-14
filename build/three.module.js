@@ -8564,6 +8564,8 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 			this.children.push( object );
 
+			this.dispatchEvent( { type: 'addedChild', object } );
+
 		} else {
 
 			console.error( "THREE.Object3D.add: object not an instance of THREE.Object3D.", object );
@@ -22455,7 +22457,7 @@ function MaterialManager() {
 
 function WebGLRenderer( parameters ) {
 
-	console.log( 'THREE.WebGLRenderer', REVISION );
+	//	console.log( 'THREE.WebGLRenderer', REVISION );
 
 	parameters = parameters || {};
 
