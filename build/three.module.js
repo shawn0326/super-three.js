@@ -8564,7 +8564,7 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 			this.children.push( object );
 
-			this.dispatchEvent( { type: 'addedChild', object } );
+			this.dispatchEvent( { type: 'addedChild', object: object } );
 
 		} else {
 
