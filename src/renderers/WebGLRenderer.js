@@ -1350,13 +1350,14 @@ function WebGLRenderer( parameters ) {
 
 	function renderObject( object, scene, camera, geometry, material, group ) {
 
-		object.onBeforeRender( _this, scene, camera, geometry, material, group );
+		var replaceMaterial;
+
+		// @THREE-Modification
+		// to be delete
+		replaceMaterial = object.onBeforeRender( _this, scene, camera, geometry, material, group );
 
 		// @THREE-Modification
 		// use materialManager to replace material.
-		// todo move these code to projectObject method.
-		var replaceMaterial;
-
 		if ( materialManager.$mode !== 0 ) {
 
 			replaceMaterial = materialManager.getStrategy().call( object, this, scene, camera, geometry, material, group );
