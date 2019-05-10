@@ -104,6 +104,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLRenderer: Add **MaterialManager** to switch material on runtime.
 * WebGLBackground: Support color transform for background cube texture.
 * alphatest_fragment: Prevent alpha test edge gradient.
+* Material: Support color mapping.
 
 ### 开发规范 ###
 

@@ -506,6 +506,10 @@ function WebGLProgram( renderer, extensions, code, material, shader, parameters,
 
 			parameters.depthPacking ? '#define DEPTH_PACKING ' + material.depthPacking : '',
 
+			// @THREE-Modification
+			// for color mapping
+			parameters.useColorMapping ? '#define COLOR_MAPPING' : '',
+
 			'\n'
 
 		].filter( filterEmptyLine ).join( '\n' );

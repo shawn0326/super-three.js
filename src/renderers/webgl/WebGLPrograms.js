@@ -206,6 +206,10 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 			doubleSided: material.side === DoubleSide,
 			flipSided: material.side === BackSide,
 
+			// @THREE-Modification
+			// for color mapping
+			useColorMapping: !! material.colorMapping,
+
 			depthPacking: ( material.depthPacking !== undefined ) ? material.depthPacking : false
 
 		};

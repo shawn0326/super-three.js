@@ -32,6 +32,8 @@ varying vec3 vIndirectFront;
 #include <specularmap_pars_fragment>
 #include <logdepthbuf_pars_fragment>
 #include <clipping_planes_pars_fragment>
+// @THREE-Modification
+#include <colormapping_pars_fragment>
 
 void main() {
 
@@ -86,6 +88,9 @@ void main() {
 	#include <envmap_fragment>
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+	// @THREE-Modification
+	#include <colormapping_fragment>
 
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>

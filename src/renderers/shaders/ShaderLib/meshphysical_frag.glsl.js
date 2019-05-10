@@ -45,6 +45,8 @@ varying vec3 vViewPosition;
 #include <metalnessmap_pars_fragment>
 #include <logdepthbuf_pars_fragment>
 #include <clipping_planes_pars_fragment>
+// @THREE-Modification
+#include <colormapping_pars_fragment>
 
 void main() {
 
@@ -77,6 +79,9 @@ void main() {
 	vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+	// @THREE-Modification
+	#include <colormapping_fragment>
 
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>

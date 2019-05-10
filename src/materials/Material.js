@@ -59,6 +59,10 @@ function Material() {
 	this.alphaTest = 0;
 	this.premultipliedAlpha = false;
 
+	// @THREE-Modification
+	// for color mapping
+	this.colorMapping = null;
+
 	this.visible = true;
 
 	this.userData = {};

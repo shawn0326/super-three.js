@@ -1924,6 +1924,12 @@ function WebGLRenderer( parameters ) {
 		// @THREE-Modification
 		// for gup picker
 		p_uniforms.setValue( _gl, 'baseId', material.baseId );
+		// for color mapping
+		if ( material.colorMapping ) {
+
+			p_uniforms.setValue( _gl, 'colorMapping', material.colorMapping );
+
+		}
 
 		if ( material.isShaderMaterial && material.uniformsNeedUpdate === true ) {
 
