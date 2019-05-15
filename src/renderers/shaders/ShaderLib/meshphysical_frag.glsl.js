@@ -59,6 +59,10 @@ void main() {
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>
 	#include <color_fragment>
+
+	// @THREE-Modification
+	#include <colormapping_fragment>
+	
 	#include <alphamap_fragment>
 	#include <alphatest_fragment>
 	#include <roughnessmap_fragment>
@@ -79,9 +83,6 @@ void main() {
 	vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
-
-	// @THREE-Modification
-	#include <colormapping_fragment>
 
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>

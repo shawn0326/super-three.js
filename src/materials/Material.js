@@ -369,6 +369,10 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		this.shadowSide = source.shadowSide;
 
+		// @THREE-Modification
+		// for color mapping
+		this.colorMapping = source.colorMapping;
+
 		return this;
 
 	},

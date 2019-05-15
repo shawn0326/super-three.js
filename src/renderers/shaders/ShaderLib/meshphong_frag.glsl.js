@@ -44,6 +44,10 @@ void main() {
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>
 	#include <color_fragment>
+
+	// @THREE-Modification
+	#include <colormapping_fragment>
+	
 	#include <alphamap_fragment>
 	#include <alphatest_fragment>
 	#include <specularmap_fragment>
@@ -65,9 +69,6 @@ void main() {
 	#include <envmap_fragment>
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
-
-	// @THREE-Modification
-	#include <colormapping_fragment>
 
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>
