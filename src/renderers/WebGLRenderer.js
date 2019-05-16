@@ -1360,7 +1360,12 @@ function WebGLRenderer( parameters ) {
 		// use materialManager to replace material.
 		if ( materialManager.$mode !== 0 ) {
 
-			replaceMaterial = materialManager.getStrategy().call( object, this, scene, camera, geometry, material, group );
+			var strategry = materialManager.getStrategy();
+			if ( strategry ) {
+
+				replaceMaterial = materialManager.getStrategy().call( object, this, scene, camera, geometry, material, group );
+
+			}
 
 		}
 
