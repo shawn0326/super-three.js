@@ -23777,7 +23777,7 @@
 				var strategry = materialManager.getStrategy();
 				if ( strategry ) {
 
-					replaceMaterial = materialManager.getStrategy().call( object, this, scene, camera, geometry, material, group );
+					replaceMaterial = strategry.call( object, this, scene, camera, geometry, material, group );
 
 				}
 
