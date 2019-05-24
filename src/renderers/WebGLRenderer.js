@@ -1359,7 +1359,7 @@ function WebGLRenderer( parameters ) {
 		// @THREE-Modification
 		// give our chance to modify matrix world before render
 		var _onBeforeUpdateModelViewMatrix = object.onBeforeUpdateModelViewMatrix;
-		if ( _onBeforeUpdateModelViewMatrix( _this, scene, camera, geometry, replaceMaterial, group ) === null ) {
+		if ( _onBeforeUpdateModelViewMatrix && _onBeforeUpdateModelViewMatrix( _this, scene, camera, geometry, replaceMaterial, group ) === null ) {
 
 			return;
 
