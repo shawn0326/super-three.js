@@ -24356,17 +24356,18 @@
 
 				WebGLUniforms.upload( _gl, materialProperties.uniformsList, m_uniforms, _this );
 
+				// for color mapping
+				if ( material.colorMapping ) {
+
+					p_uniforms.setValue( _gl, 'colorMapping', material.colorMapping );
+
+				}
+
 			}
 
 			// @THREE-Modification
 			// for gup picker
 			p_uniforms.setValue( _gl, 'baseId', material.baseId );
-			// for color mapping
-			if ( material.colorMapping ) {
-
-				p_uniforms.setValue( _gl, 'colorMapping', material.colorMapping );
-
-			}
 
 			if ( material.isShaderMaterial && material.uniformsNeedUpdate === true ) {
 
