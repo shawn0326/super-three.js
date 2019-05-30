@@ -1357,10 +1357,24 @@ function WebGLRenderer( parameters ) {
 		replaceMaterial = object.onBeforeRender( _this, scene, camera, geometry, material, group );
 
 		// @THREE-Modification
+		// give our chance to modify matrix world before render
+		var _onBeforeUpdateModelViewMatrix = object.onBeforeUpdateModelViewMatrix;
+		if ( _onBeforeUpdateModelViewMatrix && _onBeforeUpdateModelViewMatrix( _this, scene, camera, geometry, replaceMaterial, group ) === null ) {
+
+			return;
+
+		}
+
+		// @THREE-Modification
 		// use materialManager to replace material.
 		if ( materialManager.$mode !== 0 ) {
 
-			replaceMaterial = materialManager.getStrategy().call( object, this, scene, camera, geometry, material, group );
+			var strategry = materialManager.getStrategy();
+			if ( strategry ) {
+
+				replaceMaterial = strategry.call( object, this, scene, camera, geometry, material, group );
+
+			}
 
 		}
 

@@ -598,8 +598,13 @@ Object.assign( Color.prototype, {
 
 		return this.getHex();
 
-	}
+	},
 
+	getColorKeyword: function () {
+
+		return ColorKeywords;
+
+	}
 } );
 
 

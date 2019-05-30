@@ -14,6 +14,12 @@ function MaterialManager() {
 
 	};
 
+	this.getMode = function ( ) {
+
+		return _this.$mode;
+
+	};
+
 	this.addStrategy = function ( mode, method ) {
 
 		_strategies.set( mode, method );
