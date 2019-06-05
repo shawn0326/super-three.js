@@ -23801,7 +23801,7 @@ function WebGLRenderer( parameters ) {
 		// @THREE-Modification
 		// give our chance to modify matrix world before render
 		var _onBeforeUpdateModelViewMatrix = object.onBeforeUpdateModelViewMatrix;
-		if ( _onBeforeUpdateModelViewMatrix && _onBeforeUpdateModelViewMatrix( _this, scene, camera, geometry, replaceMaterial, group ) === null ) {
+		if ( _onBeforeUpdateModelViewMatrix && _onBeforeUpdateModelViewMatrix.call( object, _this, scene, camera, geometry, replaceMaterial, group ) === null ) {
 
 			return;
 
@@ -23852,6 +23852,15 @@ function WebGLRenderer( parameters ) {
 		} else {
 
 			_this.renderBufferDirect( camera, scene.fog, geometry, material, object, group );
+
+		}
+
+		// @THREE-Modification
+		// give our chance to reset matrix world after render
+		var _onAfterUpdateModelViewMatrix = object.onAfterUpdateModelViewMatrix;
+		if ( _onAfterUpdateModelViewMatrix && _onAfterUpdateModelViewMatrix.call( object, _this, scene, camera, geometry, replaceMaterial, group ) === null ) {
+
+			return;
 
 		}
 
