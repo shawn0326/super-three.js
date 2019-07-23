@@ -94,4 +94,12 @@ float linearToRelativeLuminance( const in vec3 color ) {
 	return dot( weights, color.rgb );
 
 }
+// @THREE-Modification Cartesian3 to webgl
+vec3 czm_converPosition(vec3 origin) {
+   vec3 res = vec3(0.0);
+       res.x = -origin.x;
+       res.y = origin.z;
+       res.z = origin.y;
+       return res;
+}
 `;

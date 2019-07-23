@@ -105,7 +105,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLBackground: Support color transform for background cube texture.
 * alphatest_fragment: Prevent alpha test edge gradient.
 * Material: Support color mapping.
-
+* Material: Support Cartesian3 position. defines['USE_CARTESIAN3']
 ### 开发规范 ###
 
 * 只添加必要的修改，非必要的修改可以通过扩展实现。
