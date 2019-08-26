@@ -7082,6 +7082,7 @@ var UniformsLib = {
 		map: { value: null },
 		uvTransform: { value: new Matrix3() },
 		uvTransform1: { value: new Matrix3() }, // @THREE-Modification
+		uvTransform2: { value: new Matrix3() }, // @THREE-Modification
 
 		alphaMap: { value: null },
 		alphaMap1: { value: null }, // @THREE-Modification
@@ -24579,6 +24580,20 @@ function WebGLRenderer( parameters ) {
 			}
 
 			uniforms.uvTransform1.value.copy( material.alphaMap1.matrix );
+
+		}
+
+		// @THREE-Modification
+		// Separat UVTransform for emissiveMap
+		if ( material.emissiveMap ) {
+
+			if ( material.emissiveMap.matrixAutoUpdate === true ) {
+
+				material.emissiveMap.updateMatrix();
+
+			}
+
+			uniforms.uvTransform2.value.copy( material.emissiveMap.matrix );
 
 		}
 

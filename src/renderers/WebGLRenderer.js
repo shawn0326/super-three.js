@@ -2140,6 +2140,20 @@ function WebGLRenderer( parameters ) {
 
 		}
 
+		// @THREE-Modification
+		// Separat UVTransform for emissiveMap
+		if ( material.emissiveMap ) {
+
+			if ( material.emissiveMap.matrixAutoUpdate === true ) {
+
+				material.emissiveMap.updateMatrix();
+
+			}
+
+			uniforms.uvTransform2.value.copy( material.emissiveMap.matrix );
+
+		}
+
 	}
 
 	function refreshUniformsLine( uniforms, material ) {
