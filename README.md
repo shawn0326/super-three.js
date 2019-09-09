@@ -107,6 +107,7 @@ All modifications are marked by `// @THREE-Modification`.
 * alphatest_fragment: Prevent alpha test edge gradient.
 * Material: Support color mapping.
 * Material: Support Cartesian3 position. defines['USE_CARTESIAN3']
+* UniformsUtils: Clone uniforms will not clone texture.
 
 ### 开发规范 ###
 

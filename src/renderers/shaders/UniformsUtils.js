@@ -14,10 +14,10 @@ export function cloneUniforms( src ) {
 
 			var property = src[ u ][ p ];
 
+			// @THREE-Modification don't clone texture
 			if ( property && ( property.isColor ||
 				property.isMatrix3 || property.isMatrix4 ||
-				property.isVector2 || property.isVector3 || property.isVector4 ||
-				property.isTexture ) ) {
+				property.isVector2 || property.isVector3 || property.isVector4 ) ) {
 
 				dst[ u ][ p ] = property.clone();
 
