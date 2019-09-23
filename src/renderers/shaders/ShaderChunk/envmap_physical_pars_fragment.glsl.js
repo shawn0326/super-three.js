@@ -67,29 +67,22 @@ export default /* glsl */`
 	}
 
 	vec3 getLightProbeIndirectRadiance( /*const in SpecularLightProbe specularLightProbe,*/ const in GeometricContext geometry, const in float blinnShininessExponent, const in int maxMIPLevel ) {
-            #ifdef  BASE_QUATERNION
-		        vec3 newViewDir = applyQuaternion(geometry.viewDir, baseQuaternion);
-		        vec3 newNormal = applyQuaternion(geometry.normal, baseQuaternion);
-		    #endif     
-        
-		#ifdef ENVMAP_MODE_REFLECTION
-		
-		    #ifdef  BASE_QUATERNION
-		        vec3 reflectVec = reflect( -newViewDir, newNormal );
-		    #else
-		        vec3 reflectVec = reflect( -geometry.viewDir, geometry.normal );
-		    #endif 
-            
+          
+	    #ifdef ENVMAP_MODE_REFLECTION
+
+			vec3 reflectVec = reflect( -geometry.viewDir, geometry.normal );
+
 		#else
-            #ifdef  BASE_QUATERNION
-		        vec3 reflectVec = refract( -newViewDir, newNormal, refractionRatio );
-		    #else
-		       vec3 reflectVec = refract( -geometry.viewDir, geometry.normal, refractionRatio );
-		    #endif 
-            
+
+			vec3 reflectVec = refract( -geometry.viewDir, geometry.normal, refractionRatio );
+
 		#endif
 
 		reflectVec = inverseTransformDirection( reflectVec, viewMatrix );
+		
+		#ifdef  BASE_QUATERNION
+		        reflectVec = applyQuaternion(reflectVec, baseQuaternion);
+		#endif 
 
 		float specularMIPLevel = getSpecularMIPLevel( blinnShininessExponent, maxMIPLevel );
 
