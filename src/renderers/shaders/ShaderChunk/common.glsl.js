@@ -102,4 +102,15 @@ vec3 czm_converPosition(vec3 origin) {
        res.z = origin.y;
        return res;
 }
+// @THREE-Modification vector applyQuaternion
+vec3 applyQuaternion (vec3 v, vec4 q){
+        float ix = q.w * v.x + q.y * v.z - q.z * v.y;
+		float iy = q.w * v.y + q.z * v.x - q.x * v.z;
+		float iz = q.w * v.z + q.x * v.y - q.y * v.x;
+		float iw = - q.x * v.x - q.y * v.y - q.z * v.z;
+		return vec3(ix * q.w + iw * (-q.x) + iy * (-q.z) - iz * (-q.y),
+		            iy * q.w + iw * (-q.y) + iz * (-q.x) - ix * (-q.z),
+		            iz * q.w + iw * (-q.z) + ix * (-q.y) - iy * (-q.x)
+		);
+}
 `;

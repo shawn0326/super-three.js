@@ -509,6 +509,7 @@ function WebGLProgram( renderer, extensions, code, material, shader, parameters,
 			// @THREE-Modification
 			// for color mapping
 			parameters.useColorMapping ? '#define COLOR_MAPPING' : '',
+			parameters.useBaseQuaternion ? '#define BASE_QUATERNION' : '',
 
 			'\n'
 

@@ -38,7 +38,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 		"numDirLights", "numPointLights", "numSpotLights", "numHemiLights", "numRectAreaLights",
 		"shadowMapEnabled", "shadowMapType", "toneMapping", 'physicallyCorrectLights',
 		"alphaTest", "doubleSided", "flipSided", "numClippingPlanes", "numClipIntersection", "depthPacking", "dithering",
-		"useColorMapping" // @THREE-Modification
+		"useColorMapping", "useBaseQuaternion" // @THREE-Modification
 	];
 
 
@@ -210,6 +210,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 			// @THREE-Modification
 			// for color mapping
 			useColorMapping: !! material.colorMapping,
+			useBaseQuaternion: !! material.baseQuaternion,
 
 			depthPacking: ( material.depthPacking !== undefined ) ? material.depthPacking : false
 

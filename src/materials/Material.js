@@ -62,6 +62,7 @@ function Material() {
 	// @THREE-Modification
 	// for color mapping
 	this.colorMapping = null;
+	this.baseQuaternion = null;
 
 	this.visible = true;
 
@@ -372,6 +373,9 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		// @THREE-Modification
 		// for color mapping
 		this.colorMapping = source.colorMapping;
+		// @THREE-Modification
+		// for baseQuaternion
+		this.baseQuaternion = source.baseQuaternion;
 
 		return this;
 

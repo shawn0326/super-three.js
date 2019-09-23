@@ -4,10 +4,18 @@ export default /* glsl */`
 	vec3 getLightProbeIndirectIrradiance( /*const in SpecularLightProbe specularLightProbe,*/ const in GeometricContext geometry, const in int maxMIPLevel ) {
 
 		vec3 worldNormal = inverseTransformDirection( geometry.normal, viewMatrix );
+		
+		   #ifdef  BASE_QUATERNION
+		        vec3 newNormal = applyQuaternion(worldNormal, baseQuaternion);
+		    #endif
 
 		#ifdef ENVMAP_TYPE_CUBE
-
-			vec3 queryVec = vec3( flipEnvMap * worldNormal.x, worldNormal.yz );
+            #ifdef  BASE_QUATERNION
+                vec3 queryVec = vec3( flipEnvMap * newNormal.x, newNormal.yz );
+            #else
+                vec3 queryVec = vec3( flipEnvMap * worldNormal.x, worldNormal.yz );
+            #endif
+			
 
 			// TODO: replace with properly filtered cubemaps and access the irradiance LOD level, be it the last LOD level
 			// of a specular cubemap, or just the default level of a specially created irradiance cubemap.
@@ -26,8 +34,12 @@ export default /* glsl */`
 			envMapColor.rgb = envMapTexelToLinear( envMapColor ).rgb;
 
 		#elif defined( ENVMAP_TYPE_CUBE_UV )
-
-			vec3 queryVec = vec3( flipEnvMap * worldNormal.x, worldNormal.yz );
+             #ifdef  BASE_QUATERNION
+                vec3 queryVec = vec3( flipEnvMap * newNormal.x, newNormal.yz );
+              #else
+                vec3 queryVec = vec3( flipEnvMap * worldNormal.x, worldNormal.yz );
+              #endif
+    
 			vec4 envMapColor = textureCubeUV( envMap, queryVec, 1.0 );
 
 		#else
@@ -55,15 +67,26 @@ export default /* glsl */`
 	}
 
 	vec3 getLightProbeIndirectRadiance( /*const in SpecularLightProbe specularLightProbe,*/ const in GeometricContext geometry, const in float blinnShininessExponent, const in int maxMIPLevel ) {
-
+            #ifdef  BASE_QUATERNION
+		        vec3 newViewDir = applyQuaternion(geometry.viewDir, baseQuaternion);
+		        vec3 newNormal = applyQuaternion(geometry.normal, baseQuaternion);
+		    #endif     
+        
 		#ifdef ENVMAP_MODE_REFLECTION
-
-			vec3 reflectVec = reflect( -geometry.viewDir, geometry.normal );
-
+		
+		    #ifdef  BASE_QUATERNION
+		        vec3 reflectVec = reflect( -newViewDir, newNormal );
+		    #else
+		        vec3 reflectVec = reflect( -geometry.viewDir, geometry.normal );
+		    #endif 
+            
 		#else
-
-			vec3 reflectVec = refract( -geometry.viewDir, geometry.normal, refractionRatio );
-
+            #ifdef  BASE_QUATERNION
+		        vec3 reflectVec = refract( -newViewDir, newNormal, refractionRatio );
+		    #else
+		       vec3 reflectVec = refract( -geometry.viewDir, geometry.normal, refractionRatio );
+		    #endif 
+            
 		#endif
 
 		reflectVec = inverseTransformDirection( reflectVec, viewMatrix );

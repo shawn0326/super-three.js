@@ -91,6 +91,7 @@ import worldpos_vertex from './ShaderChunk/worldpos_vertex.glsl.js';
 // @THREE-Modification
 import colormapping_fragment from './ShaderChunk/colormapping_fragment.glsl.js';
 import colormapping_pars_fragment from './ShaderChunk/colormapping_pars_fragment.glsl.js';
+import baseQuaternion_pars_fragment from './ShaderChunk/baseQuaternion_pars_fragment.glsl.js';
 
 import background_frag from './ShaderLib/background_frag.glsl.js';
 import background_vert from './ShaderLib/background_vert.glsl.js';
@@ -217,6 +218,7 @@ export var ShaderChunk = {
 	// @THREE-Modification
 	colormapping_fragment: colormapping_fragment,
 	colormapping_pars_fragment: colormapping_pars_fragment,
+	baseQuaternion_pars_fragment: baseQuaternion_pars_fragment,
 
 	background_frag: background_frag,
 	background_vert: background_vert,

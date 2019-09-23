@@ -34,6 +34,8 @@ varying vec3 vViewPosition;
 #include <bsdfs>
 #include <cube_uv_reflection_fragment>
 #include <envmap_pars_fragment>
+// @THREE-Modification
+#include <baseQuaternion_pars_fragment>
 #include <envmap_physical_pars_fragment>
 #include <fog_pars_fragment>
 #include <lights_pars_begin>
@@ -47,6 +49,7 @@ varying vec3 vViewPosition;
 #include <clipping_planes_pars_fragment>
 // @THREE-Modification
 #include <colormapping_pars_fragment>
+
 
 void main() {
 

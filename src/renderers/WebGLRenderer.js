@@ -1949,6 +1949,14 @@ function WebGLRenderer( parameters ) {
 
 			}
 
+			// for baseQuaternion
+			if ( material.baseQuaternion ) {
+
+				p_uniforms.setValue( _gl, 'baseQuaternion', material.baseQuaternion );
+
+			}
+
+
 		}
 
 		// @THREE-Modification
