@@ -5,17 +5,25 @@ export default /* glsl */`
 
 		vec3 worldNormal = inverseTransformDirection( geometry.normal, viewMatrix );
 		
-		   #ifdef  BASE_QUATERNION
-		        vec3 newNormal = applyQuaternion(worldNormal, baseQuaternion);
-		    #endif
+		// @THREE-Modification
+		#ifdef  BASE_QUATERNION
+
+			vec3 newNormal = applyQuaternion(worldNormal, baseQuaternion);
+
+		#endif
 
 		#ifdef ENVMAP_TYPE_CUBE
-            #ifdef  BASE_QUATERNION
-                vec3 queryVec = vec3( flipEnvMap * newNormal.x, newNormal.yz );
-            #else
-                vec3 queryVec = vec3( flipEnvMap * worldNormal.x, worldNormal.yz );
-            #endif
+
+			// @THREE-Modification
+			#ifdef  BASE_QUATERNION
 			
+				vec3 queryVec = vec3( flipEnvMap * newNormal.x, newNormal.yz );
+				
+			#else
+			
+				vec3 queryVec = vec3( flipEnvMap * worldNormal.x, worldNormal.yz );
+				
+            #endif
 
 			// TODO: replace with properly filtered cubemaps and access the irradiance LOD level, be it the last LOD level
 			// of a specular cubemap, or just the default level of a specially created irradiance cubemap.
@@ -34,11 +42,17 @@ export default /* glsl */`
 			envMapColor.rgb = envMapTexelToLinear( envMapColor ).rgb;
 
 		#elif defined( ENVMAP_TYPE_CUBE_UV )
-             #ifdef  BASE_QUATERNION
-                vec3 queryVec = vec3( flipEnvMap * newNormal.x, newNormal.yz );
-              #else
-                vec3 queryVec = vec3( flipEnvMap * worldNormal.x, worldNormal.yz );
-              #endif
+		
+			// @THREE-Modification
+			#ifdef  BASE_QUATERNION
+			
+				vec3 queryVec = vec3( flipEnvMap * newNormal.x, newNormal.yz );
+				
+			#else
+			
+				vec3 queryVec = vec3( flipEnvMap * worldNormal.x, worldNormal.yz );
+				
+            #endif
     
 			vec4 envMapColor = textureCubeUV( envMap, queryVec, 1.0 );
 
@@ -80,8 +94,11 @@ export default /* glsl */`
 
 		reflectVec = inverseTransformDirection( reflectVec, viewMatrix );
 		
+		// @THREE-Modification
 		#ifdef  BASE_QUATERNION
-		        reflectVec = applyQuaternion(reflectVec, baseQuaternion);
+
+			reflectVec = applyQuaternion(reflectVec, baseQuaternion);
+				
 		#endif 
 
 		float specularMIPLevel = getSpecularMIPLevel( blinnShininessExponent, maxMIPLevel );

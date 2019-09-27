@@ -210,6 +210,8 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 			// @THREE-Modification
 			// for color mapping
 			useColorMapping: !! material.colorMapping,
+			// @THREE-Modification
+			// for base quaternion
 			useBaseQuaternion: !! material.baseQuaternion,
 
 			depthPacking: ( material.depthPacking !== undefined ) ? material.depthPacking : false
