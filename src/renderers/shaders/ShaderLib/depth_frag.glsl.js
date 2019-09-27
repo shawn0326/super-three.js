@@ -1,5 +1,7 @@
 export default /* glsl */`
-#if DEPTH_PACKING == 3200
+// @THREE-Modification
+// Alpha test use opacity
+#if DEPTH_PACKING == 3200 || defined(ALPHATEST)
 
 	uniform float opacity;
 
