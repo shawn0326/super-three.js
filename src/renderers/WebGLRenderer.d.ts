@@ -85,6 +85,15 @@ export interface WebGLRendererParameters {
   logarithmicDepthBuffer?: boolean;
 }
 
+export interface WebGLDebug {
+
+  /**
+   * Enables error checking and reporting when shader programs are being compiled.
+   */
+  checkShaderErrors: boolean;
+
+}
+
 /**
  * The WebGL renderer displays your beautifully crafted scenes using WebGL, if your device supports it.
  * This renderer has way better performance than CanvasRenderer.
@@ -127,6 +136,11 @@ export class WebGLRenderer implements Renderer {
    * If autoClear is true, defines whether the renderer should clear the stencil buffer. Default is true.
    */
   autoClearStencil: boolean;
+
+  /**
+   * Debug configurations.
+   */
+  debug: WebGLDebug;
 
   /**
    * Defines whether the renderer should sort objects. Default is true.
@@ -201,7 +215,7 @@ export class WebGLRenderer implements Renderer {
   getPixelRatio(): number;
   setPixelRatio(value: number): void;
 
-  getDrawingBufferSize(): { width: number; height: number };
+  getDrawingBufferSize(target: Vector2): Vector2;
   setDrawingBufferSize(width: number, height: number, pixelRatio: number): void;
 
   getSize(target: Vector2): Vector2;
@@ -317,6 +331,14 @@ export class WebGLRenderer implements Renderer {
   animate(callback: Function): void;
 
   /**
+   * Compiles all materials in the scene with the camera. This is useful to precompile shaders before the first rendering.
+   */
+  compile(
+    scene: Scene,
+    camera: Camera
+  ): void;
+
+  /**
    * Render a scene using a camera.
    * The render is done to a previously specified {@link WebGLRenderTarget#renderTarget .renderTarget} set by calling
    * {@link WebGLRenderer#setRenderTarget .setRenderTarget} or to the canvas as usual.
@@ -333,14 +355,24 @@ export class WebGLRenderer implements Renderer {
   ): void;
 
   /**
-   * @deprecated
+   * Returns the current render target. If no render target is set, null is returned.
    */
-  getRenderTarget(): RenderTarget;
+  getRenderTarget(): RenderTarget | null;
+
   /**
    * @deprecated Use {@link WebGLRenderer#getRenderTarget .getRenderTarget()} instead.
    */
-  getCurrentRenderTarget(): RenderTarget;
-  setRenderTarget(renderTarget?: RenderTarget, activeCubeFace?: number, activeMipMapLevel?: number): void;
+  getCurrentRenderTarget(): RenderTarget | null;
+
+  /**
+   * Sets the active render target.
+   *
+   * @param renderTarget The {@link WebGLRenderTarget renderTarget} that needs to be activated. When `null` is given, the canvas is set as the active render target instead.
+	 * @param activeCubeFace Specifies the active cube side (PX 0, NX 1, PY 2, NY 3, PZ 4, NZ 5) of {@link WebGLRenderTargetCube}.
+	 * @param activeMipMapLevel Specifies the active mipmap level.
+   */
+  setRenderTarget(renderTarget: RenderTarget | null, activeCubeFace?: number, activeMipMapLevel?: number): void;
+
   readRenderTargetPixels(
     renderTarget: RenderTarget,
     x: number,

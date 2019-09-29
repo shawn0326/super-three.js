@@ -79,6 +79,16 @@ function WebGLRenderer( parameters ) {
 	this.domElement = _canvas;
 	this.context = null;
 
+	// Debug configuration container
+	this.debug = {
+
+		/**
+		 * Enables error checking and reporting when shader programs are being compiled
+		 * @type {boolean}
+		 */
+		checkShaderErrors: false
+	};
+
 	// clearing
 
 	this.autoClear = true;
@@ -300,13 +310,7 @@ function WebGLRenderer( parameters ) {
 
 	// vr
 
-	var vr = null;
-
-	if ( typeof navigator !== 'undefined' ) {
-
-		vr = ( 'xr' in navigator ) ? new WebXRManager( _this ) : new WebVRManager( _this );
-
-	}
+	var vr = ( typeof navigator !== 'undefined' && 'xr' in navigator ) ? new WebXRManager( _this ) : new WebVRManager( _this );
 
 	this.vr = vr;
 
@@ -1661,6 +1665,7 @@ function WebGLRenderer( parameters ) {
 			// wire up the material to this renderer's lighting state
 
 			uniforms.ambientLightColor.value = lights.state.ambient;
+			uniforms.lightProbe.value = lights.state.probe;
 			uniforms.directionalLights.value = lights.state.directional;
 			uniforms.spotLights.value = lights.state.spot;
 			uniforms.rectAreaLights.value = lights.state.rectArea;
@@ -2001,7 +2006,7 @@ function WebGLRenderer( parameters ) {
 
 			} else if ( material.isShadowMaterial ) {
 
-				m_uniforms.color.value = material.color;
+				m_uniforms.color.value.copy( material.color );
 				m_uniforms.opacity.value = material.opacity;
 
 			}
@@ -2066,7 +2071,7 @@ function WebGLRenderer( parameters ) {
 
 		if ( material.color ) {
 
-			uniforms.diffuse.value = material.color;
+			uniforms.diffuse.value.copy( material.color );
 
 		}
 
@@ -2238,7 +2243,7 @@ function WebGLRenderer( parameters ) {
 
 	function refreshUniformsLine( uniforms, material ) {
 
-		uniforms.diffuse.value = material.color;
+		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
 
 	}
@@ -2253,7 +2258,7 @@ function WebGLRenderer( parameters ) {
 
 	function refreshUniformsPoints( uniforms, material ) {
 
-		uniforms.diffuse.value = material.color;
+		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
 		uniforms.size.value = material.size * _pixelRatio;
 		uniforms.scale.value = _height * 0.5;
@@ -2276,7 +2281,7 @@ function WebGLRenderer( parameters ) {
 
 	function refreshUniformsSprites( uniforms, material ) {
 
-		uniforms.diffuse.value = material.color;
+		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
 		uniforms.rotation.value = material.rotation;
 		uniforms.map.value = material.map;
@@ -2297,7 +2302,7 @@ function WebGLRenderer( parameters ) {
 
 	function refreshUniformsFog( uniforms, fog ) {
 
-		uniforms.fogColor.value = fog.color;
+		uniforms.fogColor.value.copy( fog.color );
 
 		if ( fog.isFog ) {
 
@@ -2324,7 +2329,7 @@ function WebGLRenderer( parameters ) {
 
 	function refreshUniformsPhong( uniforms, material ) {
 
-		uniforms.specular.value = material.specular;
+		uniforms.specular.value.copy( material.specular );
 		uniforms.shininess.value = Math.max( material.shininess, 1e-4 ); // to prevent pow( 0.0, 0.0 )
 
 		if ( material.emissiveMap ) {
@@ -2533,6 +2538,7 @@ function WebGLRenderer( parameters ) {
 	function markUniformsLightsNeedsUpdate( uniforms, value ) {
 
 		uniforms.ambientLightColor.needsUpdate = value;
+		uniforms.lightProbe.needsUpdate = value;
 
 		uniforms.directionalLights.needsUpdate = value;
 		uniforms.pointLights.needsUpdate = value;
@@ -2729,6 +2735,5 @@ function WebGLRenderer( parameters ) {
 	};
 
 }
-
 
 export { WebGLRenderer };

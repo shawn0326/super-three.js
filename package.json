@@ -1,6 +1,6 @@
 {
   "name": "three",
-  "version": "0.103.0",
+  "version": "0.104.0",
   "description": "JavaScript 3D library",
   "main": "build/three.js",
   "repository": "mrdoob/three.js",
@@ -8,16 +8,16 @@
   "module": "build/three.module.js",
   "types": "src/Three.d.ts",
   "files": [
-    "package.json",
-    "LICENSE",
-    "README.md",
     "build/three.js",
     "build/three.min.js",
     "build/three.module.js",
-    "src",
     "examples/js",
     "examples/jsm",
-    "examples/fonts"
+    "examples/fonts",
+    "LICENSE",
+    "package.json",
+    "README.md",
+    "src"
   ],
   "directories": {
     "doc": "docs",
