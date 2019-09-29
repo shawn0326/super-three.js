@@ -24761,7 +24761,7 @@ function WebGLRenderer( parameters ) {
 			// for color mapping
 			if ( material.colorMapping ) {
 
-				p_uniforms.setValue( _gl, 'colorMapping', material.colorMapping );
+				p_uniforms.setValue( _gl, 'colorMapping', material.colorMapping, textures );
 
 			}
 
