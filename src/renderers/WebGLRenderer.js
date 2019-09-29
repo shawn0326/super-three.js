@@ -147,10 +147,6 @@ function WebGLRenderer( parameters ) {
 
 		//
 
-		_usedTextureUnits = 0,
-
-		//
-
 		_width = _canvas.width,
 		_height = _canvas.height,
 
@@ -279,7 +275,7 @@ function WebGLRenderer( parameters ) {
 		geometries = new WebGLGeometries( _gl, attributes, info );
 		objects = new WebGLObjects( geometries, info );
 		morphtargets = new WebGLMorphtargets( _gl );
-		programCache = new WebGLPrograms( _this, extensions, capabilities );
+		programCache = new WebGLPrograms( _this, extensions, capabilities, textures );
 		renderLists = new WebGLRenderLists();
 		renderStates = new WebGLRenderStates();
 
@@ -1211,6 +1207,10 @@ function WebGLRenderer( parameters ) {
 
 		//
 
+		scene.onAfterRender( _this, scene, camera );
+
+		//
+
 		if ( _currentRenderTarget !== null ) {
 
 			// Generate mipmap if we're using any kind of mipmap filtering
@@ -1230,8 +1230,6 @@ function WebGLRenderer( parameters ) {
 		state.buffers.color.setMask( true );
 
 		state.setPolygonOffset( false );
-
-		scene.onAfterRender( _this, scene, camera );
 
 		if ( vr.enabled ) {
 
@@ -1282,7 +1280,11 @@ function WebGLRenderer( parameters ) {
 					var geometry = objects.update( object );
 					var material = object.material;
 
-					currentRenderList.push( object, geometry, material, groupOrder, _vector3.z, null );
+					if ( material.visible ) {
+
+						currentRenderList.push( object, geometry, material, groupOrder, _vector3.z, null );
+
+					}
 
 				}
 
@@ -1685,7 +1687,7 @@ function WebGLRenderer( parameters ) {
 
 	function setProgram( camera, fog, material, object ) {
 
-		_usedTextureUnits = 0;
+		textures.resetTextureUnits();
 
 		var materialProperties = properties.get( material );
 		var lights = currentRenderState.state.lights;
@@ -1880,7 +1882,7 @@ function WebGLRenderer( parameters ) {
 
 					}
 
-					p_uniforms.setValue( _gl, 'boneTexture', skeleton.boneTexture );
+					p_uniforms.setValue( _gl, 'boneTexture', skeleton.boneTexture, textures );
 					p_uniforms.setValue( _gl, 'boneTextureSize', skeleton.boneTextureSize );
 
 				} else {
@@ -2010,7 +2012,7 @@ function WebGLRenderer( parameters ) {
 			if ( m_uniforms.ltc_1 !== undefined ) m_uniforms.ltc_1.value = UniformsLib.LTC_1;
 			if ( m_uniforms.ltc_2 !== undefined ) m_uniforms.ltc_2.value = UniformsLib.LTC_2;
 
-			WebGLUniforms.upload( _gl, materialProperties.uniformsList, m_uniforms, _this );
+			WebGLUniforms.upload( _gl, materialProperties.uniformsList, m_uniforms, textures );
 
 			// for color mapping
 			if ( material.colorMapping ) {
@@ -2035,7 +2037,7 @@ function WebGLRenderer( parameters ) {
 
 		if ( material.isShaderMaterial && material.uniformsNeedUpdate === true ) {
 
-			WebGLUniforms.upload( _gl, materialProperties.uniformsList, m_uniforms, _this );
+			WebGLUniforms.upload( _gl, materialProperties.uniformsList, m_uniforms, textures );
 			material.uniformsNeedUpdate = false;
 
 		}
@@ -2540,125 +2542,6 @@ function WebGLRenderer( parameters ) {
 
 	}
 
-	// Textures
-
-	function allocTextureUnit() {
-
-		var textureUnit = _usedTextureUnits;
-
-		if ( textureUnit >= capabilities.maxTextures ) {
-
-			console.warn( 'THREE.WebGLRenderer: Trying to use ' + textureUnit + ' texture units while this GPU supports only ' + capabilities.maxTextures );
-
-		}
-
-		_usedTextureUnits += 1;
-
-		return textureUnit;
-
-	}
-
-	this.allocTextureUnit = allocTextureUnit;
-
-	// this.setTexture2D = setTexture2D;
-	this.setTexture2D = ( function () {
-
-		var warned = false;
-
-		// backwards compatibility: peel texture.texture
-		return function setTexture2D( texture, slot ) {
-
-			if ( texture && texture.isWebGLRenderTarget ) {
-
-				if ( ! warned ) {
-
-					console.warn( "THREE.WebGLRenderer.setTexture2D: don't use render targets as textures. Use their .texture property instead." );
-					warned = true;
-
-				}
-
-				texture = texture.texture;
-
-			}
-
-			textures.setTexture2D( texture, slot );
-
-		};
-
-	}() );
-
-	this.setTexture3D = ( function () {
-
-		// backwards compatibility: peel texture.texture
-		return function setTexture3D( texture, slot ) {
-
-			textures.setTexture3D( texture, slot );
-
-		};
-
-	}() );
-
-	this.setTexture = ( function () {
-
-		var warned = false;
-
-		return function setTexture( texture, slot ) {
-
-			if ( ! warned ) {
-
-				console.warn( "THREE.WebGLRenderer: .setTexture is deprecated, use setTexture2D instead." );
-				warned = true;
-
-			}
-
-			textures.setTexture2D( texture, slot );
-
-		};
-
-	}() );
-
-	this.setTextureCube = ( function () {
-
-		var warned = false;
-
-		return function setTextureCube( texture, slot ) {
-
-			// backwards compatibility: peel texture.texture
-			if ( texture && texture.isWebGLRenderTargetCube ) {
-
-				if ( ! warned ) {
-
-					console.warn( "THREE.WebGLRenderer.setTextureCube: don't use cube render targets as textures. Use their .texture property instead." );
-					warned = true;
-
-				}
-
-				texture = texture.texture;
-
-			}
-
-			// currently relying on the fact that WebGLRenderTargetCube.texture is a Texture and NOT a CubeTexture
-			// TODO: unify these code paths
-			if ( ( texture && texture.isCubeTexture ) ||
-				( Array.isArray( texture.image ) && texture.image.length === 6 ) ) {
-
-				// CompressedTexture can have Array in image :/
-
-				// this function alone should take care of cube textures
-				textures.setTextureCube( texture, slot );
-
-			} else {
-
-				// assumed: texture property of THREE.WebGLRenderTargetCube
-
-				textures.setTextureCubeDynamic( texture, slot );
-
-			}
-
-		};
-
-	}() );
-
 	//
 
 	this.setFramebuffer = function ( value ) {
@@ -2731,7 +2614,7 @@ function WebGLRenderer( parameters ) {
 		if ( isCube ) {
 
 			var textureProperties = properties.get( renderTarget.texture );
-			_gl.framebufferTexture2D( _gl.FRAMEBUFFER, _gl.COLOR_ATTACHMENT0, _gl.TEXTURE_CUBE_MAP_POSITIVE_X + activeCubeFace || 0, textureProperties.__webglTexture, activeMipMapLevel || 0 );
+			_gl.framebufferTexture2D( _gl.FRAMEBUFFER, _gl.COLOR_ATTACHMENT0, _gl.TEXTURE_CUBE_MAP_POSITIVE_X + ( activeCubeFace || 0 ), textureProperties.__webglTexture, activeMipMapLevel || 0 );
 
 		}
 
@@ -2818,7 +2701,7 @@ function WebGLRenderer( parameters ) {
 		var height = texture.image.height;
 		var glFormat = utils.convert( texture.format );
 
-		this.setTexture2D( texture, 0 );
+		textures.setTexture2D( texture, 0 );
 
 		_gl.copyTexImage2D( _gl.TEXTURE_2D, level || 0, glFormat, position.x, position.y, width, height, 0 );
 
@@ -2831,7 +2714,7 @@ function WebGLRenderer( parameters ) {
 		var glFormat = utils.convert( dstTexture.format );
 		var glType = utils.convert( dstTexture.type );
 
-		this.setTexture2D( dstTexture, 0 );
+		textures.setTexture2D( dstTexture, 0 );
 
 		if ( srcTexture.isDataTexture ) {
 
