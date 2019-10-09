@@ -1,5 +1,8 @@
 import { Matrix4 } from '../math/Matrix4.js';
 
+// @THREE-Modification
+import { Vector3 } from '../math/Vector3.js';
+
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
@@ -118,6 +121,10 @@ Object.assign( Skeleton.prototype, {
 		var offsetMatrix = new Matrix4();
 		var identityMatrix = new Matrix4();
 
+		// @THREE-Modification
+		// skeleton fix
+		var worldPosition = new Vector3();
+
 		return function update( object ) {
 
 			var bones = this.bones;
@@ -129,8 +136,7 @@ Object.assign( Skeleton.prototype, {
 
 			// @THREE-Modification
 			// skeleton fix
-			var _worldPosition = new THREE.Vector3();
-			object.getWorldPosition( _worldPosition );
+			object.getWorldPosition( worldPosition );
 
 			for ( var i = 0, il = bones.length; i < il; i ++ ) {
 
@@ -143,9 +149,9 @@ Object.assign( Skeleton.prototype, {
 				// @THREE-Modification
 				// skeleton fix
 				var _m = offsetMatrix.elements;
-				_m[ 12 ] -= _worldPosition.x;
-				_m[ 13 ] -= _worldPosition.y;
-				_m[ 14 ] -= _worldPosition.z;
+				_m[ 12 ] -= worldPosition.x;
+				_m[ 13 ] -= worldPosition.y;
+				_m[ 14 ] -= worldPosition.z;
 
 				offsetMatrix.toArray( boneMatrices, i * 16 );
 

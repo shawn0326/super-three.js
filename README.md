@@ -109,6 +109,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Material: Support Cartesian3 position. defines['USE_CARTESIAN3']
 * UniformsUtils: Clone uniforms will not clone texture.
 * MeshStandardMaterial: Support envMap rotation. please use material.baseQuaternion.
+* Object3D: Dispatch 'addedChild' event when add child.
 
 ### 开发规范 ###
 
