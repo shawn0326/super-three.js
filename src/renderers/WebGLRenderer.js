@@ -1,5 +1,4 @@
 import {
-	REVISION,
 	RGBAFormat,
 	HalfFloatType,
 	FloatType,
@@ -55,8 +54,6 @@ import { MaterialManager } from '../MaterialManager.js';
  */
 
 function WebGLRenderer( parameters ) {
-
-	//	console.log( 'THREE.WebGLRenderer', REVISION );
 
 	parameters = parameters || {};
 
@@ -2397,8 +2394,24 @@ function WebGLRenderer( parameters ) {
 
 		uniforms.reflectivity.value = material.reflectivity; // also part of uniforms common
 
-		uniforms.clearCoat.value = material.clearCoat;
-		uniforms.clearCoatRoughness.value = material.clearCoatRoughness;
+		uniforms.clearcoat.value = material.clearcoat;
+		uniforms.clearcoatRoughness.value = material.clearcoatRoughness;
+		if ( material.sheen ) uniforms.sheen.value.copy( material.sheen );
+
+		if ( material.clearcoatNormalMap ) {
+
+			uniforms.clearcoatNormalScale.value.copy( material.clearcoatNormalScale );
+			uniforms.clearcoatNormalMap.value = material.clearcoatNormalMap;
+
+			if ( material.side === BackSide ) {
+
+				uniforms.clearcoatNormalScale.value.negate();
+
+			}
+
+		}
+
+		uniforms.transparency.value = material.transparency;
 
 	}
 
