@@ -3,6 +3,8 @@ export default /* glsl */`
 
 	uniform vec3 fogColor;
 	varying float fogDepth;
+	// @THREE-Modification
+	uniform float fogAlpha;
 
 	#ifdef FOG_EXP2
 

@@ -2226,6 +2226,8 @@ function WebGLRenderer( parameters ) {
 	function refreshUniformsFog( uniforms, fog ) {
 
 		uniforms.fogColor.value = fog.color;
+        // @THREE-Modification
+		uniforms.fogAlpha.value = fog.alpha ? fog.alpha : 1.0;
 
 		if ( fog.isFog ) {
 

@@ -10,7 +10,8 @@ export default /* glsl */`
 		float fogFactor = smoothstep( fogNear, fogFar, fogDepth );
 
 	#endif
-
+	// @THREE-Modification
+    fogFactor = fogFactor >= fogAlpha ? fogAlpha : fogFactor;
 	gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );
 
 #endif
