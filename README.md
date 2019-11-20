@@ -109,7 +109,9 @@ All modifications are marked by `// @THREE-Modification`.
 * Material: Support Cartesian3 position. defines['USE_CARTESIAN3']
 * UniformsUtils: Clone uniforms will not clone texture.
 * MeshStandardMaterial: Support envMap rotation. please use material.baseQuaternion.
-* Fog : Support FogAlha. please use scene.fog.alpha.
+* Fog: Support FogAlha. please use scene.fog.alpha.
+* Material: support envMap rotation.
+* InterleavedBufferAttribute: override clone.
 
 ### 开发规范 ###
 
