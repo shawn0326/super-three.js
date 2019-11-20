@@ -14079,9 +14079,9 @@ var fog_vertex = "#ifdef USE_FOG\n\tfogDepth = -mvPosition.z;\n#endif";
 
 var fog_pars_vertex = "#ifdef USE_FOG\n\tvarying float fogDepth;\n#endif";
 
-var fog_fragment = "#ifdef USE_FOG\n\t#ifdef FOG_EXP2\n\t\tfloat fogFactor = 1.0 - exp( - fogDensity * fogDensity * fogDepth * fogDepth );\n\t#else\n\t\tfloat fogFactor = smoothstep( fogNear, fogFar, fogDepth );\n\t#endif\n\tgl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );\n#endif";
+var fog_fragment = "#ifdef USE_FOG\n\t#ifdef FOG_EXP2\n\t\tfloat fogFactor = 1.0 - exp( - fogDensity * fogDensity * fogDepth * fogDepth );\n\t#else\n\t\tfloat fogFactor = smoothstep( fogNear, fogFar, fogDepth );\n\t#endif\n    fogFactor = fogFactor >= fogAlpha ? fogAlpha : fogFactor;\n\tgl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );\n#endif";
 
-var fog_pars_fragment = "#ifdef USE_FOG\n\tuniform vec3 fogColor;\n\tvarying float fogDepth;\n\t#ifdef FOG_EXP2\n\t\tuniform float fogDensity;\n\t#else\n\t\tuniform float fogNear;\n\t\tuniform float fogFar;\n\t#endif\n#endif";
+var fog_pars_fragment = "#ifdef USE_FOG\n\tuniform vec3 fogColor;\n\tvarying float fogDepth;\n\tuniform float fogAlpha;\n\t#ifdef FOG_EXP2\n\t\tuniform float fogDensity;\n\t#else\n\t\tuniform float fogNear;\n\t\tuniform float fogFar;\n\t#endif\n#endif";
 
 var gradientmap_pars_fragment = "#ifdef TOON\n\tuniform sampler2D gradientMap;\n\tvec3 getGradientIrradiance( vec3 normal, vec3 lightDirection ) {\n\t\tfloat dotNL = dot( normal, lightDirection );\n\t\tvec2 coord = vec2( dotNL * 0.5 + 0.5, 0.0 );\n\t\t#ifdef USE_GRADIENTMAP\n\t\t\treturn texture2D( gradientMap, coord ).rgb;\n\t\t#else\n\t\t\treturn ( coord.x < 0.7 ) ? vec3( 0.7 ) : vec3( 1.0 );\n\t\t#endif\n\t}\n#endif";
 
@@ -14505,7 +14505,9 @@ var UniformsLib = {
 		fogDensity: { value: 0.00025 },
 		fogNear: { value: 1 },
 		fogFar: { value: 2000 },
-		fogColor: { value: new Color( 0xffffff ) }
+		fogColor: { value: new Color( 0xffffff ) },
+        // @THREE-Modification
+		fogAlpha: { value: 1.0 }
 
 	},
 
@@ -25239,6 +25241,9 @@ function WebGLRenderer( parameters ) {
 	function refreshUniformsFog( uniforms, fog ) {
 
 		uniforms.fogColor.value.copy( fog.color );
+		
+        // @THREE-Modification
+		uniforms.fogAlpha.value = fog.alpha ? fog.alpha : 1.0;
 
 		if ( fog.isFog ) {
 
@@ -26029,6 +26034,14 @@ Object.assign( InterleavedBufferAttribute.prototype, {
 		this.data.array[ index + 3 ] = w;
 
 		return this;
+
+	},
+
+	// @THREE-Modification
+	//support InterleavedBufferAttribute clone
+	clone: function () {
+
+		return new this.constructor( this.data, this.itemSize, this.offset, this.normalized ).copy( this );
 
 	}
 

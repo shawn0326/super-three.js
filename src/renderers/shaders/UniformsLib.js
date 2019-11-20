@@ -104,7 +104,9 @@ var UniformsLib = {
 		fogDensity: { value: 0.00025 },
 		fogNear: { value: 1 },
 		fogFar: { value: 2000 },
-		fogColor: { value: new Color( 0xffffff ) }
+		fogColor: { value: new Color( 0xffffff ) },
+        // @THREE-Modification
+		fogAlpha: { value: 1.0 }
 
 	},
 

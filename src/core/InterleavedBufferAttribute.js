@@ -131,6 +131,14 @@ Object.assign( InterleavedBufferAttribute.prototype, {
 
 		return this;
 
+	},
+
+	// @THREE-Modification
+	//support InterleavedBufferAttribute clone
+	clone: function () {
+
+		return new this.constructor( this.data, this.itemSize, this.offset, this.normalized ).copy( this );
+
 	}
 
 } );
