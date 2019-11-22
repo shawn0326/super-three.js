@@ -25248,8 +25248,10 @@
 
 			uniforms.fogColor.value.copy( fog.color );
 			
-	        // @THREE-Modification
-			uniforms.fogAlpha.value = fog.alpha ? fog.alpha : 1.0;
+			// @THREE-Modification
+			if (uniforms.fogAlpha) {
+				uniforms.fogAlpha.value = fog.alpha ? fog.alpha : 1.0;
+			}
 
 			if ( fog.isFog ) {
 
