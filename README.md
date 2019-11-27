@@ -110,9 +110,9 @@ All modifications are marked by `// @THREE-Modification`.
 * UniformsUtils: Clone uniforms will not clone texture.
 * MeshStandardMaterial: Support envMap rotation. please use material.baseQuaternion.
 * Object3D: Dispatch 'addedChild' event when add child.
-* Fog: Support FogAlha. please use scene.fog.alpha.
-* Material: support envMap rotation.
-* InterleavedBufferAttribute: override clone.
+* Fog: Support fog alpha. please use fog.alpha.
+* Material: Support envMap rotation.
+* InterleavedBufferAttribute: Override clone.
 
 ### 开发规范 ###
 
