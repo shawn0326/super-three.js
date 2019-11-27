@@ -92,6 +92,7 @@ If everything went well you should see [this](https://jsfiddle.net/f2Lommf5/).
 
 ### Modification ###
 
+Now merged three.js r107.
 All modifications are marked by `// @THREE-Modification`.
 
 * RenderList sort: Prevent unstable sequencing.
@@ -113,6 +114,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Fog: Support fog alpha. please use fog.alpha.
 * Material: Support envMap rotation.
 * InterleavedBufferAttribute: Override clone.
+* Mesh: raycast method support TriangleStripDrawMode.
 
 ### 开发规范 ###
 

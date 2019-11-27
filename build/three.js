@@ -11004,6 +11004,10 @@
 
 					// non-indexed buffer geometry
 
+					// @THREE-Modification fix for TriangleStripDrawMode
+					var strip = ( this.drawMode === TriangleStripDrawMode );
+					var _offset = strip ? 1 : 3;
+
 					if ( Array.isArray( material ) ) {
 
 						for ( i = 0, il = groups.length; i < il; i ++ ) {
@@ -11014,7 +11018,10 @@
 							start = Math.max( group.start, drawRange.start );
 							end = Math.min( ( group.start + group.count ), ( drawRange.start + drawRange.count ) );
 
-							for ( j = start, jl = end; j < jl; j += 3 ) {
+							// @THREE-Modification fix for TriangleStripDrawMode
+							strip && (end -= 2);
+
+							for ( j = start, jl = end; j < jl; j += _offset ) {
 
 								a = j;
 								b = j + 1;
@@ -11024,7 +11031,7 @@
 
 								if ( intersection ) {
 
-									intersection.faceIndex = Math.floor( j / 3 ); // triangle number in non-indexed buffer semantics
+									intersection.faceIndex = Math.floor( j / _offset ); // triangle number in non-indexed buffer semantics
 									intersection.face.materialIndex = group.materialIndex;
 									intersects.push( intersection );
 
@@ -11039,7 +11046,10 @@
 						start = Math.max( 0, drawRange.start );
 						end = Math.min( position.count, ( drawRange.start + drawRange.count ) );
 
-						for ( i = start, il = end; i < il; i += 3 ) {
+						// @THREE-Modification fix for TriangleStripDrawMode
+						strip && (end -= 2);
+
+						for ( i = start, il = end; i < il; i += _offset ) {
 
 							a = i;
 							b = i + 1;
@@ -11049,7 +11059,7 @@
 
 							if ( intersection ) {
 
-								intersection.faceIndex = Math.floor( i / 3 ); // triangle number in non-indexed buffer semantics
+								intersection.faceIndex = Math.floor( i / _offset ); // triangle number in non-indexed buffer semantics
 								intersects.push( intersection );
 
 							}
