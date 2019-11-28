@@ -258,7 +258,7 @@ Mesh.prototype = Object.assign( Object.create( Object3D.prototype ), {
 						end = Math.min( ( group.start + group.count ), ( drawRange.start + drawRange.count ) );
 
 						// @THREE-Modification fix for TriangleStripDrawMode
-						strip && (end -= 2);
+						strip && ( end -= 2 );
 
 						for ( j = start, jl = end; j < jl; j += _offset ) {
 
@@ -286,7 +286,7 @@ Mesh.prototype = Object.assign( Object.create( Object3D.prototype ), {
 					end = Math.min( position.count, ( drawRange.start + drawRange.count ) );
 
 					// @THREE-Modification fix for TriangleStripDrawMode
-					strip && (end -= 2);
+					strip && ( end -= 2 );
 
 					for ( i = start, il = end; i < il; i += _offset ) {
 

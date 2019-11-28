@@ -2259,10 +2259,12 @@ function WebGLRenderer( parameters ) {
 	function refreshUniformsFog( uniforms, fog ) {
 
 		uniforms.fogColor.value.copy( fog.color );
-		
+
 		// @THREE-Modification
-		if (uniforms.fogAlpha) {
+		if ( uniforms.fogAlpha ) {
+
 			uniforms.fogAlpha.value = fog.alpha ? fog.alpha : 1.0;
+
 		}
 
 		if ( fog.isFog ) {
