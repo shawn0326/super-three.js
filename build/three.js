@@ -3823,6 +3823,9 @@
 
 		this.samples = 4;
 
+		// @THREE-Modification for share depth render buffer
+		this.webglDepthRenderbuffer = options ? options.webglDepthRenderbuffer : null;
+
 	}
 
 	WebGLMultisampleRenderTarget.prototype = Object.assign( Object.create( WebGLRenderTarget.prototype ), {
@@ -3836,6 +3839,9 @@
 			WebGLRenderTarget.prototype.copy.call( this, source );
 
 			this.samples = source.samples;
+
+			// @THREE-Modification for share depth render buffer
+			this.webglDepthRenderbuffer = source.webglDepthRenderbuffer;
 
 			return this;
 
@@ -21791,7 +21797,8 @@
 
 						if ( renderTarget.depthBuffer ) {
 
-							renderTargetProperties.__webglDepthRenderbuffer = _gl.createRenderbuffer();
+							// @THREE-Modification for share depth render buffer
+							renderTargetProperties.__webglDepthRenderbuffer = renderTarget.webglDepthRenderbuffer || _gl.createRenderbuffer();
 							setupRenderBufferStorage( renderTargetProperties.__webglDepthRenderbuffer, renderTarget, true );
 
 						}

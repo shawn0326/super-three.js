@@ -1014,7 +1014,8 @@ function WebGLTextures( _gl, extensions, state, properties, capabilities, utils,
 
 					if ( renderTarget.depthBuffer ) {
 
-						renderTargetProperties.__webglDepthRenderbuffer = _gl.createRenderbuffer();
+						// @THREE-Modification for share depth render buffer
+						renderTargetProperties.__webglDepthRenderbuffer = renderTarget.webglDepthRenderbuffer || _gl.createRenderbuffer();
 						setupRenderBufferStorage( renderTargetProperties.__webglDepthRenderbuffer, renderTarget, true );
 
 					}

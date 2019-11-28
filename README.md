@@ -115,6 +115,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Material: Support envMap rotation.
 * InterleavedBufferAttribute: Override clone.
 * Mesh: raycast method support TriangleStripDrawMode.
+* WebGLMultisampleRenderTarget: support share webglDepthRenderbuffer.
 
 ### 开发规范 ###
 
