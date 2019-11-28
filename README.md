@@ -116,6 +116,7 @@ All modifications are marked by `// @THREE-Modification`.
 * InterleavedBufferAttribute: Override clone.
 * Mesh: raycast method support TriangleStripDrawMode.
 * WebGLMultisampleRenderTarget: support share webglDepthRenderbuffer.
+* WebGLRenderer: support render list dirty.
 
 ### 开发规范 ###
 

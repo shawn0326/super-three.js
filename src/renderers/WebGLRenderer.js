@@ -93,6 +93,9 @@ function WebGLRenderer( parameters ) {
 	this.autoClearDepth = true;
 	this.autoClearStencil = true;
 
+	// @THREE-Modification
+	this.initRenderList = true;
+
 	// scene graph
 
 	this.sortObjects = true;
@@ -1121,69 +1124,85 @@ function WebGLRenderer( parameters ) {
 		_currentMaterialId = - 1;
 		_currentCamera = null;
 
-		// update scene graph
+		if ( this.initRenderList ) {
 
-		if ( scene.autoUpdate === true ) scene.updateMatrixWorld();
+			// update scene graph
 
-		// update camera matrices and frustum
+			if ( scene.autoUpdate === true ) scene.updateMatrixWorld();
 
-		if ( camera.parent === null ) camera.updateMatrixWorld();
+			// update camera matrices and frustum
 
-		if ( vr.enabled ) {
+			if ( camera.parent === null ) camera.updateMatrixWorld();
 
-			camera = vr.getCamera( camera );
+			if ( vr.enabled ) {
+
+				camera = vr.getCamera( camera );
+
+			}
+
+			//
+
+			currentRenderState = renderStates.get( scene, camera );
+			currentRenderState.init();
+
+			scene.onBeforeRender( _this, scene, camera, renderTarget || _currentRenderTarget );
+
+			_projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
+			_frustum.setFromMatrix( _projScreenMatrix );
+
+			_localClippingEnabled = this.localClippingEnabled;
+			_clippingEnabled = _clipping.init( this.clippingPlanes, _localClippingEnabled, camera );
+
+			currentRenderList = renderLists.get( scene, camera );
+			currentRenderList.init();
+
+			projectObject( scene, camera, 0, _this.sortObjects );
+
+			if ( _this.sortObjects === true ) {
+
+				currentRenderList.sort();
+
+			}
+
+			//
+
+			if ( _clippingEnabled ) _clipping.beginShadows();
+
+			var shadowsArray = currentRenderState.state.shadowsArray;
+
+			shadowMap.render( shadowsArray, scene, camera );
+
+			currentRenderState.setupLights( camera );
+
+			if ( _clippingEnabled ) _clipping.endShadows();
+
+			//
+
+			if ( this.info.autoReset ) this.info.reset();
+
+			if ( renderTarget !== undefined ) {
+
+				this.setRenderTarget( renderTarget );
+
+			}
+
+			//
+
+			background.render( currentRenderList, scene, camera, forceClear );
+
+		} else { // @THREE-Modification
+
+			currentRenderList = renderLists.get( scene, camera );
+
+			if ( this.info.autoReset ) this.info.reset();
+
+			if ( renderTarget !== undefined ) {
+
+				this.setRenderTarget( renderTarget );
+
+			}
 
 		}
-
-		//
-
-		currentRenderState = renderStates.get( scene, camera );
-		currentRenderState.init();
-
-		scene.onBeforeRender( _this, scene, camera, renderTarget || _currentRenderTarget );
-
-		_projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
-		_frustum.setFromMatrix( _projScreenMatrix );
-
-		_localClippingEnabled = this.localClippingEnabled;
-		_clippingEnabled = _clipping.init( this.clippingPlanes, _localClippingEnabled, camera );
-
-		currentRenderList = renderLists.get( scene, camera );
-		currentRenderList.init();
-
-		projectObject( scene, camera, 0, _this.sortObjects );
-
-		if ( _this.sortObjects === true ) {
-
-			currentRenderList.sort();
-
-		}
-
-		//
-
-		if ( _clippingEnabled ) _clipping.beginShadows();
-
-		var shadowsArray = currentRenderState.state.shadowsArray;
-
-		shadowMap.render( shadowsArray, scene, camera );
-
-		currentRenderState.setupLights( camera );
-
-		if ( _clippingEnabled ) _clipping.endShadows();
-
-		//
-
-		if ( this.info.autoReset ) this.info.reset();
-
-		if ( renderTarget !== undefined ) {
-
-			this.setRenderTarget( renderTarget );
-
-		}
-
-		//
-
-		background.render( currentRenderList, scene, camera, forceClear );
 
 		// render scene
 
