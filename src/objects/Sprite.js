@@ -73,7 +73,11 @@ Sprite.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 		if ( raycaster.camera === null ) {
 
-			console.error( 'THREE.Sprite: "Raycaster.camera" needs to be set in order to raycast against sprites.' );
+			// console.error( 'THREE.Sprite: "Raycaster.camera" needs to be set in order to raycast against sprites.' );
+
+			// @THREE-Modification
+			// If raycaster.camera not be set, skip sprite raycast.
+			return;
 
 		}
 

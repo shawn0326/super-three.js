@@ -114,9 +114,10 @@ All modifications are marked by `// @THREE-Modification`.
 * Fog: Support fog alpha. please use fog.alpha.
 * Material: Support envMap rotation.
 * InterleavedBufferAttribute: Override clone.
-* Mesh: raycast method support TriangleStripDrawMode.
-* WebGLMultisampleRenderTarget: support share webglDepthRenderbuffer.
-* WebGLRenderer: support render list dirty.
+* Mesh: Raycast method support TriangleStripDrawMode.
+* WebGLMultisampleRenderTarget: Support share webglDepthRenderbuffer.
+* WebGLRenderer: Support render list dirty.
+* Sprite: If raycaster's camera not be set, skip raycast.
 
 ### 开发规范 ###
 
