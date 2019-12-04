@@ -10962,6 +10962,8 @@
 							start = Math.max( group.start, drawRange.start );
 							end = Math.min( ( group.start + group.count ), ( drawRange.start + drawRange.count ) );
 
+							end = Math.min( end, index.count ); // @THREE-Modification fix for group count infinity
+
 							for ( j = start, jl = end; j < jl; j += 3 ) {
 
 								a = index.getX( j );
@@ -11023,6 +11025,8 @@
 
 							start = Math.max( group.start, drawRange.start );
 							end = Math.min( ( group.start + group.count ), ( drawRange.start + drawRange.count ) );
+
+							end = Math.min( end, position.count ); // @THREE-Modification fix for group count infinity
 
 							// @THREE-Modification fix for TriangleStripDrawMode
 							strip && ( end -= 2 );

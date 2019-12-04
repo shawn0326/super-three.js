@@ -115,6 +115,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Material: Support envMap rotation.
 * InterleavedBufferAttribute: Override clone.
 * Mesh: Raycast method support TriangleStripDrawMode.
+* Mesh: Raycast method fix for group count infinity.
 * WebGLMultisampleRenderTarget: Support share webglDepthRenderbuffer.
 * WebGLRenderer: Support render list dirty.
 * Sprite: If raycaster's camera not be set, skip raycast.
