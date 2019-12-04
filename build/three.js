@@ -8720,9 +8720,18 @@
 			// @THREE-Modification
 			// for color mapping
 			this.colorMapping = source.colorMapping;
+
 			// @THREE-Modification
-			// for baseQuaternion
-			this.baseQuaternion = source.baseQuaternion;
+			// for env map roation
+			if ( source.baseQuaternion ) {
+
+				this.baseQuaternion = source.baseQuaternion.clone();
+
+			} else {
+
+				this.baseQuaternion = null;
+
+			}
 
 			return this;
 
@@ -32264,7 +32273,8 @@
 
 		Material.prototype.copy.call( this, source );
 
-		this.defines = { 'STANDARD': '' };
+		// @THREE-Modification
+		// this.defines = { 'STANDARD': '' };
 
 		this.color.copy( source.color );
 		this.roughness = source.roughness;

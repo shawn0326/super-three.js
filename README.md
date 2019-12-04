@@ -119,6 +119,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLMultisampleRenderTarget: Support share webglDepthRenderbuffer.
 * WebGLRenderer: Support render list dirty.
 * Sprite: If raycaster's camera not be set, skip raycast.
+* MeshStandardMaterial: fix defineds copy.
 
 ### 开发规范 ###
 
