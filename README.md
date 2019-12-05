@@ -92,7 +92,7 @@ If everything went well you should see [this](https://jsfiddle.net/f2Lommf5/).
 
 ### Modification ###
 
-Now merged three.js r108.
+Now merged three.js r111.
 All modifications are marked by `// @THREE-Modification`.
 
 * RenderList sort: Prevent unstable sequencing.
