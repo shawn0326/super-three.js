@@ -7,7 +7,10 @@ export default /* glsl */`
 #define LOG2 1.442695
 #define EPSILON 1e-6
 
+#ifndef saturate
+// <tonemapping_pars_fragment> may have defined saturate() already
 #define saturate(a) clamp( a, 0.0, 1.0 )
+#endif
 #define whiteComplement(a) ( 1.0 - saturate( a ) )
 
 float pow2( const in float x ) { return x*x; }
@@ -107,23 +110,30 @@ float linearToRelativeLuminance( const in vec3 color ) {
 	return dot( weights, color.rgb );
 
 }
+
 // @THREE-Modification Cartesian3 to webgl
-vec3 czm_converPosition(vec3 origin) {
-   vec3 res = vec3(0.0);
+vec3 czm_converPosition( vec3 origin ) {
+   vec3 res = vec3( 0.0 );
        res.x = -origin.x;
        res.y = origin.z;
        res.z = origin.y;
        return res;
 }
+
 // @THREE-Modification vector applyQuaternion
-vec3 applyQuaternion (vec3 v, vec4 q){
+vec3 applyQuaternion ( vec3 v, vec4 q ) {
         float ix = q.w * v.x + q.y * v.z - q.z * v.y;
 		float iy = q.w * v.y + q.z * v.x - q.x * v.z;
 		float iz = q.w * v.z + q.x * v.y - q.y * v.x;
 		float iw = - q.x * v.x - q.y * v.y - q.z * v.z;
-		return vec3(ix * q.w + iw * (-q.x) + iy * (-q.z) - iz * (-q.y),
-		            iy * q.w + iw * (-q.y) + iz * (-q.x) - ix * (-q.z),
-		            iz * q.w + iw * (-q.z) + ix * (-q.y) - iy * (-q.x)
-		);
+		return vec3( ix * q.w + iw * ( -q.x ) + iy * ( -q.z ) - iz * ( -q.y ),
+		            iy * q.w + iw * ( -q.y ) + iz * ( -q.x ) - ix * ( -q.z ),
+		            iz * q.w + iw * ( -q.z ) + ix * ( -q.y ) - iy * ( -q.x ) );
+}
+
+bool isPerspectiveMatrix( mat4 m ) {
+
+  return m[ 2 ][ 3 ] == - 1.0;
+
 }
 `;
