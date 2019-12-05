@@ -314,7 +314,7 @@ function WebGLRenderer( parameters ) {
 
 	// vr
 
-	var vr = ( typeof navigator !== 'undefined' && 'xr' in navigator && 'isSessionSupported' in navigator.xr ) ? new WebXRManager( _this, _gl ) : new WebVRManager( _this );
+	var vr = ( typeof navigator !== 'undefined' && 'xr' in navigator ) ? new WebXRManager( _this, _gl ) : new WebVRManager( _this );
 
 	this.vr = vr;
 
@@ -751,6 +751,14 @@ function WebGLRenderer( parameters ) {
 
 		var index = geometry.index;
 		var position = geometry.attributes.position;
+
+		//
+
+		if ( index !== null && index.count === 0 ) return;
+		if ( position === undefined || position.count === 0 ) return;
+
+		//
+
 		var rangeFactor = 1;
 
 		if ( material.wireframe === true ) {
@@ -1156,7 +1164,7 @@ function WebGLRenderer( parameters ) {
 
 			if ( camera.parent === null ) camera.updateMatrixWorld();
 
-			if ( vr.enabled ) {
+			if ( vr.enabled && vr.isPresenting() ) {
 
 				camera = vr.getCamera( camera );
 
@@ -1754,7 +1762,7 @@ function WebGLRenderer( parameters ) {
 
 		}
 
-		if ( material.needsUpdate === false ) {
+		if ( material.version === materialProperties.__version ) {
 
 			if ( materialProperties.program === undefined ) {
 
@@ -1778,10 +1786,10 @@ function WebGLRenderer( parameters ) {
 
 		}
 
-		if ( material.needsUpdate ) {
+		if ( material.version !== materialProperties.__version ) {
 
 			initMaterial( material, fog, object );
-			material.needsUpdate = false;
+			materialProperties.__version = material.version;
 
 		}
 
