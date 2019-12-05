@@ -4,4 +4,13 @@ export default /* glsl */`
 	varying vec3 vColor;
 
 #endif
+
+// @THREE-Modification
+// add alpha attribute support
+
+#ifdef USE_ALPHAINDEX
+
+	varying float vAlpha;
+
+#endif
 `;

@@ -4,4 +4,13 @@ export default /* glsl */`
 	vColor.xyz = color.xyz;
 
 #endif
+
+// @THREE-Modification
+// add alpha attribute support
+
+#ifdef USE_ALPHAINDEX
+
+	vAlpha = alphaIndex;
+
+#endif
 `;

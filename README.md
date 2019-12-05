@@ -119,7 +119,8 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLMultisampleRenderTarget: Support share webglDepthRenderbuffer.
 * WebGLRenderer: Support render list dirty.
 * Sprite: If raycaster's camera not be set, skip raycast.
-* MeshStandardMaterial: fix defineds copy.
+* MeshStandardMaterial: Fix defineds copy.
+* color_vertex about: Support alpha attribtue. defines['USE_ALPHAINDEX']
 
 ### 开发规范 ###
 
