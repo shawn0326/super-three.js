@@ -1,4 +1,12 @@
 export default /* glsl */`
+// @THREE-Modification
+// Alpha test use opacity
+#ifdef ALPHATEST
+
+	uniform float opacity;
+
+#endif
+
 #define DISTANCE
 
 uniform vec3 referencePosition;
