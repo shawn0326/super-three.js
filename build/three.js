@@ -9138,6 +9138,8 @@
 		this.usage = StaticDrawUsage;
 		this.updateRange = { offset: 0, count: - 1 };
 
+		this.resizeDirty = false; // @THREE-Modification support attribute resize
+
 		this.version = 0;
 
 	}
@@ -15130,7 +15132,15 @@
 
 			gl.bindBuffer( bufferType, buffer );
 
-			if ( updateRange.count === - 1 ) {
+			if ( attribute.resizeDirty ) { 
+
+				// @THREE-Modification support attribute resize
+
+				gl.bufferData( bufferType, array, attribute.usage );
+
+				attribute.resizeDirty = false;
+
+			} else if ( updateRange.count === - 1 ) {
 
 				// Not using update ranges
 

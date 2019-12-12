@@ -107,7 +107,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLBackground: Support color transform for background cube texture.
 * alphatest_fragment: Prevent alpha test edge gradient.
 * Material: Support color mapping.
-* Material: Support Cartesian3 position. defines['USE_CARTESIAN3']
+* Material: Support Cartesian3 position. defines['USE_CARTESIAN3'].
 * UniformsUtils: Clone uniforms will not clone texture.
 * MeshStandardMaterial: Support envMap rotation. please use material.baseQuaternion.
 * Object3D: Dispatch 'addedChild' event when add child.
@@ -120,7 +120,8 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLRenderer: Support render list dirty.
 * Sprite: If raycaster's camera not be set, skip raycast.
 * MeshStandardMaterial: Fix defineds copy.
-* color_vertex about: Support alpha attribtue. defines['USE_ALPHAINDEX']
+* color_vertex about: Support alpha attribtue. defines['USE_ALPHAINDEX'].
+* WebGLAttributes: Support attribute resize.
 
 ### 开发规范 ###
 

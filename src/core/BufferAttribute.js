@@ -26,6 +26,8 @@ function BufferAttribute( array, itemSize, normalized ) {
 	this.usage = StaticDrawUsage;
 	this.updateRange = { offset: 0, count: - 1 };
 
+	this.resizeDirty = false; // @THREE-Modification support attribute resize
+
 	this.version = 0;
 
 }
