@@ -18351,7 +18351,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 	var programs = [];
 
 	var isWebGL2 = capabilities.isWebGL2;
-	var logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer;
+	// var logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer; // @THREE-Modification support logarithmicDepthBuffer state change
 	var floatVertexTextures = capabilities.floatVertexTextures;
 	var precision = capabilities.precision;
 	var maxVertexUniforms = capabilities.maxVertexUniforms;
@@ -18537,7 +18537,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 			flatShading: material.flatShading,
 
 			sizeAttenuation: material.sizeAttenuation,
-			logarithmicDepthBuffer: logarithmicDepthBuffer,
+			logarithmicDepthBuffer: capabilities.logarithmicDepthBuffer, // @THREE-Modification support logarithmicDepthBuffer state change
 
 			skinning: material.skinning && maxBones > 0,
 			maxBones: maxBones,
@@ -25409,6 +25409,8 @@ function WebGLRenderer( parameters ) {
 
 		materialProperties.uniformsList = uniformsList;
 
+		materialProperties.logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer; // @THREE-Modification support logarithmicDepthBuffer state change
+
 	}
 
 	function setProgram( camera, fog, material, object ) {
@@ -25454,6 +25456,10 @@ function WebGLRenderer( parameters ) {
 			} else if ( materialProperties.numClippingPlanes !== undefined &&
 				( materialProperties.numClippingPlanes !== _clipping.numPlanes ||
 				materialProperties.numIntersection !== _clipping.numIntersection ) ) {
+
+				material.needsUpdate = true;
+
+			} else if ( materialProperties.logarithmicDepthBuffer !== capabilities.logarithmicDepthBuffer ) { // @THREE-Modification support logarithmicDepthBuffer state change
 
 				material.needsUpdate = true;
 

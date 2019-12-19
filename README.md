@@ -122,6 +122,7 @@ All modifications are marked by `// @THREE-Modification`.
 * MeshStandardMaterial: Fix defineds copy.
 * color_vertex about: Support alpha attribtue. defines['USE_ALPHAINDEX'].
 * WebGLAttributes: Support attribute resize.
+* WebGLRenderer: Support logarithmicDepthBuffer state change.
 
 ### 开发规范 ###
 

@@ -10,7 +10,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 	var programs = [];
 
 	var isWebGL2 = capabilities.isWebGL2;
-	var logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer;
+	// var logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer; // @THREE-Modification support logarithmicDepthBuffer state change
 	var floatVertexTextures = capabilities.floatVertexTextures;
 	var precision = capabilities.precision;
 	var maxVertexUniforms = capabilities.maxVertexUniforms;
@@ -196,7 +196,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 			flatShading: material.flatShading,
 
 			sizeAttenuation: material.sizeAttenuation,
-			logarithmicDepthBuffer: logarithmicDepthBuffer,
+			logarithmicDepthBuffer: capabilities.logarithmicDepthBuffer, // @THREE-Modification support logarithmicDepthBuffer state change
 
 			skinning: material.skinning && maxBones > 0,
 			maxBones: maxBones,

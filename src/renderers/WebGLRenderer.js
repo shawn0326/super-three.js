@@ -1734,6 +1734,8 @@ function WebGLRenderer( parameters ) {
 
 		materialProperties.uniformsList = uniformsList;
 
+		materialProperties.logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer; // @THREE-Modification support logarithmicDepthBuffer state change
+
 	}
 
 	function setProgram( camera, fog, material, object ) {
@@ -1779,6 +1781,10 @@ function WebGLRenderer( parameters ) {
 			} else if ( materialProperties.numClippingPlanes !== undefined &&
 				( materialProperties.numClippingPlanes !== _clipping.numPlanes ||
 				materialProperties.numIntersection !== _clipping.numIntersection ) ) {
+
+				material.needsUpdate = true;
+
+			} else if ( materialProperties.logarithmicDepthBuffer !== capabilities.logarithmicDepthBuffer ) { // @THREE-Modification support logarithmicDepthBuffer state change
 
 				material.needsUpdate = true;
 
