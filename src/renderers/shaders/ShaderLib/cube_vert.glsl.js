@@ -1,11 +1,15 @@
 export default /* glsl */`
+// @THREE-Modification
+uniform vec4 cubeQuat;
+
 varying vec3 vWorldDirection;
 
 #include <common>
 
 void main() {
 
-	vWorldDirection = transformDirection( position, modelMatrix );
+	vec3 cubeDir = transformDirection( position, modelMatrix );
+	vWorldDirection = applyQuaternion( cubeDir, cubeQuat ); // @THREE-Modification
 
 	#include <begin_vertex>
 	#include <project_vertex>

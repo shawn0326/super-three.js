@@ -14334,7 +14334,7 @@
 
 	var cube_frag = "uniform samplerCube tCube;\nuniform float tFlip;\nuniform float opacity;\nuniform mat4 colorMatrix;\nvarying vec3 vWorldDirection;\nvoid main() {\n\tvec4 texColor = textureCube( tCube, vec3( tFlip * vWorldDirection.x, vWorldDirection.yz ) );\n\tgl_FragColor = colorMatrix * mapTexelToLinear( texColor );\n\tgl_FragColor.a *= opacity;\n\t#include <tonemapping_fragment>\n\t#include <encodings_fragment>\n}";
 
-	var cube_vert = "varying vec3 vWorldDirection;\n#include <common>\nvoid main() {\n\tvWorldDirection = transformDirection( position, modelMatrix );\n\t#include <begin_vertex>\n\t#include <project_vertex>\n\tgl_Position.z = gl_Position.w;\n}";
+	var cube_vert = "uniform vec4 cubeQuat;\nvarying vec3 vWorldDirection;\n#include <common>\nvoid main() {\n\tvec3 cubeDir = transformDirection( position, modelMatrix );\n\tvWorldDirection = applyQuaternion( cubeDir, cubeQuat );\n\t#include <begin_vertex>\n\t#include <project_vertex>\n\tgl_Position.z = gl_Position.w;\n}";
 
 	var depth_frag = "#if DEPTH_PACKING == 3200 || defined(ALPHATEST)\n\tuniform float opacity;\n#endif\n#include <common>\n#include <packing>\n#include <uv_pars_fragment>\n#include <map_pars_fragment>\n#include <alphamap_pars_fragment>\n#include <logdepthbuf_pars_fragment>\n#include <clipping_planes_pars_fragment>\nvoid main() {\n\t#include <clipping_planes_fragment>\n\tvec4 diffuseColor = vec4( 1.0 );\n\t#if DEPTH_PACKING == 3200\n\t\tdiffuseColor.a = opacity;\n\t#endif\n\t#include <map_fragment>\n\t#include <alphamap_fragment>\n\t#include <alphatest_fragment>\n\t#include <logdepthbuf_fragment>\n\t#if DEPTH_PACKING == 3200\n\t\tgl_FragColor = vec4( vec3( 1.0 - gl_FragCoord.z ), opacity );\n\t#elif DEPTH_PACKING == 3201\n\t\tgl_FragColor = packDepthToRGBA( gl_FragCoord.z );\n\t#endif\n}";
 
@@ -14933,7 +14933,8 @@
 				tCube: { value: null },
 				tFlip: { value: - 1 },
 				opacity: { value: 1.0 },
-				colorMatrix: { value: new Matrix4() } // @THREE-Modification
+				colorMatrix: { value: new Matrix4() }, // @THREE-Modification
+				cubeQuat: { value: new Vector4() } // @THREE-Modification
 			},
 
 			vertexShader: ShaderChunk.cube_vert,
@@ -15441,6 +15442,18 @@
 				} else {
 
 					boxMesh.material.uniforms.colorMatrix.value.identity();
+
+				}
+
+				// @THREE-Modification
+				// Support rotation for background cube texture
+				if ( texture.baseQuaternion ) {
+
+					boxMesh.material.uniforms.cubeQuat.value.copy( texture.baseQuaternion );
+
+				} else {
+
+					boxMesh.material.uniforms.cubeQuat.value.set( 0, 0, 0, 1 );
 
 				}
 

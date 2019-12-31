@@ -118,6 +118,18 @@ function WebGLBackground( renderer, state, objects, premultipliedAlpha ) {
 
 			}
 
+			// @THREE-Modification
+			// Support rotation for background cube texture
+			if ( texture.baseQuaternion ) {
+
+				boxMesh.material.uniforms.cubeQuat.value.copy( texture.baseQuaternion );
+
+			} else {
+
+				boxMesh.material.uniforms.cubeQuat.value.set( 0, 0, 0, 1 );
+
+			}
+
 			if ( currentBackground !== background ||
 			     currentBackgroundVersion !== texture.version ) {
 
