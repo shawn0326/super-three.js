@@ -123,6 +123,8 @@ All modifications are marked by `// @THREE-Modification`.
 * color_vertex about: Support alpha attribtue. defines['USE_ALPHAINDEX'].
 * WebGLAttributes: Support attribute resize.
 * WebGLRenderer: Support logarithmicDepthBuffer state change.
+* WebGLRenderLists: Support custom1 layer.
+* THREE.ImageLoader. (TODO remove this)
 
 ### 开发规范 ###
 

@@ -66,6 +66,7 @@ function WebGLRenderList() {
 	var renderItems = [];
 	var renderItemsIndex = 0;
 
+	var custom1 = []; // @THREE-Modification
 	var opaque = [];
 	var transparent = [];
 
@@ -75,6 +76,7 @@ function WebGLRenderList() {
 
 		renderItemsIndex = 0;
 
+		custom1.length = 0; // @THREE-Modification
 		opaque.length = 0;
 		transparent.length = 0;
 
@@ -124,7 +126,16 @@ function WebGLRenderList() {
 
 		var renderItem = getNextRenderItem( object, geometry, material, groupOrder, z, group );
 
-		( material.transparent === true ? transparent : opaque ).push( renderItem );
+		// @THREE-Modification
+		if ( object.renderLayer === 1 ) {
+
+			custom1.push( renderItem );
+
+		} else {
+
+			( material.transparent === true ? transparent : opaque ).push( renderItem );
+
+		}
 
 	}
 
@@ -132,18 +143,29 @@ function WebGLRenderList() {
 
 		var renderItem = getNextRenderItem( object, geometry, material, groupOrder, z, group );
 
-		( material.transparent === true ? transparent : opaque ).unshift( renderItem );
+		// @THREE-Modification
+		if ( object.renderLayer === 1 ) {
+
+			custom1.unshift( renderItem );
+
+		} else {
+
+			( material.transparent === true ? transparent : opaque ).unshift( renderItem );
+
+		}
 
 	}
 
 	function sort() {
 
+		if ( custom1.length > 1 ) custom1.sort( painterSortStable ); // @THREE-Modification
 		if ( opaque.length > 1 ) opaque.sort( painterSortStable );
 		if ( transparent.length > 1 ) transparent.sort( reversePainterSortStable );
 
 	}
 
 	return {
+		custom1: custom1, // @THREE-Modification
 		opaque: opaque,
 		transparent: transparent,
 

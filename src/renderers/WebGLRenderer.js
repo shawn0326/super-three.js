@@ -332,6 +332,9 @@ function WebGLRenderer( parameters ) {
 	var materialManager = new MaterialManager();
 	this.materialManager = materialManager;
 
+	// @THREE-Modification
+	this.onCustom1Finish = function () {};
+
 	// API
 
 	this.getContext = function () {
@@ -1248,6 +1251,7 @@ function WebGLRenderer( parameters ) {
 
 		// render scene
 
+		var custom1Objects = currentRenderList.custom1; // @THREE-Modification
 		var opaqueObjects = currentRenderList.opaque;
 		var transparentObjects = currentRenderList.transparent;
 
@@ -1255,10 +1259,28 @@ function WebGLRenderer( parameters ) {
 
 			var overrideMaterial = scene.overrideMaterial;
 
+			 // @THREE-Modification
+
+			if ( custom1Objects.length ) {
+
+				renderObjects( custom1Objects, scene, camera, overrideMaterial );
+				this.onCustom1Finish();
+
+			}
+
 			if ( opaqueObjects.length ) renderObjects( opaqueObjects, scene, camera, overrideMaterial );
 			if ( transparentObjects.length ) renderObjects( transparentObjects, scene, camera, overrideMaterial );
 
 		} else {
+
+			// @THREE-Modification custom1 pass (front-to-back order)
+
+			if ( custom1Objects.length ) {
+
+				renderObjects( custom1Objects, scene, camera );
+				this.onCustom1Finish();
+
+			}
 
 			// opaque pass (front-to-back order)
 

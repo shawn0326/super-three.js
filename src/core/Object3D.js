@@ -106,6 +106,9 @@ function Object3D() {
 	this.layers = new Layers();
 	this.visible = true;
 
+	// @THREE-Modification
+	this.renderLayer = null;
+
 	this.castShadow = false;
 	this.receiveShadow = false;
 
