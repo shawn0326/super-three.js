@@ -15395,6 +15395,18 @@ function WebGLBackground( renderer, state, objects, premultipliedAlpha ) {
 					} )
 				);
 
+				// @THREE-Modification set render layer
+				if ( renderList.custom1.length ) {
+
+					boxMesh.renderLayer = 1;
+
+				} else {
+
+					boxMesh.renderLayer = null;
+
+				}
+
+
 				boxMesh.geometry.deleteAttribute( 'normal' );
 				boxMesh.geometry.deleteAttribute( 'uv' );
 
@@ -15477,6 +15489,17 @@ function WebGLBackground( renderer, state, objects, premultipliedAlpha ) {
 						fog: false
 					} )
 				);
+
+				// @THREE-Modification set render layer
+				if ( renderList.custom1.length ) {
+
+					planeMesh.renderLayer = 1;
+
+				} else {
+
+					planeMesh.renderLayer = null;
+
+				}
 
 				planeMesh.geometry.deleteAttribute( 'normal' );
 
