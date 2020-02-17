@@ -15395,18 +15395,6 @@ function WebGLBackground( renderer, state, objects, premultipliedAlpha ) {
 					} )
 				);
 
-				// @THREE-Modification set render layer
-				if ( renderList.custom1.length ) {
-
-					boxMesh.renderLayer = 1;
-
-				} else {
-
-					boxMesh.renderLayer = null;
-
-				}
-
-
 				boxMesh.geometry.deleteAttribute( 'normal' );
 				boxMesh.geometry.deleteAttribute( 'uv' );
 
@@ -15459,6 +15447,17 @@ function WebGLBackground( renderer, state, objects, premultipliedAlpha ) {
 
 			}
 
+			// @THREE-Modification set render layer
+			if ( renderList.custom1.length ) {
+
+				boxMesh.renderLayer = 1;
+
+			} else {
+
+				boxMesh.renderLayer = null;
+
+			}
+
 			if ( currentBackground !== background ||
 			     currentBackgroundVersion !== texture.version ) {
 
@@ -15490,17 +15489,6 @@ function WebGLBackground( renderer, state, objects, premultipliedAlpha ) {
 					} )
 				);
 
-				// @THREE-Modification set render layer
-				if ( renderList.custom1.length ) {
-
-					planeMesh.renderLayer = 1;
-
-				} else {
-
-					planeMesh.renderLayer = null;
-
-				}
-
 				planeMesh.geometry.deleteAttribute( 'normal' );
 
 				// enable code injection for non-built-in material
@@ -15527,6 +15515,17 @@ function WebGLBackground( renderer, state, objects, premultipliedAlpha ) {
 			}
 
 			planeMesh.material.uniforms.uvTransform.value.copy( background.matrix );
+
+			// @THREE-Modification set render layer
+			if ( renderList.custom1.length ) {
+
+				planeMesh.renderLayer = 1;
+
+			} else {
+
+				planeMesh.renderLayer = null;
+
+			}
 
 			if ( currentBackground !== background ||
 				   currentBackgroundVersion !== background.version ) {
