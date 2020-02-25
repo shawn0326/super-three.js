@@ -11214,10 +11214,12 @@
 			}
 
 			// check unsupported draw modes
+			// @THREE-Modification remove TriangleStripDrawMode warning
 
-			if ( this.drawMode !== TrianglesDrawMode ) {
+			if ( this.drawMode !== TrianglesDrawMode && this.drawMode !== TriangleStripDrawMode ) {
 
-				console.warn( 'THREE.Mesh: TriangleStripDrawMode and TriangleFanDrawMode are not supported by .raycast().' );
+				console.warn( 'THREE.Mesh: TriangleFanDrawMode are not supported by .raycast().' );
+				// console.warn( 'THREE.Mesh: TriangleStripDrawMode and TriangleFanDrawMode are not supported by .raycast().' );
 				return;
 
 			}
