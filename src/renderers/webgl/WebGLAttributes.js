@@ -70,7 +70,7 @@ function WebGLAttributes( gl ) {
 
 		gl.bindBuffer( bufferType, buffer );
 
-		if ( attribute.resizeDirty ) { 
+		if ( attribute.resizeDirty ) {
 
 			// @THREE-Modification support attribute resize
 

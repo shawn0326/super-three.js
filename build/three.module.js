@@ -15125,7 +15125,7 @@ function WebGLAttributes( gl ) {
 
 		gl.bindBuffer( bufferType, buffer );
 
-		if ( attribute.resizeDirty ) { 
+		if ( attribute.resizeDirty ) {
 
 			// @THREE-Modification support attribute resize
 
@@ -24072,6 +24072,9 @@ function WebGLRenderer( parameters ) {
 	// @THREE-Modification
 	this.onCustom1Finish = function () {};
 
+	// @THREE-Modification
+	this.renderCustom1 = true;
+
 	// API
 
 	this.getContext = function () {
@@ -24998,7 +25001,7 @@ function WebGLRenderer( parameters ) {
 
 			 // @THREE-Modification
 
-			if ( custom1Objects.length ) {
+			if ( custom1Objects.length && this.renderCustom1 ) {
 
 				renderObjects( custom1Objects, scene, camera, overrideMaterial );
 				this.onCustom1Finish();
