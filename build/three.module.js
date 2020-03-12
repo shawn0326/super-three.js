@@ -25015,7 +25015,7 @@ function WebGLRenderer( parameters ) {
 
 			// @THREE-Modification custom1 pass (front-to-back order)
 
-			if ( custom1Objects.length ) {
+			if ( custom1Objects.length && this.renderCustom1 ) {
 
 				renderObjects( custom1Objects, scene, camera );
 				this.onCustom1Finish();
