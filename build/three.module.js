@@ -36778,7 +36778,7 @@ CubeTextureLoader.prototype = Object.assign( Object.create( Loader.prototype ), 
 
 		var texture = new CubeTexture();
 
-		var loader = new THREE.ImageLoader( this.manager );
+		var loader = new ImageLoader( this.manager );
 		loader.setCrossOrigin( this.crossOrigin );
 		loader.setPath( this.path );
 
@@ -36834,7 +36834,7 @@ TextureLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		var texture = new Texture();
 
-		var loader = new THREE.ImageLoader( this.manager );
+		var loader = new ImageLoader( this.manager );
 		loader.setCrossOrigin( this.crossOrigin );
 		loader.setPath( this.path );
 
@@ -40671,7 +40671,7 @@ ObjectLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			var manager = new LoadingManager( onLoad );
 
-			var loader = new THREE.ImageLoader( manager );
+			var loader = new ImageLoader( manager );
 			loader.setCrossOrigin( this.crossOrigin );
 
 			for ( var i = 0, il = json.length; i < il; i ++ ) {

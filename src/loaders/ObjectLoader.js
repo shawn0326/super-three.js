@@ -558,7 +558,7 @@ ObjectLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			var manager = new LoadingManager( onLoad );
 
-			var loader = new THREE.ImageLoader( manager );
+			var loader = new ImageLoader( manager );
 			loader.setCrossOrigin( this.crossOrigin );
 
 			for ( var i = 0, il = json.length; i < il; i ++ ) {
