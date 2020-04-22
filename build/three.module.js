@@ -21423,14 +21423,11 @@ function WebGLTextures( _gl, extensions, state, properties, capabilities, utils,
 			_gl.deleteFramebuffer( renderTargetProperties.__webglFramebuffer );
 			if ( renderTargetProperties.__webglDepthbuffer ) _gl.deleteRenderbuffer( renderTargetProperties.__webglDepthbuffer );
 
-		}
-
-		// @THREE-Modification
-		// dispose sampling render buffer
-		if ( renderTarget.isWebGLMultisampleRenderTarget ) {
-
-			if ( renderTargetProperties.__webglMultisampledFramebuffer ) _gl.deleteFramebuffer( renderTargetProperties.__webglSamplingbuffer );
+			// @THREE-Modification
+			// dispose sampling render buffer
+			if ( renderTargetProperties.__webglMultisampledFramebuffer ) _gl.deleteFramebuffer( renderTargetProperties.__webglMultisampledFramebuffer );
 			if ( renderTargetProperties.__webglColorRenderbuffer ) _gl.deleteRenderbuffer( renderTargetProperties.__webglColorRenderbuffer );
+			if ( renderTargetProperties.__webglDepthRenderbuffer && ! renderTargetProperties.__shareDepthRenderbuffer ) _gl.deleteRenderbuffer( renderTargetProperties.__webglDepthRenderbuffer );
 
 		}
 
@@ -22193,7 +22190,17 @@ function WebGLTextures( _gl, extensions, state, properties, capabilities, utils,
 					if ( renderTarget.depthBuffer ) {
 
 						// @THREE-Modification for share depth render buffer
-						renderTargetProperties.__webglDepthRenderbuffer = renderTarget.webglDepthRenderbuffer || _gl.createRenderbuffer();
+						if ( renderTarget.webglDepthRenderbuffer ) {
+
+							renderTargetProperties.__webglDepthRenderbuffer = renderTarget.webglDepthRenderbuffer;
+							renderTargetProperties.__shareDepthRenderbuffer = true;
+
+						} else {
+
+							renderTargetProperties.__webglDepthRenderbuffer = _gl.createRenderbuffer();
+
+						}
+
 						setupRenderBufferStorage( renderTargetProperties.__webglDepthRenderbuffer, renderTarget, true );
 
 					}
