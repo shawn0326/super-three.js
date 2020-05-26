@@ -13,4 +13,18 @@ export default /* glsl */`
 	vAlpha = alphaIndex;
 
 #endif
+
+// @THREE-Modification
+// INSTANCED
+
+#ifdef INSTANCED
+
+	#ifdef USE_COLOR
+
+		vColor.xyz = instanceColor.xyz;
+
+	#endif
+	
+#endif
+
 `;

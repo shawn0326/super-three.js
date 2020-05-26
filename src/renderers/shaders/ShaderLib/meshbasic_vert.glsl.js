@@ -22,11 +22,28 @@ void main() {
 	#include <beginnormal_vertex>
 	#include <morphnormal_vertex>
 	#include <skinnormal_vertex>
+
+	// @THREE-Modification
+	// normal instanced
+	#ifdef INSTANCED
+
+		mat4 instanceMat = compose( instancePosition, instanceQuaternion, instanceScale );
+		objectNormal = transformDirection( objectNormal, instanceMat );
+
+	#endif
+
 	#include <defaultnormal_vertex>
 
 	#endif
 
 	#include <begin_vertex>
+
+	// @THREE-Modification
+	// position instanced
+	#ifdef INSTANCED
+		transformed.xyz = ( instanceMat * vec4( transformed, 1.0 ) ).xyz;
+	#endif
+
 	#include <morphtarget_vertex>
 	#include <skinning_vertex>
 	#include <project_vertex>

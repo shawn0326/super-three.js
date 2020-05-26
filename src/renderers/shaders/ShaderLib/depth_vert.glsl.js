@@ -22,6 +22,14 @@ void main() {
 	#endif
 
 	#include <begin_vertex>
+
+	// @THREE-Modification
+	// position instanced
+	#ifdef INSTANCED
+		mat4 instanceMat = compose(instancePosition, instanceQuaternion, instanceScale);
+		transformed.xyz = (instanceMat * vec4(transformed, 1.0)).xyz;
+	#endif
+
 	#include <morphtarget_vertex>
 	#include <skinning_vertex>
 	#include <displacementmap_vertex>

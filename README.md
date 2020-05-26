@@ -124,7 +124,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLAttributes: Support attribute resize.
 * WebGLRenderer: Support logarithmicDepthBuffer state change.
 * WebGLRenderLists: Support custom1 layer.
-* THREE.ImageLoader. (TODO remove this)
+* WebGLProgram: Support instanced material.
 
 ### 开发规范 ###
 

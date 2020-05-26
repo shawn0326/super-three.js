@@ -504,6 +504,30 @@ function WebGLProgram( renderer, extensions, cacheKey, material, shader, paramet
 
 			'#endif',
 
+			// @THREE-Modification
+
+			'#ifdef INSTANCED',
+			'	attribute vec3 instancePosition;',
+			'	attribute vec4 instanceQuaternion;',
+			'	attribute vec3 instanceScale;',
+			'	attribute vec3 instanceColor;',
+			'	mat4 compose(vec3 position, vec4 quaternion, vec3 scale) {',
+			'		float x = quaternion.x, y = quaternion.y, z = quaternion.z, w = quaternion.w;',
+			'		float x2 = x + x,  y2 = y + y,  z2 = z + z;',
+			'		float xx = x * x2, xy = x * y2, xz = x * z2;',
+			'		float yy = y * y2, yz = y * z2, zz = z * z2;',
+			'		float wx = w * x2, wy = w * y2, wz = w * z2;',
+
+			'		float sx = scale.x, sy = scale.y, sz = scale.z;',
+
+			'		return mat4(( 1. - ( yy + zz ) ) * sx, ( xy + wz ) * sx, ( xz - wy ) * sx, 0.,',
+			'			( xy - wz ) * sy, ( 1. - ( xx + zz ) ) * sy, ( yz + wx ) * sy, 0.,',
+			'			( xz + wy ) * sz, ( yz - wx ) * sz, ( 1. - ( xx + yy ) ) * sz, 0.,',
+			'			position.x, position.y, position.z, 1.',
+			'	);',
+			'}',
+			'#endif',
+
 			'attribute vec3 position;',
 			'attribute vec3 normal;',
 			'attribute vec2 uv;',

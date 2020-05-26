@@ -38,6 +38,16 @@ void main() {
 	#include <morphnormal_vertex>
 	#include <skinbase_vertex>
 	#include <skinnormal_vertex>
+
+	// @THREE-Modification
+	// normal instanced
+	#ifdef INSTANCED
+
+		mat4 instanceMat = compose( instancePosition, instanceQuaternion, instanceScale );
+		objectNormal = transformDirection( objectNormal, instanceMat );
+
+	#endif
+
 	#include <defaultnormal_vertex>
 
 #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
@@ -54,6 +64,13 @@ void main() {
 #endif
 
 	#include <begin_vertex>
+
+	// @THREE-Modification
+	// position instanced
+	#ifdef INSTANCED
+		transformed.xyz = ( instanceMat * vec4( transformed, 1.0 ) ).xyz;
+	#endif
+	
 	#include <morphtarget_vertex>
 	#include <skinning_vertex>
 	#include <displacementmap_vertex>
