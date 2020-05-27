@@ -17,6 +17,12 @@ void main() {
 	#include <color_vertex>
 	#include <skinbase_vertex>
 
+	// @THREE-Modification
+	// normal instanced
+	#ifdef INSTANCED
+		mat4 instanceMat = compose( instancePosition, instanceQuaternion, instanceScale );
+	#endif
+
 	#ifdef USE_ENVMAP
 
 	#include <beginnormal_vertex>
@@ -26,10 +32,7 @@ void main() {
 	// @THREE-Modification
 	// normal instanced
 	#ifdef INSTANCED
-
-		mat4 instanceMat = compose( instancePosition, instanceQuaternion, instanceScale );
 		objectNormal = transformDirection( objectNormal, instanceMat );
-
 	#endif
 
 	#include <defaultnormal_vertex>
