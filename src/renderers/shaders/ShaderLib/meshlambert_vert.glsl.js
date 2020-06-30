@@ -39,7 +39,9 @@ void main() {
 	#ifdef INSTANCED
 
 		mat4 instanceMat = compose( instancePosition, instanceQuaternion, instanceScale );
-		objectNormal = transformDirection( objectNormal, instanceMat );
+		mat3 im = mat3( instanceMat );
+		objectNormal /= vec3( dot( im[ 0 ], im[ 0 ] ), dot( im[ 1 ], im[ 1 ] ), dot( im[ 2 ], im[ 2 ] ) );
+		objectNormal = im * objectNormal;
 
 	#endif
 
