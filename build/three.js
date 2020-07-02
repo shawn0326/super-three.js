@@ -36332,16 +36332,9 @@
 
 						scope.manager.itemEnd( url );
 
-					} else if ( this.status === 201 && typeof( response ) == 'string' ) { // @THREE-Modification TODO remove this mass to callback
+					} else if ( this.status === 201 && typeof ( response ) == 'string' ) { // @THREE-Modification TODO remove this mass to callback
 
-						console.error('[have no right] name: ' + decodeURIComponent( JSON.parse(response).message) + '\nurl: ' + url);
-
-						for ( var i = 0, il = callbacks.length; i < il; i ++ ) {
-
-							var callback = callbacks[ i ];
-							if ( callback.onError ) { callback.onError( event ); }
-
-						}
+						console.error( '[have no right] name: ' + decodeURIComponent( JSON.parse( response ).message ) + '\nurl: ' + url );
 
 						scope.manager.itemEnd( url );
 
