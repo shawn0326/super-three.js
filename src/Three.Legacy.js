@@ -1719,19 +1719,20 @@ Object.defineProperties( WebGLRenderer.prototype, {
 
 		}
 	},
-	gammaInput: {
-		get: function () {
+	// @THREE-Modification
+	// gammaInput: {
+	// 	get: function () {
 
-			console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
-			return false;
+	// 		console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
+	// 		return false;
 
-		},
-		set: function () {
+	// 	},
+	// 	set: function () {
 
-			console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
+	// 		console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
 
-		}
-	},
+	// 	}
+	// },
 	gammaOutput: {
 		get: function () {
 

@@ -18607,7 +18607,7 @@
 
 		}
 
-		function getTextureEncodingFromMap( map ) {
+		function getTextureEncodingFromMap( map, gammaOverrideLinear ) { // @THREE-Modification
 
 			var encoding;
 
@@ -18623,6 +18623,13 @@
 
 				console.warn( "THREE.WebGLPrograms.getTextureEncodingFromMap: don't use render targets as textures. Use their .texture property instead." );
 				encoding = map.texture.encoding;
+
+			}
+
+			// @THREE-Modification
+			if ( encoding === LinearEncoding && gammaOverrideLinear ) {
+
+				encoding = GammaEncoding;
 
 			}
 
@@ -18673,18 +18680,18 @@
 				numMultiviewViews: numMultiviewViews,
 				outputEncoding: ( currentRenderTarget !== null ) ? getTextureEncodingFromMap( currentRenderTarget.texture ) : renderer.outputEncoding,
 				map: !! material.map,
-				mapEncoding: getTextureEncodingFromMap( material.map ),
+				mapEncoding: getTextureEncodingFromMap( material.map, renderer.gammaInput ), // @THREE-Modification
 				matcap: !! material.matcap,
-				matcapEncoding: getTextureEncodingFromMap( material.matcap ),
+				matcapEncoding: getTextureEncodingFromMap( material.matcap, renderer.gammaInput ), // @THREE-Modification
 				envMap: !! envMap,
 				envMapMode: envMap && envMap.mapping,
-				envMapEncoding: getTextureEncodingFromMap( envMap ),
+				envMapEncoding: getTextureEncodingFromMap( envMap, renderer.gammaInput ), // @THREE-Modification
 				envMapCubeUV: ( !! envMap ) && ( ( envMap.mapping === CubeUVReflectionMapping ) || ( envMap.mapping === CubeUVRefractionMapping ) ),
 				lightMap: !! material.lightMap,
 				lightMapEncoding: getTextureEncodingFromMap( material.lightMap ),
 				aoMap: !! material.aoMap,
 				emissiveMap: !! material.emissiveMap,
-				emissiveMapEncoding: getTextureEncodingFromMap( material.emissiveMap ),
+				emissiveMapEncoding: getTextureEncodingFromMap( material.emissiveMap, renderer.gammaInput ), // @THREE-Modification
 				bumpMap: !! material.bumpMap,
 				normalMap: !! material.normalMap,
 				objectSpaceNormalMap: material.normalMapType === ObjectSpaceNormalMap,
@@ -23589,6 +23596,7 @@
 		// physically based shading
 
 		this.gammaFactor = 2.0;	// for backwards compatibility
+		this.gammaInput = false; // @THREE-Modification
 		this.outputEncoding = LinearEncoding;
 
 		// physical lights
@@ -49895,19 +49903,20 @@
 
 			}
 		},
-		gammaInput: {
-			get: function () {
+		// @THREE-Modification
+		// gammaInput: {
+		// 	get: function () {
 
-				console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
-				return false;
+		// 		console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
+		// 		return false;
 
-			},
-			set: function () {
+		// 	},
+		// 	set: function () {
 
-				console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
+		// 		console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
 
-			}
-		},
+		// 	}
+		// },
 		gammaOutput: {
 			get: function () {
 
