@@ -2,7 +2,7 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-import { BackSide, DoubleSide, CubeUVRefractionMapping, CubeUVReflectionMapping, GammaEncoding, LinearEncoding, ObjectSpaceNormalMap, TangentSpaceNormalMap, NoToneMapping } from '../../constants.js';
+import { BackSide, DoubleSide, CubeUVRefractionMapping, CubeUVReflectionMapping, LinearEncoding, ObjectSpaceNormalMap, TangentSpaceNormalMap, NoToneMapping } from '../../constants.js';
 import { WebGLProgram } from './WebGLProgram.js';
 
 function WebGLPrograms( renderer, extensions, capabilities ) {
@@ -23,7 +23,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 		MeshBasicMaterial: 'basic',
 		MeshLambertMaterial: 'lambert',
 		MeshPhongMaterial: 'phong',
-		MeshToonMaterial: 'phong',
+		MeshToonMaterial: 'toon',
 		MeshStandardMaterial: 'physical',
 		MeshPhysicalMaterial: 'physical',
 		MeshMatcapMaterial: 'matcap',
@@ -37,7 +37,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 	var parameterNames = [
 		"precision", "isWebGL2", "supportsVertexTextures", "outputEncoding", "instancing", "numMultiviewViews",
 		"map", "mapEncoding", "matcap", "matcapEncoding", "envMap", "envMapMode", "envMapEncoding", "envMapCubeUV",
-		"lightMap", "aoMap", "emissiveMap", "emissiveMapEncoding", "bumpMap", "normalMap", "objectSpaceNormalMap", "tangentSpaceNormalMap", "clearcoatNormalMap", "displacementMap", "specularMap",
+		"lightMap", "lightMapEncoding", "aoMap", "emissiveMap", "emissiveMapEncoding", "bumpMap", "normalMap", "objectSpaceNormalMap", "tangentSpaceNormalMap", "clearcoatNormalMap", "displacementMap", "specularMap",
 		"roughnessMap", "metalnessMap", "gradientMap",
 		"alphaMap", "combine", "vertexColors", "vertexTangents", "vertexUvs", "uvsVertexOnly", "fog", "useFog", "fogExp2",
 		"flatShading", "sizeAttenuation", "logarithmicDepthBuffer", "skinning",
@@ -88,7 +88,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 	}
 
-	function getTextureEncodingFromMap( map, gammaOverrideLinear ) {
+	function getTextureEncodingFromMap( map ) {
 
 		var encoding;
 
@@ -107,18 +107,16 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 		}
 
-		// add backwards compatibility for WebGLRenderer.gammaInput/gammaOutput parameter, should probably be removed at some point.
-		if ( encoding === LinearEncoding && gammaOverrideLinear ) {
-
-			encoding = GammaEncoding;
-
-		}
-
 		return encoding;
 
 	}
 
-	this.getParameters = function ( material, lights, shadows, fog, nClipPlanes, nClipIntersection, object ) {
+	this.getParameters = function ( material, lights, shadows, scene, nClipPlanes, nClipIntersection, object ) {
+
+		var fog = scene.fog;
+		var environment = material.isMeshStandardMaterial ? scene.environment : null;
+
+		var envMap = material.envMap || environment;
 
 		var shaderID = shaderIDs[ material.type ];
 
@@ -154,19 +152,20 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 			supportsVertexTextures: vertexTextures,
 			numMultiviewViews: numMultiviewViews,
-			outputEncoding: getTextureEncodingFromMap( ( ! currentRenderTarget ) ? null : currentRenderTarget.texture, renderer.gammaOutput ),
+			outputEncoding: ( currentRenderTarget !== null ) ? getTextureEncodingFromMap( currentRenderTarget.texture ) : renderer.outputEncoding,
 			map: !! material.map,
-			mapEncoding: getTextureEncodingFromMap( material.map, renderer.gammaInput ),
+			mapEncoding: getTextureEncodingFromMap( material.map ),
 			matcap: !! material.matcap,
-			matcapEncoding: getTextureEncodingFromMap( material.matcap, renderer.gammaInput ),
-			envMap: !! material.envMap,
-			envMapMode: material.envMap && material.envMap.mapping,
-			envMapEncoding: getTextureEncodingFromMap( material.envMap, renderer.gammaInput ),
-			envMapCubeUV: ( !! material.envMap ) && ( ( material.envMap.mapping === CubeUVReflectionMapping ) || ( material.envMap.mapping === CubeUVRefractionMapping ) ),
+			matcapEncoding: getTextureEncodingFromMap( material.matcap ),
+			envMap: !! envMap,
+			envMapMode: envMap && envMap.mapping,
+			envMapEncoding: getTextureEncodingFromMap( envMap ),
+			envMapCubeUV: ( !! envMap ) && ( ( envMap.mapping === CubeUVReflectionMapping ) || ( envMap.mapping === CubeUVRefractionMapping ) ),
 			lightMap: !! material.lightMap,
+			lightMapEncoding: getTextureEncodingFromMap( material.lightMap ),
 			aoMap: !! material.aoMap,
 			emissiveMap: !! material.emissiveMap,
-			emissiveMapEncoding: getTextureEncodingFromMap( material.emissiveMap, renderer.gammaInput ),
+			emissiveMapEncoding: getTextureEncodingFromMap( material.emissiveMap ),
 			bumpMap: !! material.bumpMap,
 			normalMap: !! material.normalMap,
 			objectSpaceNormalMap: material.normalMapType === ObjectSpaceNormalMap,
@@ -275,17 +274,20 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 		}
 
-		for ( var i = 0; i < parameterNames.length; i ++ ) {
+		if ( material.isRawShaderMaterial === undefined ) {
 
-			array.push( parameters[ parameterNames[ i ] ] );
+			for ( var i = 0; i < parameterNames.length; i ++ ) {
+
+				array.push( parameters[ parameterNames[ i ] ] );
+
+			}
+
+			array.push( renderer.outputEncoding );
+			array.push( renderer.gammaFactor );
 
 		}
 
 		array.push( material.onBeforeCompile.toString() );
-
-		array.push( renderer.gammaOutput );
-
-		array.push( renderer.gammaFactor );
 
 		return array.join();
 

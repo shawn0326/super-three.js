@@ -6,7 +6,7 @@ import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
 import { Triangle } from '../math/Triangle.js';
 import { Face3 } from '../core/Face3.js';
-import { DoubleSide, BackSide, TrianglesDrawMode, TriangleStripDrawMode } from '../constants.js';
+import { DoubleSide, BackSide } from '../constants.js';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 
@@ -49,8 +49,6 @@ function Mesh( geometry, material ) {
 	this.geometry = geometry !== undefined ? geometry : new BufferGeometry();
 	this.material = material !== undefined ? material : new MeshBasicMaterial( { color: Math.random() * 0xffffff } );
 
-	this.drawMode = TrianglesDrawMode;
-
 	this.updateMorphTargets();
 
 }
@@ -61,17 +59,9 @@ Mesh.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 	isMesh: true,
 
-	setDrawMode: function ( value ) {
-
-		this.drawMode = value;
-
-	},
-
 	copy: function ( source ) {
 
 		Object3D.prototype.copy.call( this, source );
-
-		this.drawMode = source.drawMode;
 
 		if ( source.morphTargetInfluences !== undefined ) {
 
@@ -165,17 +155,6 @@ Mesh.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 		}
 
-		// check unsupported draw modes
-		// @THREE-Modification remove TriangleStripDrawMode warning
-
-		if ( this.drawMode !== TrianglesDrawMode && this.drawMode !== TriangleStripDrawMode ) {
-
-			console.warn( 'THREE.Mesh: TriangleFanDrawMode are not supported by .raycast().' );
-			// console.warn( 'THREE.Mesh: TriangleStripDrawMode and TriangleFanDrawMode are not supported by .raycast().' );
-			return;
-
-		}
-
 		var intersection;
 
 		if ( geometry.isBufferGeometry ) {
@@ -257,10 +236,6 @@ Mesh.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 				// non-indexed buffer geometry
 
-				// @THREE-Modification fix for TriangleStripDrawMode
-				var strip = ( this.drawMode === TriangleStripDrawMode );
-				var _offset = strip ? 1 : 3;
-
 				if ( Array.isArray( material ) ) {
 
 					for ( i = 0, il = groups.length; i < il; i ++ ) {
@@ -273,10 +248,7 @@ Mesh.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 						end = Math.min( end, position.count ); // @THREE-Modification fix for group count infinity
 
-						// @THREE-Modification fix for TriangleStripDrawMode
-						strip && ( end -= 2 );
-
-						for ( j = start, jl = end; j < jl; j += _offset ) {
+						for ( j = start, jl = end; j < jl; j += 3 ) {
 
 							a = j;
 							b = j + 1;
@@ -286,7 +258,7 @@ Mesh.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 							if ( intersection ) {
 
-								intersection.faceIndex = Math.floor( j / _offset ); // triangle number in non-indexed buffer semantics
+								intersection.faceIndex = Math.floor( j / 3 ); // triangle number in non-indexed buffer semantics
 								intersection.face.materialIndex = group.materialIndex;
 								intersects.push( intersection );
 
@@ -301,10 +273,7 @@ Mesh.prototype = Object.assign( Object.create( Object3D.prototype ), {
 					start = Math.max( 0, drawRange.start );
 					end = Math.min( position.count, ( drawRange.start + drawRange.count ) );
 
-					// @THREE-Modification fix for TriangleStripDrawMode
-					strip && ( end -= 2 );
-
-					for ( i = start, il = end; i < il; i += _offset ) {
+					for ( i = start, il = end; i < il; i += 3 ) {
 
 						a = i;
 						b = i + 1;
@@ -314,7 +283,7 @@ Mesh.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 						if ( intersection ) {
 
-							intersection.faceIndex = Math.floor( i / _offset ); // triangle number in non-indexed buffer semantics
+							intersection.faceIndex = Math.floor( i / 3 ); // triangle number in non-indexed buffer semantics
 							intersects.push( intersection );
 
 						}

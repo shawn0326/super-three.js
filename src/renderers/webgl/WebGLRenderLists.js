@@ -156,11 +156,11 @@ function WebGLRenderList() {
 
 	}
 
-	function sort() {
+	function sort( customOpaqueSort, customTransparentSort ) {
 
-		if ( custom1.length > 1 ) custom1.sort( painterSortStable ); // @THREE-Modification
-		if ( opaque.length > 1 ) opaque.sort( painterSortStable );
-		if ( transparent.length > 1 ) transparent.sort( reversePainterSortStable );
+		if ( custom1.length > 1 ) custom1.sort( customOpaqueSort || painterSortStable ); // @THREE-Modification
+		if ( opaque.length > 1 ) opaque.sort( customOpaqueSort || painterSortStable );
+		if ( transparent.length > 1 ) transparent.sort( customTransparentSort || reversePainterSortStable );
 
 	}
 

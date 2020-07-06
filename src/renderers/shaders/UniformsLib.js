@@ -17,6 +17,7 @@ var UniformsLib = {
 		uvTransform: { value: new Matrix3() },
 		uvTransform1: { value: new Matrix3() }, // @THREE-Modification
 		uvTransform2: { value: new Matrix3() }, // @THREE-Modification
+		uv2Transform: { value: new Matrix3() },
 
 		alphaMap: { value: null },
 		alphaMap1: { value: null }, // @THREE-Modification
