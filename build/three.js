@@ -18807,7 +18807,7 @@
 
 				supportsVertexTextures: vertexTextures,
 				numMultiviewViews: numMultiviewViews,
-				outputEncoding: getTextureEncodingFromMap( ! currentRenderTarget ? null : currentRenderTarget.texture, renderer.outputEncoding === GammaEncoding ), // @THREE-Modification
+				outputEncoding: ( currentRenderTarget !== null ) ? getTextureEncodingFromMap( currentRenderTarget.texture, renderer.outputEncoding === GammaEncoding ) : renderer.outputEncoding, // @THREE-Modification
 				map: !! material.map,
 				mapEncoding: getTextureEncodingFromMap( material.map, renderer.gammaInput ), // @THREE-Modification
 				matcap: !! material.matcap,
