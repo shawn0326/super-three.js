@@ -198,7 +198,7 @@ export class Material extends EventDispatcher {
 	 * Used to check whether this or derived classes are materials. Default is true.
 	 * You should not change this, as it used internally for optimisation.
 	 */
-	isMaterial: boolean;
+	readonly isMaterial: true;
 
 	/**
 	 * Material name. Default is an empty string.
@@ -256,6 +256,12 @@ export class Material extends EventDispatcher {
 	 * Default is THREE.FrontSide. Other options are THREE.BackSide and THREE.DoubleSide.
 	 */
 	side: Side;
+
+	/**
+	 * Defines which of the face sides will cast shadows. Default is *null*.
+	 * If *null*, the value is opposite that of side, above.
+	 */
+	shadowSide: Side;
 
 	/**
 	 * Defines whether this material is tone mapped according to the renderer's toneMapping setting.
