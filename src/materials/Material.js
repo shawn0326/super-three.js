@@ -1,5 +1,5 @@
 import { EventDispatcher } from '../core/EventDispatcher.js';
-import { NoColors, FrontSide, FlatShading, NormalBlending, LessEqualDepth, AddEquation, OneMinusSrcAlphaFactor, SrcAlphaFactor, AlwaysStencilFunc, KeepStencilOp } from '../constants.js';
+import { FrontSide, FlatShading, NormalBlending, LessEqualDepth, AddEquation, OneMinusSrcAlphaFactor, SrcAlphaFactor, AlwaysStencilFunc, KeepStencilOp } from '../constants.js';
 import { MathUtils } from '../math/MathUtils.js';
 
 /**
@@ -23,8 +23,7 @@ function Material() {
 	this.blending = NormalBlending;
 	this.side = FrontSide;
 	this.flatShading = false;
-	this.vertexTangents = false;
-	this.vertexColors = NoColors; // THREE.NoColors, THREE.VertexColors, THREE.FaceColors
+	this.vertexColors = false;
 
 	this.opacity = 1;
 	this.transparent = false;
@@ -254,7 +253,7 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		if ( this.blending !== NormalBlending ) data.blending = this.blending;
 		if ( this.flatShading === true ) data.flatShading = this.flatShading;
 		if ( this.side !== FrontSide ) data.side = this.side;
-		if ( this.vertexColors !== NoColors ) data.vertexColors = this.vertexColors;
+		if ( this.vertexColors ) data.vertexColors = true;
 
 		if ( this.opacity < 1 ) data.opacity = this.opacity;
 		if ( this.transparent === true ) data.transparent = this.transparent;
@@ -351,7 +350,6 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		this.blending = source.blending;
 		this.side = source.side;
 		this.flatShading = source.flatShading;
-		this.vertexTangents = source.vertexTangents;
 		this.vertexColors = source.vertexColors;
 
 		this.opacity = source.opacity;
