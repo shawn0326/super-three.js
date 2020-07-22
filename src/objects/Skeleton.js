@@ -189,6 +189,18 @@ Object.assign( Skeleton.prototype, {
 
 		return undefined;
 
+	},
+
+	dispose: function ( ) {
+
+		if ( this.boneTexture ) {
+
+			this.boneTexture.dispose();
+
+			this.boneTexture = undefined;
+
+		}
+
 	}
 
 } );
