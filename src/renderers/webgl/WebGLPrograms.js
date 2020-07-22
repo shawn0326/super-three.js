@@ -7,18 +7,19 @@ import { WebGLProgram } from './WebGLProgram.js';
 import { ShaderLib } from '../shaders/ShaderLib.js';
 import { UniformsUtils } from '../shaders/UniformsUtils.js';
 
-function WebGLPrograms( renderer, extensions, capabilities ) {
+function WebGLPrograms( renderer, extensions, capabilities, bindingStates ) {
 
-	var programs = [];
+	const programs = [];
 
-	var isWebGL2 = capabilities.isWebGL2;
-	// var logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer; // @THREE-Modification support logarithmicDepthBuffer state change
-	var floatVertexTextures = capabilities.floatVertexTextures;
-	var precision = capabilities.precision;
-	var maxVertexUniforms = capabilities.maxVertexUniforms;
-	var vertexTextures = capabilities.vertexTextures;
+	const isWebGL2 = capabilities.isWebGL2;
+	// const logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer; // @THREE-Modification support logarithmicDepthBuffer state change
+	const floatVertexTextures = capabilities.floatVertexTextures;
+	const maxVertexUniforms = capabilities.maxVertexUniforms;
+	const vertexTextures = capabilities.vertexTextures;
 
-	var shaderIDs = {
+	let precision = capabilities.precision;
+
+	const shaderIDs = {
 		MeshDepthMaterial: 'depth',
 		MeshDistanceMaterial: 'distanceRGBA',
 		MeshNormalMaterial: 'normal',
@@ -36,7 +37,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 		SpriteMaterial: 'sprite'
 	};
 
-	var parameterNames = [
+	const parameterNames = [
 		"precision", "isWebGL2", "supportsVertexTextures", "outputEncoding", "instancing",
 		"map", "mapEncoding", "matcap", "matcapEncoding", "envMap", "envMapMode", "envMapEncoding", "envMapCubeUV",
 		"lightMap", "lightMapEncoding", "aoMap", "emissiveMap", "emissiveMapEncoding", "bumpMap", "normalMap", "objectSpaceNormalMap", "tangentSpaceNormalMap", "clearcoatMap", "clearcoatRoughnessMap", "clearcoatNormalMap", "displacementMap", "specularMap",
@@ -55,14 +56,14 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 	function getShaderObject( material, shaderID ) {
 
-		var shaderobject;
+		let shaderobject;
 
 		if ( shaderID ) {
 
-			var shader = ShaderLib[ shaderID ];
+			const shader = ShaderLib[ shaderID ];
 
 			shaderobject = {
-				name: material.type,
+				name: material.name || material.type,
 				uniforms: UniformsUtils.clone( shader.uniforms ),
 				vertexShader: shader.vertexShader,
 				fragmentShader: shader.fragmentShader
@@ -71,7 +72,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 		} else {
 
 			shaderobject = {
-				name: material.type,
+				name: material.name || material.type,
 				uniforms: material.uniforms,
 				vertexShader: material.vertexShader,
 				fragmentShader: material.fragmentShader
@@ -85,8 +86,8 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 	function allocateBones( object ) {
 
-		var skeleton = object.skeleton;
-		var bones = skeleton.bones;
+		const skeleton = object.skeleton;
+		const bones = skeleton.bones;
 
 		if ( floatVertexTextures ) {
 
@@ -101,10 +102,10 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 			//  - limit here is ANGLE's 254 max uniform vectors
 			//    (up to 54 should be safe)
 
-			var nVertexUniforms = maxVertexUniforms;
-			var nVertexMatrices = Math.floor( ( nVertexUniforms - 20 ) / 4 );
+			const nVertexUniforms = maxVertexUniforms;
+			const nVertexMatrices = Math.floor( ( nVertexUniforms - 20 ) / 4 );
 
-			var maxBones = Math.min( nVertexMatrices, bones.length );
+			const maxBones = Math.min( nVertexMatrices, bones.length );
 
 			if ( maxBones < bones.length ) {
 
@@ -121,7 +122,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 	function getTextureEncodingFromMap( map, gammaOverrideLinear ) { // @THREE-Modification
 
-		var encoding;
+		let encoding;
 
 		if ( ! map ) {
 
@@ -149,19 +150,19 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 	}
 
-	this.getParameters = function ( material, lights, shadows, scene, nClipPlanes, nClipIntersection, object ) {
+	function getParameters( material, lights, shadows, scene, nClipPlanes, nClipIntersection, object ) {
 
-		var fog = scene.fog;
-		var environment = material.isMeshStandardMaterial ? scene.environment : null;
+		const fog = scene.fog;
+		const environment = material.isMeshStandardMaterial ? scene.environment : null;
 
-		var envMap = material.envMap || environment;
+		const envMap = material.envMap || environment;
 
-		var shaderID = shaderIDs[ material.type ];
+		const shaderID = shaderIDs[ material.type ];
 
 		// heuristics to create shader parameters according to lights in the scene
 		// (not to blow over maxLights budget)
 
-		var maxBones = object.isSkinnedMesh ? allocateBones( object ) : 0;
+		const maxBones = object.isSkinnedMesh ? allocateBones( object ) : 0;
 
 		if ( material.precision !== null ) {
 
@@ -175,12 +176,12 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 		}
 
-		var shaderobject = getShaderObject( material, shaderID );
+		const shaderobject = getShaderObject( material, shaderID );
 		material.onBeforeCompile( shaderobject, renderer );
 
-		var currentRenderTarget = renderer.getRenderTarget();
+		const currentRenderTarget = renderer.getRenderTarget();
 
-		var parameters = {
+		const parameters = {
 
 			isWebGL2: isWebGL2,
 
@@ -305,17 +306,17 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 			rendererExtensionDrawBuffers: isWebGL2 || extensions.get( 'WEBGL_draw_buffers' ) !== null,
 			rendererExtensionShaderTextureLod: isWebGL2 || extensions.get( 'EXT_shader_texture_lod' ) !== null,
 
-			onBeforeCompile: material.onBeforeCompile
+			customProgramCacheKey: material.customProgramCacheKey()
 
 		};
 
 		return parameters;
 
-	};
+	}
 
-	this.getProgramCacheKey = function ( parameters ) {
+	function getProgramCacheKey( parameters ) {
 
-		var array = [];
+		const array = [];
 
 		if ( parameters.shaderID ) {
 
@@ -330,7 +331,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 		if ( parameters.defines !== undefined ) {
 
-			for ( var name in parameters.defines ) {
+			for ( const name in parameters.defines ) {
 
 				array.push( name );
 				array.push( parameters.defines[ name ] );
@@ -341,7 +342,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 		if ( parameters.isRawShaderMaterial === undefined ) {
 
-			for ( var i = 0; i < parameterNames.length; i ++ ) {
+			for ( let i = 0; i < parameterNames.length; i ++ ) {
 
 				array.push( parameters[ parameterNames[ i ] ] );
 
@@ -352,20 +353,20 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 		}
 
-		array.push( parameters.onBeforeCompile.toString() );
+		array.push( parameters.customProgramCacheKey );
 
 		return array.join();
 
-	};
+	}
 
-	this.acquireProgram = function ( parameters, cacheKey ) {
+	function acquireProgram( parameters, cacheKey ) {
 
-		var program;
+		let program;
 
 		// Check if code has been already compiled
-		for ( var p = 0, pl = programs.length; p < pl; p ++ ) {
+		for ( let p = 0, pl = programs.length; p < pl; p ++ ) {
 
-			var preexistingProgram = programs[ p ];
+			const preexistingProgram = programs[ p ];
 
 			if ( preexistingProgram.cacheKey === cacheKey ) {
 
@@ -380,21 +381,21 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 		if ( program === undefined ) {
 
-			program = new WebGLProgram( renderer, cacheKey, parameters );
+			program = new WebGLProgram( renderer, cacheKey, parameters, bindingStates );
 			programs.push( program );
 
 		}
 
 		return program;
 
-	};
+	}
 
-	this.releaseProgram = function ( program ) {
+	function releaseProgram( program ) {
 
 		if ( -- program.usedTimes === 0 ) {
 
 			// Remove from unordered set
-			var i = programs.indexOf( program );
+			const i = programs.indexOf( program );
 			programs[ i ] = programs[ programs.length - 1 ];
 			programs.pop();
 
@@ -403,10 +404,16 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 		}
 
-	};
+	}
 
-	// Exposed for resource monitoring & error feedback via renderer.info:
-	this.programs = programs;
+	return {
+		getParameters: getParameters,
+		getProgramCacheKey: getProgramCacheKey,
+		acquireProgram: acquireProgram,
+		releaseProgram: releaseProgram,
+		// Exposed for resource monitoring & error feedback via renderer.info:
+		programs: programs
+	};
 
 }
 

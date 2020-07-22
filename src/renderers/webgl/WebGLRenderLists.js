@@ -63,14 +63,14 @@ function reversePainterSortStable( a, b ) {
 
 function WebGLRenderList() {
 
-	var renderItems = [];
-	var renderItemsIndex = 0;
+	const renderItems = [];
+	let renderItemsIndex = 0;
 
-	var custom1 = []; // @THREE-Modification
-	var opaque = [];
-	var transparent = [];
+	const custom1 = []; // @THREE-Modification
+	const opaque = [];
+	const transparent = [];
 
-	var defaultProgram = { id: - 1 };
+	const defaultProgram = { id: - 1 };
 
 	function init() {
 
@@ -84,7 +84,7 @@ function WebGLRenderList() {
 
 	function getNextRenderItem( object, geometry, material, groupOrder, z, group ) {
 
-		var renderItem = renderItems[ renderItemsIndex ];
+		let renderItem = renderItems[ renderItemsIndex ];
 
 		if ( renderItem === undefined ) {
 
@@ -124,7 +124,7 @@ function WebGLRenderList() {
 
 	function push( object, geometry, material, groupOrder, z, group ) {
 
-		var renderItem = getNextRenderItem( object, geometry, material, groupOrder, z, group );
+		const renderItem = getNextRenderItem( object, geometry, material, groupOrder, z, group );
 
 		// @THREE-Modification
 		if ( object.renderLayer === 1 ) {
@@ -141,7 +141,7 @@ function WebGLRenderList() {
 
 	function unshift( object, geometry, material, groupOrder, z, group ) {
 
-		var renderItem = getNextRenderItem( object, geometry, material, groupOrder, z, group );
+		const renderItem = getNextRenderItem( object, geometry, material, groupOrder, z, group );
 
 		// @THREE-Modification
 		if ( object.renderLayer === 1 ) {
@@ -168,9 +168,9 @@ function WebGLRenderList() {
 
 		// Clear references from inactive renderItems in the list
 
-		for ( var i = renderItemsIndex, il = renderItems.length; i < il; i ++ ) {
+		for ( let i = renderItemsIndex, il = renderItems.length; i < il; i ++ ) {
 
-			var renderItem = renderItems[ i ];
+			const renderItem = renderItems[ i ];
 
 			if ( renderItem.id === null ) break;
 
@@ -202,11 +202,11 @@ function WebGLRenderList() {
 
 function WebGLRenderLists() {
 
-	var lists = new WeakMap();
+	let lists = new WeakMap();
 
 	function onSceneDispose( event ) {
 
-		var scene = event.target;
+		const scene = event.target;
 
 		scene.removeEventListener( 'dispose', onSceneDispose );
 
@@ -216,8 +216,9 @@ function WebGLRenderLists() {
 
 	function get( scene, camera ) {
 
-		var cameras = lists.get( scene );
-		var list;
+		const cameras = lists.get( scene );
+		let list;
+
 		if ( cameras === undefined ) {
 
 			list = new WebGLRenderList();

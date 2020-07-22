@@ -15,7 +15,7 @@ import { Vector4 } from '../../math/Vector4.js'; // @THREE-Modification
  * @author mikael emtinger / http://gomo.se/
  */
 
-var ShaderLib = {
+const ShaderLib = {
 
 	basic: {
 
@@ -112,7 +112,6 @@ var ShaderLib = {
 
 		uniforms: mergeUniforms( [
 			UniformsLib.common,
-			UniformsLib.specularmap,
 			UniformsLib.aomap,
 			UniformsLib.lightmap,
 			UniformsLib.emissivemap,
@@ -123,9 +122,7 @@ var ShaderLib = {
 			UniformsLib.fog,
 			UniformsLib.lights,
 			{
-				emissive: { value: new Color( 0x000000 ) },
-				specular: { value: new Color( 0x111111 ) },
-				shininess: { value: 30 }
+				emissive: { value: new Color( 0x000000 ) }
 			}
 		] ),
 

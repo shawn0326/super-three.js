@@ -10,8 +10,8 @@ import { Vector3 } from '../math/Vector3.js';
  * @author ikerr / http://verold.com
  */
 
-var _offsetMatrix = new Matrix4();
-var _identityMatrix = new Matrix4();
+const _offsetMatrix = new Matrix4();
+const _identityMatrix = new Matrix4();
 
 // @THREE-Modification
 // skeleton fix
@@ -46,7 +46,7 @@ function Skeleton( bones, boneInverses ) {
 
 			this.boneInverses = [];
 
-			for ( var i = 0, il = this.bones.length; i < il; i ++ ) {
+			for ( let i = 0, il = this.bones.length; i < il; i ++ ) {
 
 				this.boneInverses.push( new Matrix4() );
 
@@ -64,9 +64,9 @@ Object.assign( Skeleton.prototype, {
 
 		this.boneInverses = [];
 
-		for ( var i = 0, il = this.bones.length; i < il; i ++ ) {
+		for ( let i = 0, il = this.bones.length; i < il; i ++ ) {
 
-			var inverse = new Matrix4();
+			const inverse = new Matrix4();
 
 			if ( this.bones[ i ] ) {
 
@@ -82,13 +82,11 @@ Object.assign( Skeleton.prototype, {
 
 	pose: function () {
 
-		var bone, i, il;
-
 		// recover the bind-time world matrices
 
-		for ( i = 0, il = this.bones.length; i < il; i ++ ) {
+		for ( let i = 0, il = this.bones.length; i < il; i ++ ) {
 
-			bone = this.bones[ i ];
+			const bone = this.bones[ i ];
 
 			if ( bone ) {
 
@@ -100,9 +98,9 @@ Object.assign( Skeleton.prototype, {
 
 		// compute the local matrices, positions, rotations and scales
 
-		for ( i = 0, il = this.bones.length; i < il; i ++ ) {
+		for ( let i = 0, il = this.bones.length; i < il; i ++ ) {
 
-			bone = this.bones[ i ];
+			const bone = this.bones[ i ];
 
 			if ( bone ) {
 
@@ -129,10 +127,10 @@ Object.assign( Skeleton.prototype, {
 	// skeleton fix
 	update: function ( object ) {
 
-		var bones = this.bones;
-		var boneInverses = this.boneInverses;
-		var boneMatrices = this.boneMatrices;
-		var boneTexture = this.boneTexture;
+		const bones = this.bones;
+		const boneInverses = this.boneInverses;
+		const boneMatrices = this.boneMatrices;
+		const boneTexture = this.boneTexture;
 
 		// flatten bone matrices to array
 
@@ -140,11 +138,11 @@ Object.assign( Skeleton.prototype, {
 		// skeleton fix
 		object.getWorldPosition( _worldPosition );
 
-		for ( var i = 0, il = bones.length; i < il; i ++ ) {
+		for ( let i = 0, il = bones.length; i < il; i ++ ) {
 
 			// compute the offset between the current and the original transform
 
-			var matrix = bones[ i ] ? bones[ i ].matrixWorld : _identityMatrix;
+			const matrix = bones[ i ] ? bones[ i ].matrixWorld : _identityMatrix;
 
 			_offsetMatrix.multiplyMatrices( matrix, boneInverses[ i ] );
 
@@ -175,9 +173,9 @@ Object.assign( Skeleton.prototype, {
 
 	getBoneByName: function ( name ) {
 
-		for ( var i = 0, il = this.bones.length; i < il; i ++ ) {
+		for ( let i = 0, il = this.bones.length; i < il; i ++ ) {
 
-			var bone = this.bones[ i ];
+			const bone = this.bones[ i ];
 
 			if ( bone.name === name ) {
 
