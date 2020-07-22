@@ -34,7 +34,6 @@ import { Mesh } from "../objects/Mesh.js";
 import { OrthographicCamera } from "../cameras/OrthographicCamera.js";
 import { PerspectiveCamera } from "../cameras/PerspectiveCamera.js";
 import { RawShaderMaterial } from "../materials/RawShaderMaterial.js";
-import { Scene } from "../scenes/Scene.js";
 import { Vector2 } from "../math/Vector2.js";
 import { Vector3 } from "../math/Vector3.js";
 import { WebGLRenderTarget } from "../renderers/WebGLRenderTarget.js";
@@ -246,9 +245,8 @@ PMREMGenerator.prototype = {
 
 	_compileMaterial: function ( material ) {
 
-		var tmpScene = new Scene();
-		tmpScene.add( new Mesh( _lodPlanes[ 0 ], material ) );
-		this._renderer.compile( tmpScene, _flatCamera );
+		var tmpMesh = new Mesh( _lodPlanes[ 0 ], material );
+		this._renderer.compile( tmpMesh, _flatCamera );
 
 	},
 
@@ -257,8 +255,8 @@ PMREMGenerator.prototype = {
 		var fov = 90;
 		var aspect = 1;
 		var cubeCamera = new PerspectiveCamera( fov, aspect, near, far );
-		var upSign = [ 1, 1, 1, 1, - 1, 1 ];
-		var forwardSign = [ 1, 1, - 1, - 1, - 1, 1 ];
+		var upSign = [ 1, - 1, 1, 1, 1, 1 ];
+		var forwardSign = [ 1, 1, 1, - 1, - 1, - 1 ];
 		var renderer = this._renderer;
 
 		var outputEncoding = renderer.outputEncoding;
@@ -270,7 +268,6 @@ PMREMGenerator.prototype = {
 		renderer.toneMapping = LinearToneMapping;
 		renderer.toneMappingExposure = 1.0;
 		renderer.outputEncoding = LinearEncoding;
-		scene.scale.z *= - 1;
 
 		var background = scene.background;
 		if ( background && background.isColor ) {
@@ -317,13 +314,11 @@ PMREMGenerator.prototype = {
 		renderer.toneMappingExposure = toneMappingExposure;
 		renderer.outputEncoding = outputEncoding;
 		renderer.setClearColor( clearColor, clearAlpha );
-		scene.scale.z *= - 1;
 
 	},
 
 	_textureToCubeUV: function ( texture, cubeUVRenderTarget ) {
 
-		var scene = new Scene();
 		var renderer = this._renderer;
 
 		if ( texture.isCubeTexture ) {
@@ -345,7 +340,7 @@ PMREMGenerator.prototype = {
 		}
 
 		var material = texture.isCubeTexture ? this._cubemapShader : this._equirectShader;
-		scene.add( new Mesh( _lodPlanes[ 0 ], material ) );
+		var mesh = new Mesh( _lodPlanes[ 0 ], material );
 
 		var uniforms = material.uniforms;
 
@@ -363,7 +358,7 @@ PMREMGenerator.prototype = {
 		_setViewport( cubeUVRenderTarget, 0, 0, 3 * SIZE_MAX, 2 * SIZE_MAX );
 
 		renderer.setRenderTarget( cubeUVRenderTarget );
-		renderer.render( scene, _flatCamera );
+		renderer.render( mesh, _flatCamera );
 
 	},
 
@@ -433,8 +428,7 @@ PMREMGenerator.prototype = {
 		// Number of standard deviations at which to cut off the discrete approximation.
 		var STANDARD_DEVIATIONS = 3;
 
-		var blurScene = new Scene();
-		blurScene.add( new Mesh( _lodPlanes[ lodOut ], blurMaterial ) );
+		var blurMesh = new Mesh( _lodPlanes[ lodOut ], blurMaterial );
 		var blurUniforms = blurMaterial.uniforms;
 
 		var pixels = _sizeLods[ lodIn ] - 1;
@@ -499,7 +493,7 @@ PMREMGenerator.prototype = {
 
 		_setViewport( targetOut, x, y, 3 * outputSize, 2 * outputSize );
 		renderer.setRenderTarget( targetOut );
-		renderer.render( blurScene, _flatCamera );
+		renderer.render( blurMesh, _flatCamera );
 
 	}
 
@@ -709,15 +703,12 @@ uniform vec2 texelSize;
 
 ${_getEncodings()}
 
-#define RECIPROCAL_PI 0.31830988618
-#define RECIPROCAL_PI2 0.15915494
+#include <common>
 
 void main() {
 	gl_FragColor = vec4(0.0);
 	vec3 outputDirection = normalize(vOutputDirection);
-	vec2 uv;
-	uv.y = asin(clamp(outputDirection.y, -1.0, 1.0)) * RECIPROCAL_PI + 0.5;
-	uv.x = atan(outputDirection.z, outputDirection.x) * RECIPROCAL_PI2 + 0.5;
+	vec2 uv = equirectUv( outputDirection );
 	vec2 f = fract(uv / texelSize - 0.5);
 	uv -= f * texelSize;
 	vec3 tl = envMapTexelToLinear(texture2D(envMap, uv)).rgb;
@@ -794,26 +785,30 @@ attribute vec3 position;
 attribute vec2 uv;
 attribute float faceIndex;
 varying vec3 vOutputDirection;
+
+// RH coordinate system; PMREM face-indexing convention
 vec3 getDirection(vec2 uv, float face) {
 	uv = 2.0 * uv - 1.0;
 	vec3 direction = vec3(uv, 1.0);
 	if (face == 0.0) {
-		direction = direction.zyx;
-		direction.z *= -1.0;
+		direction = direction.zyx; // ( 1, v, u ) pos x
 	} else if (face == 1.0) {
 		direction = direction.xzy;
-		direction.z *= -1.0;
+		direction.xz *= -1.0; // ( -u, 1, -v ) pos y
+	} else if (face == 2.0) {
+		direction.x *= -1.0; // ( -u, v, 1 ) pos z
 	} else if (face == 3.0) {
 		direction = direction.zyx;
-		direction.x *= -1.0;
+		direction.xz *= -1.0; // ( -1, v, -u ) neg x
 	} else if (face == 4.0) {
 		direction = direction.xzy;
-		direction.y *= -1.0;
+		direction.xy *= -1.0; // ( -u, -1, v ) neg y
 	} else if (face == 5.0) {
-		direction.xz *= -1.0;
+		direction.z *= -1.0; // ( u, v, -1 ) neg z
 	}
 	return direction;
 }
+
 void main() {
 	vOutputDirection = getDirection(uv, faceIndex);
 	gl_Position = vec4( position, 1.0 );

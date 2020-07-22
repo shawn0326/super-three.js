@@ -64,7 +64,15 @@ function animate() {
 }
 ```
 
-If everything went well you should see [this](https://jsfiddle.net/8kubjpL5/).
+If everything went well, you should see [this](https://jsfiddle.net/8kubjpL5/).
+
+### Cloning this repository ###
+
+Cloning the repo with all its history results in a ~2GB download. If you don't need the whole history you can use the `depth` parameter to significantly reduce download size.
+
+```sh
+git clone --depth=1 https://github.com/mrdoob/three.js.git
+```
 
 ### Change log ###
 
@@ -93,8 +101,8 @@ All modifications are marked by `// @THREE-Modification`.
 * ~~WebGLTextures: Support RenderTarget.multipleSampling & WebGLRenderer.blitRenderTarget() (for MSAA etc) in WebGL2.~~(implemented in r101)
 * WebGLRenderer: Skeleton percision fix.
 * WebGLRenderer: GPU picker support. (Remove this later)
-* WebGLRenderer: Separat UVTransform for alphaMap.
-* WebGLRenderer: Separat UVTransform for emissiveMap.
+* WebGLMaterials: Separat UVTransform for alphaMap.
+* WebGLMaterials: Separat UVTransform for emissiveMap.
 * WebGLRenderer: Add **MaterialManager** to switch material on runtime.
 * WebGLBackground: Support color transform for background cube texture.
 * alphatest_fragment: Prevent alpha test edge gradient.
@@ -105,7 +113,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Object3D: Dispatch 'addedChild' event when add child.
 * Fog: Support fog alpha. please use fog.alpha.
 * Material: Support envMap rotation.
-* InterleavedBufferAttribute: Override clone.
+* ~~InterleavedBufferAttribute: Override clone.~~(implemented in r117)
 * ~~Mesh: Raycast method support TriangleStripDrawMode.~~(Mesh.drawMode has been moved in r112)
 * Mesh: Raycast method fix for group count infinity.
 * WebGLMultisampleRenderTarget: Support share webglDepthRenderbuffer.
