@@ -12,7 +12,7 @@ import {
 	FloatType,
 	UnsignedByteType,
 	LinearEncoding,
-	LinearToneMapping,
+	NoToneMapping,
 	BackSide
 } from '../constants.js';
 import { MathUtils } from '../math/MathUtils.js';
@@ -113,7 +113,7 @@ function WebGLRenderer( parameters ) {
 
 	// tone mapping
 
-	this.toneMapping = LinearToneMapping;
+	this.toneMapping = NoToneMapping;
 	this.toneMappingExposure = 1.0;
 	this.toneMappingWhitePoint = 1.0;
 
@@ -597,8 +597,6 @@ function WebGLRenderer( parameters ) {
 
 		animation.stop();
 
-		this.forceContextLoss();
-
 	};
 
 	// Events
@@ -759,6 +757,12 @@ function WebGLRenderer( parameters ) {
 		if ( material.morphTargets || material.morphNormals ) {
 
 			morphtargets.update( object, geometry, material, program );
+
+			updateBuffers = true;
+
+		}
+
+		if ( object.isInstancedMesh === true ) {
 
 			updateBuffers = true;
 
@@ -958,7 +962,7 @@ function WebGLRenderer( parameters ) {
 						}
 
 						_gl.bindBuffer( _gl.ARRAY_BUFFER, buffer );
-						_gl.vertexAttribPointer( programAttribute, size, type, normalized, stride * bytesPerElement, offset * bytesPerElement );
+						state.vertexAttribPointer( programAttribute, size, type, normalized, stride * bytesPerElement, offset * bytesPerElement );
 
 					} else {
 
@@ -979,7 +983,7 @@ function WebGLRenderer( parameters ) {
 						}
 
 						_gl.bindBuffer( _gl.ARRAY_BUFFER, buffer );
-						_gl.vertexAttribPointer( programAttribute, size, type, normalized, 0, 0 );
+						state.vertexAttribPointer( programAttribute, size, type, normalized, 0, 0 );
 
 					}
 
@@ -1180,10 +1184,10 @@ function WebGLRenderer( parameters ) {
 
 			//
 
+			scene.onBeforeRender( _this, scene, camera, renderTarget || _currentRenderTarget );
+
 			currentRenderState = renderStates.get( scene, camera );
 			currentRenderState.init();
-
-			scene.onBeforeRender( _this, scene, camera, renderTarget || _currentRenderTarget );
 
 			_projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
 			_frustum.setFromProjectionMatrix( _projScreenMatrix );
@@ -1618,8 +1622,7 @@ function WebGLRenderer( parameters ) {
 
 			materialProperties.program = program;
 			materialProperties.uniforms = parameters.uniforms;
-			materialProperties.environment = material.isMeshStandardMaterial ? scene.environment : null;
-			materialProperties.outputEncoding = _this.outputEncoding;
+			materialProperties.outputEncoding = parameters.outputEncoding;
 			material.program = program;
 
 		}
@@ -1670,6 +1673,7 @@ function WebGLRenderer( parameters ) {
 
 		}
 
+		materialProperties.environment = material.isMeshStandardMaterial ? scene.environment : null;
 		materialProperties.fog = scene.fog;
 
 		// store the light setup it was created for
@@ -1718,6 +1722,10 @@ function WebGLRenderer( parameters ) {
 
 		var fog = scene.fog;
 		var environment = material.isMeshStandardMaterial ? scene.environment : null;
+
+		// @THREE-Modification remove this later
+		var encoding = _this.outputEncoding;
+		// var encoding = ( _currentRenderTarget === null ) ? _this.outputEncoding : _currentRenderTarget.texture.encoding;
 
 		var materialProperties = properties.get( material );
 		var lights = currentRenderState.state.lights;
@@ -1769,7 +1777,7 @@ function WebGLRenderer( parameters ) {
 
 				material.needsUpdate = true;
 
-			} else if ( materialProperties.outputEncoding !== _this.outputEncoding ) {
+			} else if ( materialProperties.outputEncoding !== encoding ) {
 
 				initMaterial( material, scene, object );
 
@@ -2950,6 +2958,8 @@ function WebGLRenderer( parameters ) {
 
 	this.copyTextureToTexture = function ( position, srcTexture, dstTexture, level ) {
 
+		if ( level === undefined ) level = 0;
+
 		var width = srcTexture.image.width;
 		var height = srcTexture.image.height;
 		var glFormat = utils.convert( dstTexture.format );
@@ -2959,13 +2969,24 @@ function WebGLRenderer( parameters ) {
 
 		if ( srcTexture.isDataTexture ) {
 
-			_gl.texSubImage2D( _gl.TEXTURE_2D, level || 0, position.x, position.y, width, height, glFormat, glType, srcTexture.image.data );
+			_gl.texSubImage2D( _gl.TEXTURE_2D, level, position.x, position.y, width, height, glFormat, glType, srcTexture.image.data );
 
 		} else {
 
-			_gl.texSubImage2D( _gl.TEXTURE_2D, level || 0, position.x, position.y, glFormat, glType, srcTexture.image );
+			if ( srcTexture.isCompressedTexture ) {
+
+				_gl.compressedTexSubImage2D( _gl.TEXTURE_2D, level, position.x, position.y, srcTexture.mipmaps[ 0 ].width, srcTexture.mipmaps[ 0 ].height, glFormat, srcTexture.mipmaps[ 0 ].data );
+
+			} else {
+
+				_gl.texSubImage2D( _gl.TEXTURE_2D, level, position.x, position.y, glFormat, glType, srcTexture.image );
+
+			}
 
 		}
+
+		// Generate mipmaps only when copying level 0
+		if ( level === 0 && dstTexture.generateMipmaps ) _gl.generateMipmap( _gl.TEXTURE_2D );
 
 		state.unbindTexture();
 
