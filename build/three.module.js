@@ -19365,7 +19365,7 @@ function WebGLPrograms( renderer, extensions, capabilities, bindingStates ) {
 			const shader = ShaderLib[ shaderID ];
 
 			shaderobject = {
-				name: material.name || material.type,
+				name: material.type,
 				uniforms: UniformsUtils.clone( shader.uniforms ),
 				vertexShader: shader.vertexShader,
 				fragmentShader: shader.fragmentShader
@@ -19374,7 +19374,7 @@ function WebGLPrograms( renderer, extensions, capabilities, bindingStates ) {
 		} else {
 
 			shaderobject = {
-				name: material.name || material.type,
+				name: material.type,
 				uniforms: material.uniforms,
 				vertexShader: material.vertexShader,
 				fragmentShader: material.fragmentShader
