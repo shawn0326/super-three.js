@@ -126,6 +126,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLRenderLists: Support custom1 layer.
 * WebGLProgram: Support instanced material.
 * FileLoader: Handle status 201. (Remove this later)
+* Object3D: Add Matrtix dirty.
 
 ### 开发规范 ###
 
