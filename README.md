@@ -127,6 +127,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLProgram: Support instanced material.
 * FileLoader: Handle status 201. (Remove this later)
 * WebGLPrograms: Support renderer.gammaInput & renderer.outputEncoding will override renderTarget linearEncoding.
+* WebGLRenderer: Add polyfill for state.enableAttribute.
 
 ### 开发规范 ###
 

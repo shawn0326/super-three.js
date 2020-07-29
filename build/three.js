@@ -25353,6 +25353,13 @@
 			_this.state = state;
 			_this.info = info;
 
+			// @THREE-Modification add polyfill for state.enableAttribute
+			_this.state.enableAttribute = function ( attribute ) {
+
+				bindingStates.enableAttribute( attribute );
+
+			};
+
 		}
 
 		initGLContext();
