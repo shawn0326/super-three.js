@@ -5407,6 +5407,9 @@ function Object3D() {
 	this.matrixAutoUpdate = Object3D.DefaultMatrixAutoUpdate;
 	this.matrixWorldNeedsUpdate = false;
 
+	// @THREE-Modification mark matrix dirty
+	this.matrixNeedsUpdate = true;
+
 	this.layers = new Layers();
 	this.visible = true;
 
@@ -5437,7 +5440,7 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 	applyMatrix4: function ( matrix ) {
 
-		if ( this.matrixAutoUpdate ) this.updateMatrix();
+		if ( this.matrixAutoUpdate || this.matrixNeedsUpdate ) this.updateMatrix(); // @THREE-Modification mark matrix dirty
 
 		this.matrix.premultiply( matrix );
 
@@ -5866,11 +5869,13 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		this.matrixWorldNeedsUpdate = true;
 
+		this.matrixNeedsUpdate = false;
+
 	},
 
 	updateMatrixWorld: function ( force ) {
 
-		if ( this.matrixAutoUpdate ) this.updateMatrix();
+		if ( this.matrixAutoUpdate || this.matrixNeedsUpdate ) this.updateMatrix(); // @THREE-Modification mark matrix dirty
 
 		if ( this.matrixWorldNeedsUpdate || force ) {
 
@@ -5912,7 +5917,7 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		}
 
-		if ( this.matrixAutoUpdate ) this.updateMatrix();
+		if ( this.matrixAutoUpdate || this.matrixNeedsUpdate ) this.updateMatrix(); // @THREE-Modification mark matrix dirty
 
 		if ( this.parent === null ) {
 

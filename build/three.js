@@ -5435,6 +5435,9 @@
 		this.matrixAutoUpdate = Object3D.DefaultMatrixAutoUpdate;
 		this.matrixWorldNeedsUpdate = false;
 
+		// @THREE-Modification mark matrix dirty
+		this.matrixNeedsUpdate = true;
+
 		this.layers = new Layers();
 		this.visible = true;
 
@@ -5465,7 +5468,7 @@
 
 		applyMatrix4: function ( matrix ) {
 
-			if ( this.matrixAutoUpdate ) { this.updateMatrix(); }
+			if ( this.matrixAutoUpdate || this.matrixNeedsUpdate ) { this.updateMatrix(); } // @THREE-Modification mark matrix dirty
 
 			this.matrix.premultiply( matrix );
 
@@ -5894,11 +5897,13 @@
 
 			this.matrixWorldNeedsUpdate = true;
 
+			this.matrixNeedsUpdate = false;
+
 		},
 
 		updateMatrixWorld: function ( force ) {
 
-			if ( this.matrixAutoUpdate ) { this.updateMatrix(); }
+			if ( this.matrixAutoUpdate || this.matrixNeedsUpdate ) { this.updateMatrix(); } // @THREE-Modification mark matrix dirty
 
 			if ( this.matrixWorldNeedsUpdate || force ) {
 
@@ -5940,7 +5945,7 @@
 
 			}
 
-			if ( this.matrixAutoUpdate ) { this.updateMatrix(); }
+			if ( this.matrixAutoUpdate || this.matrixNeedsUpdate ) { this.updateMatrix(); } // @THREE-Modification mark matrix dirty
 
 			if ( this.parent === null ) {
 
