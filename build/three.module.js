@@ -16050,7 +16050,9 @@ function WebGLBindingStates( gl, extensions, attributes, capabilities ) {
 			enabledAttributes: enabledAttributes,
 			attributeDivisors: attributeDivisors,
 			object: vao,
-			attributes: {}
+			attributes: {},
+
+			index: null // @THREE-Modification fix index cache for vao
 
 		};
 
@@ -16071,6 +16073,12 @@ function WebGLBindingStates( gl, extensions, attributes, capabilities ) {
 			if ( cachedAttribute.attribute !== geometryAttribute ) return true;
 
 			if ( cachedAttribute.data !== geometryAttribute.data ) return true;
+
+		}
+
+		if ( currentState.index !== geometry.index ) { // @THREE-Modification fix index cache for vao
+
+			return true;
 
 		}
 
@@ -16101,6 +16109,7 @@ function WebGLBindingStates( gl, extensions, attributes, capabilities ) {
 		}
 
 		currentState.attributes = cache;
+		currentState.index = geometry.index; // @THREE-Modification fix index cache for vao
 
 	}
 

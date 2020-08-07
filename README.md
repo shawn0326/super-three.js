@@ -129,6 +129,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLPrograms: Support renderer.gammaInput & renderer.outputEncoding will override renderTarget linearEncoding.
 * WebGLRenderer: Add polyfill for state.enableAttribute.
 * Object3D: Add Matrtix dirty.
+* WebGLBindingStates: Fix index cache for VAO.
 
 ### 开发规范 ###
 
