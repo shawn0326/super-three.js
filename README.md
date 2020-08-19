@@ -127,6 +127,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLProgram: Support instanced material.
 * FileLoader: Handle status 201. (Remove this later)
 * Object3D: Add Matrtix dirty.
+* WebGLState: Support separate stencil settings.
 
 ### 开发规范 ###
 
