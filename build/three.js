@@ -8804,6 +8804,14 @@
 		this.stencilZPass = KeepStencilOp;
 		this.stencilWrite = false;
 
+		// @THREE-Modification Support separate stencil settings.
+		this.stencilFuncBack = null;
+		this.stencilRefBack = null;
+		this.stencilFuncMaskBack = null;
+		this.stencilFailBack = null;
+		this.stencilZFailBack = null;
+		this.stencilZPassBack = null;
+
 		this.clippingPlanes = null;
 		this.clipIntersection = false;
 		this.clipShadows = false;
@@ -9045,6 +9053,14 @@
 			data.stencilZFail = this.stencilZFail;
 			data.stencilZPass = this.stencilZPass;
 
+			// @THREE-Modification Support separate stencil settings.
+			data.stencilFuncBack = this.stencilFuncBack;
+			data.stencilRefBack = this.stencilRefBack;
+			data.stencilFuncMaskBack = this.stencilFuncMaskBack;
+			data.stencilFailBack = this.stencilFailBack;
+			data.stencilZFailBack = this.stencilZFailBack;
+			data.stencilZPassBack = this.stencilZPassBack;
+
 			// rotation (SpriteMaterial)
 			if ( this.rotation && this.rotation !== 0 ) { data.rotation = this.rotation; }
 
@@ -9148,6 +9164,14 @@
 			this.stencilZFail = source.stencilZFail;
 			this.stencilZPass = source.stencilZPass;
 			this.stencilWrite = source.stencilWrite;
+
+			// @THREE-Modification Support separate stencil settings.
+			this.stencilFuncBack = source.stencilFuncBack;
+			this.stencilRefBack = source.stencilRefBack;
+			this.stencilFuncMaskBack = source.stencilFuncMaskBack;
+			this.stencilFailBack = source.stencilFailBack;
+			this.stencilZFailBack = source.stencilZFailBack;
+			this.stencilZPassBack = source.stencilZPassBack;
 
 			var srcPlanes = source.clippingPlanes;
 			var dstPlanes = null;
@@ -21456,6 +21480,14 @@
 			var currentStencilZPass = null;
 			var currentStencilClear = null;
 
+			// @THREE-Modification Support separate stencil settings.
+			var currentStencilFuncBack = null;
+			var currentStencilRefBack = null;
+			var currentStencilFuncMaskBack = null;
+			var currentStencilFailBack = null;
+			var currentStencilZFailBack = null;
+			var currentStencilZPassBack = null;
+
 			return {
 
 				setTest: function ( stencilTest ) {
@@ -21487,33 +21519,67 @@
 
 				},
 
-				setFunc: function ( stencilFunc, stencilRef, stencilMask ) {
+				setFunc: function ( stencilFunc, stencilRef, stencilMask, stencilFuncBack, stencilRefBack, stencilMaskBack ) {
+
+					// @THREE-Modification Support separate stencil settings.
 
 					if ( currentStencilFunc !== stencilFunc ||
 					     currentStencilRef 	!== stencilRef 	||
-					     currentStencilFuncMask !== stencilMask ) {
+						 currentStencilFuncMask !== stencilMask ||
+						 currentStencilFuncBack !== stencilFuncBack ||
+					     currentStencilRefBack 	!== stencilRefBack 	||
+					     currentStencilFuncMaskBack !== stencilMaskBack ) {
 
-						gl.stencilFunc( stencilFunc, stencilRef, stencilMask );
+						if ( stencilFuncBack === null || stencilRefBack === null || stencilMaskBack === null ) {
+
+							gl.stencilFunc( stencilFunc, stencilRef, stencilMask );
+
+						} else {
+
+							gl.stencilFuncSeparate( 1028, stencilFunc, stencilRef, stencilMask );
+							gl.stencilFuncSeparate( 1029, stencilFuncBack, stencilRefBack, stencilMaskBack );
+
+						}
 
 						currentStencilFunc = stencilFunc;
 						currentStencilRef = stencilRef;
 						currentStencilFuncMask = stencilMask;
+						currentStencilFuncBack = stencilFuncBack;
+						currentStencilRefBack = stencilRefBack;
+						currentStencilFuncMaskBack = stencilMaskBack;
 
 					}
 
 				},
 
-				setOp: function ( stencilFail, stencilZFail, stencilZPass ) {
+				setOp: function ( stencilFail, stencilZFail, stencilZPass, stencilFailBack, stencilZFailBack, stencilZPassBack ) {
+
+					// @THREE-Modification Support separate stencil settings.
 
 					if ( currentStencilFail	 !== stencilFail 	||
 					     currentStencilZFail !== stencilZFail ||
-					     currentStencilZPass !== stencilZPass ) {
+						 currentStencilZPass !== stencilZPass ||
+						 currentStencilFailBack	 !== stencilFailBack ||
+					     currentStencilZFailBack !== stencilZFailBack ||
+					     currentStencilZPassBack !== stencilZPassBack ) {
 
-						gl.stencilOp( stencilFail, stencilZFail, stencilZPass );
+						if ( stencilFailBack === null || stencilZFailBack === null || stencilZPassBack === null ) {
+
+							gl.stencilOp( stencilFail, stencilZFail, stencilZPass );
+
+						} else {
+
+							gl.stencilOpSeparate( 1028, stencilFail, stencilZFail, stencilZPass );
+							gl.stencilOpSeparate( 1029, stencilFailBack, stencilZFailBack, stencilZPassBack );
+
+						}
 
 						currentStencilFail = stencilFail;
 						currentStencilZFail = stencilZFail;
 						currentStencilZPass = stencilZPass;
+						currentStencilFailBack = stencilFailBack;
+					    currentStencilZFailBack = stencilZFailBack;
+					    currentStencilZPassBack = stencilZPassBack;
 
 					}
 
@@ -21880,8 +21946,10 @@
 			if ( stencilWrite ) {
 
 				stencilBuffer.setMask( material.stencilWriteMask );
-				stencilBuffer.setFunc( material.stencilFunc, material.stencilRef, material.stencilFuncMask );
-				stencilBuffer.setOp( material.stencilFail, material.stencilZFail, material.stencilZPass );
+
+				// @THREE-Modification Support separate stencil settings.
+				stencilBuffer.setFunc( material.stencilFunc, material.stencilRef, material.stencilFuncMask, material.stencilFuncBack, material.stencilRefBack, material.stencilFuncMaskBack );
+				stencilBuffer.setOp( material.stencilFail, material.stencilZFail, material.stencilZPass, material.stencilFailBack, material.stencilZFailBack, material.stencilZPassBack );
 
 			}
 

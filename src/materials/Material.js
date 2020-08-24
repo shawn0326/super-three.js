@@ -48,6 +48,14 @@ function Material() {
 	this.stencilZPass = KeepStencilOp;
 	this.stencilWrite = false;
 
+	// @THREE-Modification Support separate stencil settings.
+	this.stencilFuncBack = null;
+	this.stencilRefBack = null;
+	this.stencilFuncMaskBack = null;
+	this.stencilFailBack = null;
+	this.stencilZFailBack = null;
+	this.stencilZPassBack = null;
+
 	this.clippingPlanes = null;
 	this.clipIntersection = false;
 	this.clipShadows = false;
@@ -289,6 +297,14 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		data.stencilZFail = this.stencilZFail;
 		data.stencilZPass = this.stencilZPass;
 
+		// @THREE-Modification Support separate stencil settings.
+		data.stencilFuncBack = this.stencilFuncBack;
+		data.stencilRefBack = this.stencilRefBack;
+		data.stencilFuncMaskBack = this.stencilFuncMaskBack;
+		data.stencilFailBack = this.stencilFailBack;
+		data.stencilZFailBack = this.stencilZFailBack;
+		data.stencilZPassBack = this.stencilZPassBack;
+
 		// rotation (SpriteMaterial)
 		if ( this.rotation && this.rotation !== 0 ) data.rotation = this.rotation;
 
@@ -392,6 +408,14 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		this.stencilZFail = source.stencilZFail;
 		this.stencilZPass = source.stencilZPass;
 		this.stencilWrite = source.stencilWrite;
+
+		// @THREE-Modification Support separate stencil settings.
+		this.stencilFuncBack = source.stencilFuncBack;
+		this.stencilRefBack = source.stencilRefBack;
+		this.stencilFuncMaskBack = source.stencilFuncMaskBack;
+		this.stencilFailBack = source.stencilFailBack;
+		this.stencilZFailBack = source.stencilZFailBack;
+		this.stencilZPassBack = source.stencilZPassBack;
 
 		const srcPlanes = source.clippingPlanes;
 		let dstPlanes = null;

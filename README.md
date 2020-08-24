@@ -130,6 +130,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLRenderer: Add polyfill for state.enableAttribute.
 * Object3D: Add Matrtix dirty.
 * WebGLBindingStates: Fix index cache for VAO.
+* WebGLState: Support separate stencil settings.
 
 ### 开发规范 ###
 
