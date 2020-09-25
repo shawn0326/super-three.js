@@ -128,6 +128,7 @@ All modifications are marked by `// @THREE-Modification`.
 * FileLoader: Handle status 201. (Remove this later)
 * Object3D: Add Matrtix dirty.
 * WebGLState: Support separate stencil settings.
+* Move SpriteMaterial.rotation to Sprite.spriteRotation. (SpriteMaterial.rotation still work)
 
 ### 开发规范 ###
 

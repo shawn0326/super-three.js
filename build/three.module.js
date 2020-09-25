@@ -25998,6 +25998,8 @@ function WebGLRenderer( parameters ) {
 
 			p_uniforms.setValue( _gl, 'center', object.center );
 
+			p_uniforms.setValue( _gl, 'rotation', object.spriteRotation || material.rotation ); // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
+
 		}
 
 		// common matrices
@@ -26265,7 +26267,7 @@ function WebGLRenderer( parameters ) {
 
 		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
-		uniforms.rotation.value = material.rotation;
+		// uniforms.rotation.value = material.rotation; // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
 
 		if ( material.map ) {
 
@@ -27239,6 +27241,8 @@ function Sprite( material ) {
 
 	this.center = new Vector2( 0.5, 0.5 );
 
+	this.spriteRotation = 0; // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
+
 }
 
 Sprite.prototype = Object.assign( Object.create( Object3D.prototype ), {
@@ -27272,7 +27276,7 @@ Sprite.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 		}
 
-		var rotation = this.material.rotation;
+		var rotation = this.spriteRotation || this.material.rotation; // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
 		var sin, cos;
 		if ( rotation !== 0 ) {
 
@@ -27336,6 +27340,8 @@ Sprite.prototype = Object.assign( Object.create( Object3D.prototype ), {
 		Object3D.prototype.copy.call( this, source );
 
 		if ( source.center !== undefined ) this.center.copy( source.center );
+
+		if ( source.spriteRotation !== undefined ) this.spriteRotation = source.spriteRotation; // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
 
 		return this;
 

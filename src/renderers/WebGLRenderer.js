@@ -2157,6 +2157,8 @@ function WebGLRenderer( parameters ) {
 
 			p_uniforms.setValue( _gl, 'center', object.center );
 
+			p_uniforms.setValue( _gl, 'rotation', object.spriteRotation || material.rotation ); // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
+
 		}
 
 		// common matrices
@@ -2424,7 +2426,7 @@ function WebGLRenderer( parameters ) {
 
 		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
-		uniforms.rotation.value = material.rotation;
+		// uniforms.rotation.value = material.rotation; // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
 
 		if ( material.map ) {
 
