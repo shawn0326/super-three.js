@@ -1858,6 +1858,8 @@ function WebGLRenderer( parameters ) {
 
 			p_uniforms.setValue( _gl, 'center', object.center );
 
+			p_uniforms.setValue( _gl, 'rotation', object.spriteRotation || material.rotation ); // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
+
 		}
 
 		// common matrices

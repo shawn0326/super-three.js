@@ -393,7 +393,7 @@ function WebGLMaterials( properties ) {
 
 		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
-		uniforms.rotation.value = material.rotation;
+		// uniforms.rotation.value = material.rotation; // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
 
 		if ( material.map ) {
 
