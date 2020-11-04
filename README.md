@@ -92,7 +92,7 @@ git clone --depth=1 https://github.com/mrdoob/three.js.git
 
 ### Modification ###
 
-Now merged three.js r111.
+Now merged three.js r118.
 All modifications are marked by `// @THREE-Modification`.
 
 * RenderList sort: Prevent unstable sequencing.
