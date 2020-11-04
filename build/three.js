@@ -33964,8 +33964,6 @@
 	CircleBufferGeometry.prototype = Object.create( BufferGeometry.prototype );
 	CircleBufferGeometry.prototype.constructor = CircleBufferGeometry;
 
-
-
 	var Geometries = /*#__PURE__*/Object.freeze({
 		__proto__: null,
 		WireframeGeometry: WireframeGeometry,
@@ -34998,8 +34996,6 @@
 		return this;
 
 	};
-
-
 
 	var Materials = /*#__PURE__*/Object.freeze({
 		__proto__: null,
@@ -39479,8 +39475,6 @@
 		return this;
 
 	};
-
-
 
 	var Curves = /*#__PURE__*/Object.freeze({
 		__proto__: null,

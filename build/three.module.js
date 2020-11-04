@@ -33934,8 +33934,6 @@ function CircleBufferGeometry( radius, segments, thetaStart, thetaLength ) {
 CircleBufferGeometry.prototype = Object.create( BufferGeometry.prototype );
 CircleBufferGeometry.prototype.constructor = CircleBufferGeometry;
 
-
-
 var Geometries = /*#__PURE__*/Object.freeze({
 	__proto__: null,
 	WireframeGeometry: WireframeGeometry,
@@ -34968,8 +34966,6 @@ LineDashedMaterial.prototype.copy = function ( source ) {
 	return this;
 
 };
-
-
 
 var Materials = /*#__PURE__*/Object.freeze({
 	__proto__: null,
@@ -39447,8 +39443,6 @@ SplineCurve.prototype.fromJSON = function ( json ) {
 	return this;
 
 };
-
-
 
 var Curves = /*#__PURE__*/Object.freeze({
 	__proto__: null,
