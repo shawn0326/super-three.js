@@ -353,7 +353,9 @@ function WebXRManager( renderer, gl ) {
 
 		}
 
-		const parent = camera.parent;
+		// @THREE-Modification VR Camera apply camera transform.
+		// const parent = camera.parent;
+		const parent = camera;
 		const cameras = cameraVR.cameras;
 
 		updateCamera( cameraVR, parent );

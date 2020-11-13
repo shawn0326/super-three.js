@@ -132,6 +132,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLBindingStates: Fix index cache for VAO.
 * WebGLState: Support separate stencil settings.
 * Move SpriteMaterial.rotation to Sprite.spriteRotation. (SpriteMaterial.rotation still work)
+* VR Camera apply camera transform.
 
 ### 开发规范 ###
 

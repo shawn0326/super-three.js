@@ -24267,7 +24267,9 @@
 
 			}
 
-			var parent = camera.parent;
+			// @THREE-Modification VR Camera apply camera transform.
+			// const parent = camera.parent;
+			var parent = camera;
 			var cameras = cameraVR.cameras;
 
 			updateCamera( cameraVR, parent );
