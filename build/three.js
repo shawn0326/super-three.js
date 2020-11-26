@@ -8832,9 +8832,9 @@
 		this.premultipliedAlpha = false;
 
 		// @THREE-Modification
-		// for color mapping
-		this.colorMapping = null;
-		this.baseQuaternion = null;
+		this.colorMapping = null; // for color mapping
+		this.baseQuaternion = null; // for envMap rotation
+		this.uvTransform = null; // add Material.uvTransform to replace texture.matrix
 
 		this.visible = true;
 
@@ -9227,6 +9227,19 @@
 			} else {
 
 				this.baseQuaternion = null;
+
+			}
+
+			// @THREE-Modification
+			// add Material.uvTransform to replace texture.matrix
+
+			if ( source.uvTransform ) {
+
+				this.uvTransform = source.uvTransform;
+
+			} else {
+
+				this.uvTransform = null;
 
 			}
 
@@ -24641,6 +24654,14 @@
 			}
 
 			// @THREE-Modification
+			// Add Material.uvTransform to replace texture.matrix
+			if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+
+				uniforms.uvTransform.value.copy( material.uvTransform );
+
+			}
+
+			// @THREE-Modification
 			// Separat UVTransform for alphaMap
 			if ( material.alphaMap ) {
 
@@ -24781,6 +24802,14 @@
 
 			}
 
+			// @THREE-Modification
+			// Add Material.uvTransform to replace texture.matrix
+			if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+
+				uniforms.uvTransform.value.copy( material.uvTransform );
+
+			}
+
 		}
 
 		function refreshUniformsSprites( uniforms, material ) {
@@ -24826,6 +24855,14 @@
 				}
 
 				uniforms.uvTransform.value.copy( uvScaleMap.matrix );
+
+			}
+
+			// @THREE-Modification
+			// Add Material.uvTransform to replace texture.matrix
+			if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+
+				uniforms.uvTransform.value.copy( material.uvTransform );
 
 			}
 

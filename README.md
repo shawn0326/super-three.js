@@ -133,6 +133,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLState: Support separate stencil settings.
 * Move SpriteMaterial.rotation to Sprite.spriteRotation. (SpriteMaterial.rotation still work)
 * VR Camera apply camera transform.
+* Add Material.uvTransform to replace texture.matrix.
 
 ### 开发规范 ###
 

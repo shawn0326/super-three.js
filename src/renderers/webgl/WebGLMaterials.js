@@ -247,6 +247,14 @@ function WebGLMaterials( properties ) {
 		}
 
 		// @THREE-Modification
+		// Add Material.uvTransform to replace texture.matrix
+		if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+
+			uniforms.uvTransform.value.copy( material.uvTransform );
+
+		}
+
+		// @THREE-Modification
 		// Separat UVTransform for alphaMap
 		if ( material.alphaMap ) {
 
@@ -387,6 +395,14 @@ function WebGLMaterials( properties ) {
 
 		}
 
+		// @THREE-Modification
+		// Add Material.uvTransform to replace texture.matrix
+		if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+
+			uniforms.uvTransform.value.copy( material.uvTransform );
+
+		}
+
 	}
 
 	function refreshUniformsSprites( uniforms, material ) {
@@ -432,6 +448,14 @@ function WebGLMaterials( properties ) {
 			}
 
 			uniforms.uvTransform.value.copy( uvScaleMap.matrix );
+
+		}
+
+		// @THREE-Modification
+		// Add Material.uvTransform to replace texture.matrix
+		if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+
+			uniforms.uvTransform.value.copy( material.uvTransform );
 
 		}
 

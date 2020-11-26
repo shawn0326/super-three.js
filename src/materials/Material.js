@@ -76,9 +76,9 @@ function Material() {
 	this.premultipliedAlpha = false;
 
 	// @THREE-Modification
-	// for color mapping
-	this.colorMapping = null;
-	this.baseQuaternion = null;
+	this.colorMapping = null; // for color mapping
+	this.baseQuaternion = null; // for envMap rotation
+	this.uvTransform = null; // add Material.uvTransform to replace texture.matrix
 
 	this.visible = true;
 
@@ -471,6 +471,19 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		} else {
 
 			this.baseQuaternion = null;
+
+		}
+
+		// @THREE-Modification
+		// add Material.uvTransform to replace texture.matrix
+
+		if ( source.uvTransform ) {
+
+			this.uvTransform = source.uvTransform;
+
+		} else {
+
+			this.uvTransform = null;
 
 		}
 
