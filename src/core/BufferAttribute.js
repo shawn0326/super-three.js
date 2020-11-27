@@ -4,10 +4,6 @@ import { Vector2 } from '../math/Vector2.js';
 import { Color } from '../math/Color.js';
 import { StaticDrawUsage } from '../constants.js';
 
-/**
- * @author mrdoob / http://mrdoob.com/
- */
-
 const _vector = new Vector3();
 const _vector2 = new Vector2();
 
@@ -209,7 +205,7 @@ Object.assign( BufferAttribute.prototype, {
 				_vector2.fromBufferAttribute( this, i );
 				_vector2.applyMatrix3( m );
 
-				this.setXY( i, _vector2.x, _vector2.y, );
+				this.setXY( i, _vector2.x, _vector2.y );
 
 			}
 

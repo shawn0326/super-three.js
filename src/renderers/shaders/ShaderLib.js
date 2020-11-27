@@ -5,15 +5,8 @@ import { Vector3 } from '../../math/Vector3.js';
 import { UniformsLib } from './UniformsLib.js';
 import { Color } from '../../math/Color.js';
 import { Matrix3 } from '../../math/Matrix3.js';
-
 import { Matrix4 } from '../../math/Matrix4.js'; // @THREE-Modification
 import { Vector4 } from '../../math/Vector4.js'; // @THREE-Modification
-
-/**
- * @author alteredq / http://alteredqualia.com/
- * @author mrdoob / http://mrdoob.com/
- * @author mikael emtinger / http://gomo.se/
- */
 
 const ShaderLib = {
 
@@ -308,7 +301,8 @@ ShaderLib.physical = {
 			clearcoatNormalScale: { value: new Vector2( 1, 1 ) },
 			clearcoatNormalMap: { value: null },
 			sheen: { value: new Color( 0x000000 ) },
-			transparency: { value: 0 },
+			transmission: { value: 0 },
+			transmissionMap: { value: null },
 		}
 	] ),
 

@@ -134,7 +134,7 @@ vec3 applyQuaternion ( vec3 v, vec4 q ) {
 
 bool isPerspectiveMatrix( mat4 m ) {
 
-  return m[ 2 ][ 3 ] == - 1.0;
+	return m[ 2 ][ 3 ] == - 1.0;
 
 }
 

@@ -1,14 +1,5 @@
 import { Matrix4 } from '../math/Matrix4.js';
-
-// @THREE-Modification
-import { Vector3 } from '../math/Vector3.js';
-
-/**
- * @author mikael emtinger / http://gomo.se/
- * @author alteredq / http://alteredqualia.com/
- * @author michael guerrero / http://realitymeltdown.com
- * @author ikerr / http://verold.com
- */
+import { Vector3 } from '../math/Vector3.js'; // @THREE-Modification
 
 const _offsetMatrix = new Matrix4();
 const _identityMatrix = new Matrix4();

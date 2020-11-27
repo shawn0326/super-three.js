@@ -1,7 +1,3 @@
-/**
- * @author mrdoob / http://mrdoob.com/
- */
-
 import { NotEqualDepth, GreaterDepth, GreaterEqualDepth, EqualDepth, LessEqualDepth, LessDepth, AlwaysDepth, NeverDepth, CullFaceFront, CullFaceBack, CullFaceNone, DoubleSide, BackSide, CustomBlending, MultiplyBlending, SubtractiveBlending, AdditiveBlending, NoBlending, NormalBlending, AddEquation, SubtractEquation, ReverseSubtractEquation, MinEquation, MaxEquation, ZeroFactor, OneFactor, SrcColorFactor, SrcAlphaFactor, SrcAlphaSaturateFactor, DstColorFactor, DstAlphaFactor, OneMinusSrcColorFactor, OneMinusSrcAlphaFactor, OneMinusDstColorFactor, OneMinusDstAlphaFactor } from '../../constants.js';
 import { Vector4 } from '../../math/Vector4.js';
 
@@ -257,10 +253,10 @@ function WebGLState( gl, extensions, capabilities ) {
 				// @THREE-Modification Support separate stencil settings.
 
 				if ( currentStencilFunc !== stencilFunc ||
-				     currentStencilRef 	!== stencilRef 	||
+				     currentStencilRef !== stencilRef ||
 					 currentStencilFuncMask !== stencilMask ||
 					 currentStencilFuncBack !== stencilFuncBack ||
-				     currentStencilRefBack 	!== stencilRefBack 	||
+				     currentStencilRefBack !== stencilRefBack ||
 				     currentStencilFuncMaskBack !== stencilMaskBack ) {
 
 					if ( stencilFuncBack === null || stencilRefBack === null || stencilMaskBack === null ) {
@@ -289,7 +285,7 @@ function WebGLState( gl, extensions, capabilities ) {
 
 				// @THREE-Modification Support separate stencil settings.
 
-				if ( currentStencilFail	 !== stencilFail 	||
+				if ( currentStencilFail !== stencilFail ||
 				     currentStencilZFail !== stencilZFail ||
 					 currentStencilZPass !== stencilZPass ||
 					 currentStencilFailBack	 !== stencilFailBack ||
