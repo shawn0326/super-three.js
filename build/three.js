@@ -22175,12 +22175,11 @@
 			} else {
 
 				_gl.deleteFramebuffer( renderTargetProperties.__webglFramebuffer );
-				if ( renderTargetProperties.__webglDepthbuffer ) { _gl.deleteRenderbuffer( renderTargetProperties.__webglDepthbuffer ); }
+				if ( renderTargetProperties.__webglDepthbuffer && ! renderTargetProperties.__shareDepthbuffer ) { _gl.deleteRenderbuffer( renderTargetProperties.__webglDepthbuffer ); } // @THREE-Modification dispose depth render buffer
 				if ( renderTargetProperties.__webglMultisampledFramebuffer ) { _gl.deleteFramebuffer( renderTargetProperties.__webglMultisampledFramebuffer ); }
 				if ( renderTargetProperties.__webglColorRenderbuffer ) { _gl.deleteRenderbuffer( renderTargetProperties.__webglColorRenderbuffer ); }
 
-				// @THREE-Modification
-				// dispose sampling render buffer
+				// @THREE-Modification dispose depth sampling render buffer
 				if ( renderTargetProperties.__webglDepthRenderbuffer && ! renderTargetProperties.__shareDepthRenderbuffer ) { _gl.deleteRenderbuffer( renderTargetProperties.__webglDepthRenderbuffer ); }
 
 			}
@@ -22898,7 +22897,19 @@
 				} else {
 
 					_gl.bindFramebuffer( 36160, renderTargetProperties.__webglFramebuffer );
-					renderTargetProperties.__webglDepthbuffer = _gl.createRenderbuffer();
+
+					// @THREE-Modification for share depth render buffer
+					if ( renderTarget.webglDepthRenderbuffer && ! renderTarget.isWebGLMultisampleRenderTarget ) {
+
+						renderTargetProperties.__webglDepthbuffer = renderTarget.webglDepthRenderbuffer;
+						renderTargetProperties.__shareDepthbuffer = true;
+
+					} else {
+
+						renderTargetProperties.__webglDepthbuffer = _gl.createRenderbuffer();
+
+					}
+
 					setupRenderBufferStorage( renderTargetProperties.__webglDepthbuffer, renderTarget, false );
 
 				}
@@ -33800,6 +33811,8 @@
 		return CircleBufferGeometry;
 	}(BufferGeometry));
 
+
+
 	var Geometries = /*#__PURE__*/Object.freeze({
 		__proto__: null,
 		WireframeGeometry: WireframeGeometry,
@@ -34810,6 +34823,8 @@
 		return this;
 
 	};
+
+
 
 	var Materials = /*#__PURE__*/Object.freeze({
 		__proto__: null,
@@ -39196,6 +39211,8 @@
 		return this;
 
 	};
+
+
 
 	var Curves = /*#__PURE__*/Object.freeze({
 		__proto__: null,
