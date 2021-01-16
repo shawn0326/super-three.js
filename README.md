@@ -134,6 +134,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Move SpriteMaterial.rotation to Sprite.spriteRotation. (SpriteMaterial.rotation still work)
 * VR Camera apply camera transform.
 * Add Material.uvTransform to replace texture.matrix.
+* Move clippingPlanes from material to object.
 
 ### 开发规范 ###
 

@@ -6511,6 +6511,11 @@
 		// @THREE-Modification
 		this.renderLayer = null;
 
+		// @THREE-Modification move clippingPlanes from material to object
+		this.clippingPlanes = null;
+		this.clipIntersection = false;
+		this.clipShadows = false;
+
 		this.castShadow = false;
 		this.receiveShadow = false;
 
@@ -16407,11 +16412,21 @@
 
 		};
 
-		this.setState = function ( material, camera, useCache ) {
+		this.setState = function ( material, camera, useCache, object ) {
 
 			var planes = material.clippingPlanes,
 				clipIntersection = material.clipIntersection,
 				clipShadows = material.clipShadows;
+
+			// @THREE-Modification move clippingPlanes from material to object
+
+			if ( object.clippingPlanes !== null ) {
+
+				planes = object.clippingPlanes;
+				clipIntersection = object.clipIntersection;
+				clipShadows = object.clipShadows;
+
+			}
 
 			var materialProperties = properties.get( material );
 
@@ -25078,6 +25093,7 @@
 
 		var _clippingEnabled = false;
 		var _localClippingEnabled = false;
+		var _disableClippingCache = false; // @THREE-Modification move clippingPlanes from material to object
 
 		// camera matrices cache
 
@@ -26453,10 +26469,21 @@
 						camera === _currentCamera &&
 						material.id === _currentMaterialId;
 
+					// @THREE-Modification move clippingPlanes from material to object
+					if ( _disableClippingCache === false ) {
+
+						if ( object.clippingPlanes && object.clippingPlanes.length > 0 ) {
+
+							_disableClippingCache = true;
+
+						}
+
+					}
+
 					// we might want to call this function with some ClippingGroup
 					// object instead of the material, once it becomes feasible
 					// (#8465, #8379)
-					clipping.setState( material, camera, useCache );
+					clipping.setState( material, camera, useCache && ! _disableClippingCache, object ); // @THREE-Modification move clippingPlanes from material to object
 
 				}
 

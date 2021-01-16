@@ -6511,6 +6511,11 @@ function Object3D() {
 	// @THREE-Modification
 	this.renderLayer = null;
 
+	// @THREE-Modification move clippingPlanes from material to object
+	this.clippingPlanes = null;
+	this.clipIntersection = false;
+	this.clipShadows = false;
+
 	this.castShadow = false;
 	this.receiveShadow = false;
 
@@ -21611,11 +21616,21 @@ function WebGLClipping( properties ) {
 
 	};
 
-	this.setState = function ( material, camera, useCache ) {
+	this.setState = function ( material, camera, useCache, object ) {
 
-		const planes = material.clippingPlanes,
+		let planes = material.clippingPlanes,
 			clipIntersection = material.clipIntersection,
 			clipShadows = material.clipShadows;
+
+		// @THREE-Modification move clippingPlanes from material to object
+
+		if ( object.clippingPlanes !== null ) {
+
+			planes = object.clippingPlanes;
+			clipIntersection = object.clipIntersection;
+			clipShadows = object.clipShadows;
+
+		}
 
 		const materialProperties = properties.get( material );
 
@@ -30334,6 +30349,7 @@ function WebGLRenderer( parameters ) {
 
 	let _clippingEnabled = false;
 	let _localClippingEnabled = false;
+	let _disableClippingCache = false; // @THREE-Modification move clippingPlanes from material to object
 
 	// camera matrices cache
 
@@ -31709,10 +31725,21 @@ function WebGLRenderer( parameters ) {
 					camera === _currentCamera &&
 					material.id === _currentMaterialId;
 
+				// @THREE-Modification move clippingPlanes from material to object
+				if ( _disableClippingCache === false ) {
+
+					if ( object.clippingPlanes && object.clippingPlanes.length > 0 ) {
+
+						_disableClippingCache = true;
+
+					}
+
+				}
+
 				// we might want to call this function with some ClippingGroup
 				// object instead of the material, once it becomes feasible
 				// (#8465, #8379)
-				clipping.setState( material, camera, useCache );
+				clipping.setState( material, camera, useCache && ! _disableClippingCache, object ); // @THREE-Modification move clippingPlanes from material to object
 
 			}
 
