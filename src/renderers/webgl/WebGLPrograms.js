@@ -269,7 +269,7 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 
 			// @THREE-Modification
 			// for color mapping
-			useColorMapping: !! material.colorMapping,
+			useColorMapping: !! material.colorMapping ? material.colorMappingType : 0,
 			// @THREE-Modification
 			// for base quaternion
 			useBaseQuaternion: !! material.baseQuaternion,

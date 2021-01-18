@@ -8545,6 +8545,7 @@ function Material() {
 
 	// @THREE-Modification
 	this.colorMapping = null; // for color mapping
+	this.colorMappingType = 1; // for color mapping type
 	this.baseQuaternion = null; // for envMap rotation
 	this.uvTransform = null; // add Material.uvTransform to replace texture.matrix
 
@@ -8929,6 +8930,7 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		// @THREE-Modification
 		// for color mapping
 		this.colorMapping = source.colorMapping;
+		this.colorMappingType = source.colorMappingType;
 
 		// @THREE-Modification
 		// for env map roation
@@ -18238,18 +18240,44 @@ var worldpos_vertex = /* glsl */`
 // @THREE-Modification
 // for color mapping
 var colormapping_fragment = /* glsl */`
-  #ifdef COLOR_MAPPING
-    float gray = clamp( dot( diffuseColor.rgb, vec3(0.333, 0.333, 0.333) ), 0.0, 1.0 );
-    diffuseColor.rgb = texture2D( colorMapping, vec2( gray, 0.5 ) ).rgb;
-  #endif
+#ifdef COLOR_MAPPING
+	
+	#if COLOR_MAPPING == 1
+
+    	float gray = clamp( dot( diffuseColor.rgb, vec3(0.333, 0.333, 0.333) ), 0.0, 1.0 );
+		diffuseColor.rgb = texture2D( colorMapping, vec2( gray, 0.5 ) ).rgb;
+
+	#elif COLOR_MAPPING == 2
+
+		float hue = rgb2hsb( diffuseColor.rgb ).x;
+		diffuseColor.rgb = texture2D( colorMapping, vec2( hue, 0.5 ) ).rgb;
+
+	#endif
+
+#endif	  
 `;
 
 // @THREE-Modification
 // for color mapping
 var colormapping_pars_fragment = /* glsl */`
-  #ifdef COLOR_MAPPING
+#ifdef COLOR_MAPPING
+
     uniform sampler2D colorMapping;
-  #endif
+
+	#if COLOR_MAPPING == 2
+	
+		vec3 rgb2hsb ( in vec3 c ) {
+			vec4 K = vec4( 0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0 );
+			vec4 p = mix( vec4( c.bg, K.wz ), vec4( c.gb, K.xy ), step( c.b, c.g ) );
+			vec4 q = mix( vec4( p.xyw, c.r ), vec4( c.r, p.yzx ), step( p.x, c.r ) );
+			float d = q.x - min( q.w, q.y );
+			float e = 0.0000000001;
+			return vec3( abs( q.z + ( q.w - q.y ) / ( 6.0 * d + e ) ), d / ( q.x + e ), q.x );
+		}
+
+	#endif
+
+#endif
 `;
 
 // @THREE-Modification
@@ -24079,7 +24107,7 @@ function WebGLProgram( renderer, cacheKey, parameters, bindingStates ) {
 
 			// @THREE-Modification
 			// for color mapping
-			parameters.useColorMapping ? '#define COLOR_MAPPING' : '',
+			parameters.useColorMapping ? ( '#define COLOR_MAPPING ' + parameters.useColorMapping ) : '',
 			// @THREE-Modification
 			// for base quaternion
 			parameters.useBaseQuaternion ? '#define BASE_QUATERNION' : '',
@@ -24547,7 +24575,7 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 
 			// @THREE-Modification
 			// for color mapping
-			useColorMapping: !! material.colorMapping,
+			useColorMapping: !! material.colorMapping ? material.colorMappingType : 0,
 			// @THREE-Modification
 			// for base quaternion
 			useBaseQuaternion: !! material.baseQuaternion,

@@ -8529,6 +8529,7 @@
 
 		// @THREE-Modification
 		this.colorMapping = null; // for color mapping
+		this.colorMappingType = 1; // for color mapping type
 		this.baseQuaternion = null; // for envMap rotation
 		this.uvTransform = null; // add Material.uvTransform to replace texture.matrix
 
@@ -8913,6 +8914,7 @@
 			// @THREE-Modification
 			// for color mapping
 			this.colorMapping = source.colorMapping;
+			this.colorMappingType = source.colorMappingType;
 
 			// @THREE-Modification
 			// for env map roation
@@ -14606,11 +14608,11 @@
 
 	// @THREE-Modification
 	// for color mapping
-	var colormapping_fragment = /* glsl */"\n  #ifdef COLOR_MAPPING\n    float gray = clamp( dot( diffuseColor.rgb, vec3(0.333, 0.333, 0.333) ), 0.0, 1.0 );\n    diffuseColor.rgb = texture2D( colorMapping, vec2( gray, 0.5 ) ).rgb;\n  #endif\n";
+	var colormapping_fragment = /* glsl */"\n#ifdef COLOR_MAPPING\n\t\n\t#if COLOR_MAPPING == 1\n\n    \tfloat gray = clamp( dot( diffuseColor.rgb, vec3(0.333, 0.333, 0.333) ), 0.0, 1.0 );\n\t\tdiffuseColor.rgb = texture2D( colorMapping, vec2( gray, 0.5 ) ).rgb;\n\n\t#elif COLOR_MAPPING == 2\n\n\t\tfloat hue = rgb2hsb( diffuseColor.rgb ).x;\n\t\tdiffuseColor.rgb = texture2D( colorMapping, vec2( hue, 0.5 ) ).rgb;\n\n\t#endif\n\n#endif\t  \n";
 
 	// @THREE-Modification
 	// for color mapping
-	var colormapping_pars_fragment = /* glsl */"\n  #ifdef COLOR_MAPPING\n    uniform sampler2D colorMapping;\n  #endif\n";
+	var colormapping_pars_fragment = /* glsl */"\n#ifdef COLOR_MAPPING\n\n    uniform sampler2D colorMapping;\n\n\t#if COLOR_MAPPING == 2\n\t\n\t\tvec3 rgb2hsb ( in vec3 c ) {\n\t\t\tvec4 K = vec4( 0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0 );\n\t\t\tvec4 p = mix( vec4( c.bg, K.wz ), vec4( c.gb, K.xy ), step( c.b, c.g ) );\n\t\t\tvec4 q = mix( vec4( p.xyw, c.r ), vec4( c.r, p.yzx ), step( p.x, c.r ) );\n\t\t\tfloat d = q.x - min( q.w, q.y );\n\t\t\tfloat e = 0.0000000001;\n\t\t\treturn vec3( abs( q.z + ( q.w - q.y ) / ( 6.0 * d + e ) ), d / ( q.x + e ), q.x );\n\t\t}\n\n\t#endif\n\n#endif\n";
 
 	// @THREE-Modification
 	// for baseQuaternion
@@ -18875,7 +18877,7 @@
 
 				// @THREE-Modification
 				// for color mapping
-				parameters.useColorMapping ? '#define COLOR_MAPPING' : '',
+				parameters.useColorMapping ? ( '#define COLOR_MAPPING ' + parameters.useColorMapping ) : '',
 				// @THREE-Modification
 				// for base quaternion
 				parameters.useBaseQuaternion ? '#define BASE_QUATERNION' : '',
@@ -19343,7 +19345,7 @@
 
 				// @THREE-Modification
 				// for color mapping
-				useColorMapping: !! material.colorMapping,
+				useColorMapping: !! material.colorMapping ? material.colorMappingType : 0,
 				// @THREE-Modification
 				// for base quaternion
 				useBaseQuaternion: !! material.baseQuaternion,

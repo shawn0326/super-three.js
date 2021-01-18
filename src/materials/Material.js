@@ -72,6 +72,7 @@ function Material() {
 
 	// @THREE-Modification
 	this.colorMapping = null; // for color mapping
+	this.colorMappingType = 1; // for color mapping type
 	this.baseQuaternion = null; // for envMap rotation
 	this.uvTransform = null; // add Material.uvTransform to replace texture.matrix
 
@@ -456,6 +457,7 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		// @THREE-Modification
 		// for color mapping
 		this.colorMapping = source.colorMapping;
+		this.colorMappingType = source.colorMappingType;
 
 		// @THREE-Modification
 		// for env map roation
