@@ -52,21 +52,11 @@ function WebGLClipping( properties ) {
 
 	};
 
-	this.setState = function ( material, camera, useCache, object ) {
+	this.setState = function ( material, camera, useCache ) {
 
-		let planes = material.clippingPlanes,
+		const planes = material.clippingPlanes,
 			clipIntersection = material.clipIntersection,
 			clipShadows = material.clipShadows;
-
-		// @THREE-Modification move clippingPlanes from material to object
-
-		if ( object.clippingPlanes !== null ) {
-
-			planes = object.clippingPlanes;
-			clipIntersection = object.clipIntersection;
-			clipShadows = object.clipShadows;
-
-		}
 
 		const materialProperties = properties.get( material );
 

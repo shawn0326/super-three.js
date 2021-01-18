@@ -157,7 +157,6 @@ function WebGLRenderer( parameters ) {
 
 	let _clippingEnabled = false;
 	let _localClippingEnabled = false;
-	let _disableClippingCache = false; // @THREE-Modification move clippingPlanes from material to object
 
 	// camera matrices cache
 
@@ -1533,21 +1532,10 @@ function WebGLRenderer( parameters ) {
 					camera === _currentCamera &&
 					material.id === _currentMaterialId;
 
-				// @THREE-Modification move clippingPlanes from material to object
-				if ( _disableClippingCache === false ) {
-
-					if ( object.clippingPlanes && object.clippingPlanes.length > 0 ) {
-
-						_disableClippingCache = true;
-
-					}
-
-				}
-
 				// we might want to call this function with some ClippingGroup
 				// object instead of the material, once it becomes feasible
 				// (#8465, #8379)
-				clipping.setState( material, camera, useCache && ! _disableClippingCache, object ); // @THREE-Modification move clippingPlanes from material to object
+				clipping.setState( material, camera, useCache );
 
 			}
 

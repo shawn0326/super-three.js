@@ -103,11 +103,6 @@ function Object3D() {
 	// @THREE-Modification
 	this.renderLayer = null;
 
-	// @THREE-Modification move clippingPlanes from material to object
-	this.clippingPlanes = null;
-	this.clipIntersection = false;
-	this.clipShadows = false;
-
 	this.castShadow = false;
 	this.receiveShadow = false;
 
