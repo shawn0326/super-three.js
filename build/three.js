@@ -24427,13 +24427,13 @@
 
 				uniforms.uvTransform.value.copy( uvScaleMap.matrix );
 
-			}
+				// @THREE-Modification
+				// Add Material.uvTransform to replace texture.matrix
+				if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
 
-			// @THREE-Modification
-			// Add Material.uvTransform to replace texture.matrix
-			if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+					uniforms.uvTransform.value.copy( material.uvTransform );
 
-				uniforms.uvTransform.value.copy( material.uvTransform );
+				}
 
 			}
 
@@ -24466,6 +24466,14 @@
 			}
 
 			// @THREE-Modification
+			// Add Material.uvTransform to replace texture.matrix
+			if ( ( material.alphaMap || material.alphaMap1 ) && material.uvTransform1 && material.uvTransform1.isMatrix3 ) {
+
+				uniforms.uvTransform1.value.copy( material.uvTransform1 );
+
+			}
+
+			// @THREE-Modification
 			// Separat UVTransform for emissiveMap
 			if ( material.emissiveMap ) {
 
@@ -24476,6 +24484,14 @@
 				}
 
 				uniforms.uvTransform2.value.copy( material.emissiveMap.matrix );
+
+				// @THREE-Modification
+				// Add Material.uvTransform to replace texture.matrix
+				if ( material.uvTransform2 && material.uvTransform2.isMatrix3 ) {
+
+					uniforms.uvTransform2.value.copy( material.uvTransform2 );
+
+				}
 
 			}
 
@@ -24576,13 +24592,13 @@
 
 				uniforms.uvTransform.value.copy( uvScaleMap.matrix );
 
-			}
+				// @THREE-Modification
+				// Add Material.uvTransform to replace texture.matrix
+				if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
 
-			// @THREE-Modification
-			// Add Material.uvTransform to replace texture.matrix
-			if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+					uniforms.uvTransform.value.copy( material.uvTransform );
 
-				uniforms.uvTransform.value.copy( material.uvTransform );
+				}
 
 			}
 
@@ -24632,13 +24648,13 @@
 
 				uniforms.uvTransform.value.copy( uvScaleMap.matrix );
 
-			}
+				// @THREE-Modification
+				// Add Material.uvTransform to replace texture.matrix
+				if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
 
-			// @THREE-Modification
-			// Add Material.uvTransform to replace texture.matrix
-			if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+					uniforms.uvTransform.value.copy( material.uvTransform );
 
-				uniforms.uvTransform.value.copy( material.uvTransform );
+				}
 
 			}
 
@@ -33811,8 +33827,6 @@
 		return CircleBufferGeometry;
 	}(BufferGeometry));
 
-
-
 	var Geometries = /*#__PURE__*/Object.freeze({
 		__proto__: null,
 		WireframeGeometry: WireframeGeometry,
@@ -34823,8 +34837,6 @@
 		return this;
 
 	};
-
-
 
 	var Materials = /*#__PURE__*/Object.freeze({
 		__proto__: null,
@@ -39211,8 +39223,6 @@
 		return this;
 
 	};
-
-
 
 	var Curves = /*#__PURE__*/Object.freeze({
 		__proto__: null,

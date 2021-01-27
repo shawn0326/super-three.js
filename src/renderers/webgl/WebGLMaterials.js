@@ -264,13 +264,13 @@ function WebGLMaterials( properties ) {
 
 			uniforms.uvTransform.value.copy( uvScaleMap.matrix );
 
-		}
+			// @THREE-Modification
+			// Add Material.uvTransform to replace texture.matrix
+			if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
 
-		// @THREE-Modification
-		// Add Material.uvTransform to replace texture.matrix
-		if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+				uniforms.uvTransform.value.copy( material.uvTransform );
 
-			uniforms.uvTransform.value.copy( material.uvTransform );
+			}
 
 		}
 
@@ -303,6 +303,14 @@ function WebGLMaterials( properties ) {
 		}
 
 		// @THREE-Modification
+		// Add Material.uvTransform to replace texture.matrix
+		if ( ( material.alphaMap || material.alphaMap1 ) && material.uvTransform1 && material.uvTransform1.isMatrix3 ) {
+
+			uniforms.uvTransform1.value.copy( material.uvTransform1 );
+
+		}
+
+		// @THREE-Modification
 		// Separat UVTransform for emissiveMap
 		if ( material.emissiveMap ) {
 
@@ -313,6 +321,14 @@ function WebGLMaterials( properties ) {
 			}
 
 			uniforms.uvTransform2.value.copy( material.emissiveMap.matrix );
+
+			// @THREE-Modification
+			// Add Material.uvTransform to replace texture.matrix
+			if ( material.uvTransform2 && material.uvTransform2.isMatrix3 ) {
+
+				uniforms.uvTransform2.value.copy( material.uvTransform2 );
+
+			}
 
 		}
 
@@ -413,13 +429,13 @@ function WebGLMaterials( properties ) {
 
 			uniforms.uvTransform.value.copy( uvScaleMap.matrix );
 
-		}
+			// @THREE-Modification
+			// Add Material.uvTransform to replace texture.matrix
+			if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
 
-		// @THREE-Modification
-		// Add Material.uvTransform to replace texture.matrix
-		if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+				uniforms.uvTransform.value.copy( material.uvTransform );
 
-			uniforms.uvTransform.value.copy( material.uvTransform );
+			}
 
 		}
 
@@ -469,13 +485,13 @@ function WebGLMaterials( properties ) {
 
 			uniforms.uvTransform.value.copy( uvScaleMap.matrix );
 
-		}
+			// @THREE-Modification
+			// Add Material.uvTransform to replace texture.matrix
+			if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
 
-		// @THREE-Modification
-		// Add Material.uvTransform to replace texture.matrix
-		if ( material.uvTransform && material.uvTransform.isMatrix3 ) {
+				uniforms.uvTransform.value.copy( material.uvTransform );
 
-			uniforms.uvTransform.value.copy( material.uvTransform );
+			}
 
 		}
 
