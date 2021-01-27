@@ -8547,6 +8547,8 @@ function Material() {
 	this.colorMapping = null; // for color mapping
 	this.baseQuaternion = null; // for envMap rotation
 	this.uvTransform = null; // add Material.uvTransform to replace texture.matrix
+	this.uvTransform1 = null; // add Material.uvTransform to replace texture.matrix
+	this.uvTransform2 = null; // add Material.uvTransform to replace texture.matrix
 
 	this.visible = true;
 
@@ -8952,6 +8954,26 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		} else {
 
 			this.uvTransform = null;
+
+		}
+
+		if ( source.uvTransform1 ) {
+
+			this.uvTransform1 = source.uvTransform1;
+
+		} else {
+
+			this.uvTransform1 = null;
+
+		}
+
+		if ( source.uvTransform2 ) {
+
+			this.uvTransform2 = source.uvTransform2;
+
+		} else {
+
+			this.uvTransform2 = null;
 
 		}
 
