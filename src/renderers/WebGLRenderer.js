@@ -1619,7 +1619,7 @@ function WebGLRenderer( parameters ) {
 				// 	2.0 / ( Math.log( camera.far + 1.0 ) / Math.LN2 ) );
 
 				p_uniforms.setValue( _gl, 'logDepthBufFC',
-					2.0 / ( Math.log( camera.far - camera.near + 1.0 ) / camera.logDepthFactor ) );
+					2.0 / ( Math.log( camera.far - camera.near + 1.0 ) * Math.LOG2E ) );
 
 				p_uniforms.setValue( _gl, 'logDepthCameraNear', camera.near );
 
