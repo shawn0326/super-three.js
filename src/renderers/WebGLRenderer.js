@@ -319,6 +319,7 @@ function WebGLRenderer( parameters ) {
 		_this.info = info;
 
 		// @THREE-Modification add polyfill for state.enableAttribute
+		_this.bindingStates = bindingStates;
 		_this.state.enableAttribute = function ( attribute ) {
 
 			bindingStates.enableAttribute( attribute );
