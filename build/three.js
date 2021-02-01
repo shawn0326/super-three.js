@@ -13413,6 +13413,9 @@
 		this.projectionMatrix = new Matrix4();
 		this.projectionMatrixInverse = new Matrix4();
 
+		// @THREE-Modification modify log depth encoding
+		this.logDepthFactor = Math.LN2;
+
 	}
 
 	Camera.prototype = Object.assign( Object.create( Object3D.prototype ), {
@@ -14536,9 +14539,9 @@
 
 	var logdepthbuf_pars_fragment = /* glsl */"\n#if defined( USE_LOGDEPTHBUF ) && defined( USE_LOGDEPTHBUF_EXT )\n\n\tuniform float logDepthBufFC;\n\tvarying float vFragDepth;\n\tvarying float vIsPerspective;\n\n#endif\n";
 
-	var logdepthbuf_pars_vertex = /* glsl */"\n#ifdef USE_LOGDEPTHBUF\n\n\t#ifdef USE_LOGDEPTHBUF_EXT\n\n\t\tvarying float vFragDepth;\n\t\tvarying float vIsPerspective;\n\n\t#else\n\n\t\tuniform float logDepthBufFC;\n\n\t#endif\n\n#endif\n";
+	var logdepthbuf_pars_vertex = /* glsl */"\n#ifdef USE_LOGDEPTHBUF\n\n\t#ifdef USE_LOGDEPTHBUF_EXT\n\n\t\tuniform float logDepthCameraNear; // @THREE-Modification modify log depth encoding\n\t\tvarying float vFragDepth;\n\t\tvarying float vIsPerspective;\n\n\t#else\n\n\t\tuniform float logDepthBufFC;\n\t\tuniform float logDepthCameraNear; // @THREE-Modification modify log depth encoding\n\n\t#endif\n\n#endif\n";
 
-	var logdepthbuf_vertex = /* glsl */"\n#ifdef USE_LOGDEPTHBUF\n\n\t#ifdef USE_LOGDEPTHBUF_EXT\n\n\t\tvFragDepth = 1.0 + gl_Position.w;\n\t\tvIsPerspective = float( isPerspectiveMatrix( projectionMatrix ) );\n\n\t#else\n\n\t\tif ( isPerspectiveMatrix( projectionMatrix ) ) {\n\n\t\t\tgl_Position.z = log2( max( EPSILON, gl_Position.w + 1.0 ) ) * logDepthBufFC - 1.0;\n\n\t\t\tgl_Position.z *= gl_Position.w;\n\n\t\t}\n\n\t#endif\n\n#endif\n";
+	var logdepthbuf_vertex = /* glsl */"\n#ifdef USE_LOGDEPTHBUF\n\n\t#ifdef USE_LOGDEPTHBUF_EXT\n\n\t\t// @THREE-Modification modify log depth encoding\n\t\tvFragDepth = 1.0 + gl_Position.w - logDepthCameraNear;\n\t\tvIsPerspective = float( isPerspectiveMatrix( projectionMatrix ) );\n\n\t#else\n\n\t\tif ( isPerspectiveMatrix( projectionMatrix ) ) {\n\n\t\t\t// @THREE-Modification modify log depth encoding\n\t\t\tgl_Position.z = log2( max( EPSILON, gl_Position.w - logDepthCameraNear + 1.0 ) ) * logDepthBufFC - 1.0;\n\n\t\t\tgl_Position.z *= gl_Position.w;\n\n\t\t}\n\n\t#endif\n\n#endif\n";
 
 	var map_fragment = /* glsl */"\n#ifdef USE_MAP\n\n\tvec4 texelColor = texture2D( map, vUv );\n\n\ttexelColor = mapTexelToLinear( texelColor );\n\tdiffuseColor *= texelColor;\n\n#endif\n";
 
@@ -26582,8 +26585,15 @@
 
 				if ( capabilities.logarithmicDepthBuffer ) {
 
+					// @THREE-Modification modify log depth encoding
+
+					// p_uniforms.setValue( _gl, 'logDepthBufFC',
+					// 	2.0 / ( Math.log( camera.far + 1.0 ) / Math.LN2 ) );
+
 					p_uniforms.setValue( _gl, 'logDepthBufFC',
-						2.0 / ( Math.log( camera.far + 1.0 ) / Math.LN2 ) );
+						2.0 / ( Math.log( camera.far - camera.near + 1.0 ) / camera.logDepthFactor ) );
+
+					p_uniforms.setValue( _gl, 'logDepthCameraNear', camera.near );
 
 				}
 

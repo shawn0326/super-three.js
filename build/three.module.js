@@ -13426,6 +13426,9 @@ function Camera() {
 	this.projectionMatrix = new Matrix4();
 	this.projectionMatrixInverse = new Matrix4();
 
+	// @THREE-Modification modify log depth encoding
+	this.logDepthFactor = Math.LN2;
+
 }
 
 Camera.prototype = Object.assign( Object.create( Object3D.prototype ), {
@@ -16970,12 +16973,14 @@ var logdepthbuf_pars_vertex = /* glsl */`
 
 	#ifdef USE_LOGDEPTHBUF_EXT
 
+		uniform float logDepthCameraNear; // @THREE-Modification modify log depth encoding
 		varying float vFragDepth;
 		varying float vIsPerspective;
 
 	#else
 
 		uniform float logDepthBufFC;
+		uniform float logDepthCameraNear; // @THREE-Modification modify log depth encoding
 
 	#endif
 
@@ -16987,14 +16992,16 @@ var logdepthbuf_vertex = /* glsl */`
 
 	#ifdef USE_LOGDEPTHBUF_EXT
 
-		vFragDepth = 1.0 + gl_Position.w;
+		// @THREE-Modification modify log depth encoding
+		vFragDepth = 1.0 + gl_Position.w - logDepthCameraNear;
 		vIsPerspective = float( isPerspectiveMatrix( projectionMatrix ) );
 
 	#else
 
 		if ( isPerspectiveMatrix( projectionMatrix ) ) {
 
-			gl_Position.z = log2( max( EPSILON, gl_Position.w + 1.0 ) ) * logDepthBufFC - 1.0;
+			// @THREE-Modification modify log depth encoding
+			gl_Position.z = log2( max( EPSILON, gl_Position.w - logDepthCameraNear + 1.0 ) ) * logDepthBufFC - 1.0;
 
 			gl_Position.z *= gl_Position.w;
 
@@ -31838,8 +31845,15 @@ function WebGLRenderer( parameters ) {
 
 			if ( capabilities.logarithmicDepthBuffer ) {
 
+				// @THREE-Modification modify log depth encoding
+
+				// p_uniforms.setValue( _gl, 'logDepthBufFC',
+				// 	2.0 / ( Math.log( camera.far + 1.0 ) / Math.LN2 ) );
+
 				p_uniforms.setValue( _gl, 'logDepthBufFC',
-					2.0 / ( Math.log( camera.far + 1.0 ) / Math.LN2 ) );
+					2.0 / ( Math.log( camera.far - camera.near + 1.0 ) / camera.logDepthFactor ) );
+
+				p_uniforms.setValue( _gl, 'logDepthCameraNear', camera.near );
 
 			}
 

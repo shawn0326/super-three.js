@@ -13,6 +13,9 @@ function Camera() {
 	this.projectionMatrix = new Matrix4();
 	this.projectionMatrixInverse = new Matrix4();
 
+	// @THREE-Modification modify log depth encoding
+	this.logDepthFactor = Math.LN2;
+
 }
 
 Camera.prototype = Object.assign( Object.create( Object3D.prototype ), {
