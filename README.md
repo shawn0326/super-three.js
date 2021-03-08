@@ -131,6 +131,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Object3D: Add Matrtix dirty.
 * ~~WebGLBindingStates: Fix index cache for VAO.~~(Fixed in r120)
 * WebGLState: Support separate stencil settings.
+* WebGLState: Fix reset().
 * Move SpriteMaterial.rotation to Sprite.spriteRotation. (SpriteMaterial.rotation still work)
 * VR Camera apply camera transform.
 * Add Material.uvTransform to replace texture.matrix.

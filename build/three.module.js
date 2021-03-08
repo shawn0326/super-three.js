@@ -27131,6 +27131,7 @@ function WebGLState( gl, extensions, capabilities ) {
 
 		currentProgram = null;
 
+		currentBlendingEnabled = null; // @THREE-Modification WebGLState fix reset.
 		currentBlending = null;
 
 		currentFlipSided = null;
