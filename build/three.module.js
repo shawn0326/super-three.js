@@ -27501,6 +27501,15 @@ function WebGLTextures( _gl, extensions, state, properties, capabilities, utils,
 
 		const textureProperties = properties.get( texture );
 
+		if ( texture.glTexture ) { // @THREE-Modification support input gl texture
+
+			textureProperties.__webglTexture = texture.glTexture;
+			state.activeTexture( 33984 + slot );
+			state.bindTexture( 3553, texture.glTexture );
+			return;
+
+		}
+
 		if ( texture.isVideoTexture ) updateVideoTexture( texture );
 
 		if ( texture.version > 0 && textureProperties.__version !== texture.version ) {
