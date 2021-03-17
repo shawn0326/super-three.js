@@ -30,11 +30,11 @@ function WebGLBackground( renderer, cubemaps, state, objects, premultipliedAlpha
 
 		if ( background && background.isTexture ) {
 
-			background = cubemaps.get( background );
-
 			// @THREE-Modification
 			colorMatrix = background.colorMatrix;
 			baseQuaternion = background.baseQuaternion;
+
+			background = cubemaps.get( background );
 
 		}
 
