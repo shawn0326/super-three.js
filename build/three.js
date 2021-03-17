@@ -15372,9 +15372,18 @@
 
 			var background = scene.isScene === true ? scene.background : null;
 
+			// @THREE-Modification
+			// Support color transform for background cube texture
+			// Support rotation for background cube texture
+			var colorMatrix, baseQuaternion;
+
 			if ( background && background.isTexture ) {
 
 				background = cubemaps.get( background );
+
+				// @THREE-Modification
+				colorMatrix = background.colorMatrix;
+				baseQuaternion = background.baseQuaternion;
 
 			}
 
@@ -15462,9 +15471,9 @@
 
 				// @THREE-Modification
 				// Support color transform for background cube texture
-				if ( background.colorMatrix ) {
+				if ( colorMatrix ) {
 
-					boxMesh.material.uniforms.colorMatrix.value.copy( background.colorMatrix );
+					boxMesh.material.uniforms.colorMatrix.value.copy( colorMatrix );
 
 				} else {
 
@@ -15474,9 +15483,9 @@
 
 				// @THREE-Modification
 				// Support rotation for background cube texture
-				if ( background.baseQuaternion ) {
+				if ( baseQuaternion ) {
 
-					boxMesh.material.uniforms.cubeQuat.value.copy( background.baseQuaternion );
+					boxMesh.material.uniforms.cubeQuat.value.copy( baseQuaternion );
 
 				} else {
 
