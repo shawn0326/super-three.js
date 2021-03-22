@@ -8533,6 +8533,7 @@
 		this.uvTransform = null; // add Material.uvTransform to replace texture.matrix
 		this.uvTransform1 = null; // add Material.uvTransform to replace texture.matrix
 		this.uvTransform2 = null; // add Material.uvTransform to replace texture.matrix
+		this.useEnvironment = null; // add Material.useEnvironment decide whether to use scene.environment
 
 		this.visible = true;
 
@@ -8960,6 +8961,11 @@
 				this.uvTransform2 = null;
 
 			}
+
+			// @THREE-Modification
+			// add Material.useEnvironment decide whether to use scene.environment
+
+			this.useEnvironment = source.useEnvironment;
 
 			return this;
 
@@ -24310,6 +24316,20 @@
 
 			} else if ( material.isShaderMaterial ) {
 
+				// @THREE-Modification
+				// if set useEnvironment, override envMap
+				if ( material.useEnvironment ) {
+
+					var envMap = properties.get( material ).envMap;
+
+					if ( envMap ) {
+
+						uniforms.envMap.value = envMap;
+
+					}
+
+				}
+
 				material.uniformsNeedUpdate = false; // #15581
 
 			}
@@ -26415,7 +26435,7 @@
 
 				// same glsl and uniform list, envMap still needs the update here to avoid a frame-late effect
 
-				var environment = material.isMeshStandardMaterial ? scene.environment : null;
+				var environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // add Material.useEnvironment decide whether to use scene.environment
 				materialProperties.envMap = cubemaps.get( material.envMap || environment );
 
 				return;
@@ -26453,7 +26473,7 @@
 
 			}
 
-			materialProperties.environment = material.isMeshStandardMaterial ? scene.environment : null;
+			materialProperties.environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // add Material.useEnvironment decide whether to use scene.environment
 			materialProperties.fog = scene.fog;
 			materialProperties.envMap = cubemaps.get( material.envMap || materialProperties.environment );
 

@@ -76,6 +76,7 @@ function Material() {
 	this.uvTransform = null; // add Material.uvTransform to replace texture.matrix
 	this.uvTransform1 = null; // add Material.uvTransform to replace texture.matrix
 	this.uvTransform2 = null; // add Material.uvTransform to replace texture.matrix
+	this.useEnvironment = null; // add Material.useEnvironment decide whether to use scene.environment
 
 	this.visible = true;
 
@@ -503,6 +504,11 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 			this.uvTransform2 = null;
 
 		}
+
+		// @THREE-Modification
+		// add Material.useEnvironment decide whether to use scene.environment
+
+		this.useEnvironment = source.useEnvironment;
 
 		return this;
 

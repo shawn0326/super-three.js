@@ -106,6 +106,20 @@ function WebGLMaterials( properties ) {
 
 		} else if ( material.isShaderMaterial ) {
 
+			// @THREE-Modification
+			// if set useEnvironment, override envMap
+			if ( material.useEnvironment ) {
+
+				const envMap = properties.get( material ).envMap;
+
+				if ( envMap ) {
+
+					uniforms.envMap.value = envMap;
+
+				}
+
+			}
+
 			material.uniformsNeedUpdate = false; // #15581
 
 		}

@@ -1426,7 +1426,7 @@ function WebGLRenderer( parameters ) {
 
 			// same glsl and uniform list, envMap still needs the update here to avoid a frame-late effect
 
-			const environment = material.isMeshStandardMaterial ? scene.environment : null;
+			const environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // add Material.useEnvironment decide whether to use scene.environment
 			materialProperties.envMap = cubemaps.get( material.envMap || environment );
 
 			return;
@@ -1464,7 +1464,7 @@ function WebGLRenderer( parameters ) {
 
 		}
 
-		materialProperties.environment = material.isMeshStandardMaterial ? scene.environment : null;
+		materialProperties.environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // add Material.useEnvironment decide whether to use scene.environment
 		materialProperties.fog = scene.fog;
 		materialProperties.envMap = cubemaps.get( material.envMap || materialProperties.environment );
 
