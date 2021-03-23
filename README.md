@@ -137,6 +137,7 @@ All modifications are marked by `// @THREE-Modification`.
 * VR Camera apply camera transform.
 * Add Material.uvTransform to replace texture.matrix.
 * Add Material.useEnvironment decide whether to use scene.environment.
+* WebGLTextures: Fix empty cube texture binding.
 
 ### 开发规范 ###
 

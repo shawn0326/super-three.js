@@ -19230,7 +19230,7 @@
 		function getParameters( material, lights, shadows, scene, object ) {
 
 			var fog = scene.fog;
-			var environment = material.isMeshStandardMaterial ? scene.environment : null;
+			var environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
 
 			var envMap = cubemaps.get( material.envMap || environment );
 
@@ -22330,9 +22330,17 @@
 
 		function setTextureCube( texture, slot ) {
 
-			if ( texture.image.length !== 6 ) { return; }
+			// if ( texture.image.length !== 6 ) return;
 
 			var textureProperties = properties.get( texture );
+
+			if ( texture.image.length !== 6 ) { // @THREE-Modification fix empty cube texture binding
+
+				state.activeTexture( 33984 + slot );
+				state.bindTexture( 34067, textureProperties.__webglTexture );
+				return;
+
+			}
 
 			if ( texture.version > 0 && textureProperties.__version !== texture.version ) {
 
@@ -24320,13 +24328,7 @@
 				// if set useEnvironment, override envMap
 				if ( material.useEnvironment ) {
 
-					var envMap = properties.get( material ).envMap;
-
-					if ( envMap ) {
-
-						uniforms.envMap.value = envMap;
-
-					}
+					uniforms.envMap.value = properties.get( material ).envMap;
 
 				}
 
@@ -26435,7 +26437,7 @@
 
 				// same glsl and uniform list, envMap still needs the update here to avoid a frame-late effect
 
-				var environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // add Material.useEnvironment decide whether to use scene.environment
+				var environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
 				materialProperties.envMap = cubemaps.get( material.envMap || environment );
 
 				return;
@@ -26473,7 +26475,7 @@
 
 			}
 
-			materialProperties.environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // add Material.useEnvironment decide whether to use scene.environment
+			materialProperties.environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
 			materialProperties.fog = scene.fog;
 			materialProperties.envMap = cubemaps.get( material.envMap || materialProperties.environment );
 
@@ -26525,7 +26527,9 @@
 			textures.resetTextureUnits();
 
 			var fog = scene.fog;
-			var environment = material.isMeshStandardMaterial ? scene.environment : null;
+
+			// @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
+			var environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null;
 			// @THREE-Modification remove this later
 			var encoding = _this.outputEncoding;
 			// const encoding = ( _currentRenderTarget === null ) ? _this.outputEncoding : _currentRenderTarget.texture.encoding;

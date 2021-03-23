@@ -110,13 +110,7 @@ function WebGLMaterials( properties ) {
 			// if set useEnvironment, override envMap
 			if ( material.useEnvironment ) {
 
-				const envMap = properties.get( material ).envMap;
-
-				if ( envMap ) {
-
-					uniforms.envMap.value = envMap;
-
-				}
+				uniforms.envMap.value = properties.get( material ).envMap;
 
 			}
 

@@ -119,7 +119,7 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 	function getParameters( material, lights, shadows, scene, object ) {
 
 		const fog = scene.fog;
-		const environment = material.isMeshStandardMaterial ? scene.environment : null;
+		const environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
 
 		const envMap = cubemaps.get( material.envMap || environment );
 

@@ -1426,7 +1426,7 @@ function WebGLRenderer( parameters ) {
 
 			// same glsl and uniform list, envMap still needs the update here to avoid a frame-late effect
 
-			const environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // add Material.useEnvironment decide whether to use scene.environment
+			const environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
 			materialProperties.envMap = cubemaps.get( material.envMap || environment );
 
 			return;
@@ -1464,7 +1464,7 @@ function WebGLRenderer( parameters ) {
 
 		}
 
-		materialProperties.environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // add Material.useEnvironment decide whether to use scene.environment
+		materialProperties.environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
 		materialProperties.fog = scene.fog;
 		materialProperties.envMap = cubemaps.get( material.envMap || materialProperties.environment );
 
@@ -1516,7 +1516,9 @@ function WebGLRenderer( parameters ) {
 		textures.resetTextureUnits();
 
 		const fog = scene.fog;
-		const environment = material.isMeshStandardMaterial ? scene.environment : null;
+
+		// @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
+		const environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null;
 		// @THREE-Modification remove this later
 		const encoding = _this.outputEncoding;
 		// const encoding = ( _currentRenderTarget === null ) ? _this.outputEncoding : _currentRenderTarget.texture.encoding;
