@@ -3,6 +3,7 @@ struct PhysicalMaterial {
 
 	vec3 diffuseColor;
 	float specularRoughness;
+	float specularFactor; // @THREE-Modification add specular factor for physical material
 	vec3 specularColor;
 
 #ifdef CLEARCOAT
@@ -109,7 +110,7 @@ void RE_Direct_Physical( const in IncidentLight directLight, const in GeometricC
 			material.sheenColor
 		);
 	#else
-		reflectedLight.directSpecular += ( 1.0 - clearcoatDHR ) * irradiance * BRDF_Specular_GGX( directLight, geometry.viewDir, geometry.normal, material.specularColor, material.specularRoughness);
+		reflectedLight.directSpecular += specularFactor * ( 1.0 - clearcoatDHR ) * irradiance * BRDF_Specular_GGX( directLight, geometry.viewDir, geometry.normal, material.specularColor, material.specularRoughness); // @THREE-Modification add specular factor for physical material
 	#endif
 
 	reflectedLight.directDiffuse += ( 1.0 - clearcoatDHR ) * irradiance * BRDF_Diffuse_Lambert( material.diffuseColor );

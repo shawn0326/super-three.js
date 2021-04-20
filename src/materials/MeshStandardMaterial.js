@@ -65,6 +65,8 @@ function MeshStandardMaterial( parameters ) {
 	this.roughness = 1.0;
 	this.metalness = 0.0;
 
+	this.specularFactor = 1; // @THREE-Modification add specular factor for physical material
+
 	this.map = null;
 
 	this.lightMap = null;
@@ -129,6 +131,8 @@ MeshStandardMaterial.prototype.copy = function ( source ) {
 	this.color.copy( source.color );
 	this.roughness = source.roughness;
 	this.metalness = source.metalness;
+
+	this.specularFactor = source.specularFactor; // @THREE-Modification add specular factor for physical material
 
 	this.map = source.map;
 

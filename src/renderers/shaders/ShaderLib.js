@@ -92,6 +92,7 @@ const ShaderLib = {
 				emissive: { value: new Color( 0x000000 ) },
 				roughness: { value: 1.0 },
 				metalness: { value: 0.0 },
+				specularFactor: { value: 1.0 }, // @THREE-Modification add specular factor for physical material
 				envMapIntensity: { value: 1 } // temporary
 			}
 		] ),

@@ -597,6 +597,8 @@ function WebGLMaterials( properties ) {
 		uniforms.roughness.value = material.roughness;
 		uniforms.metalness.value = material.metalness;
 
+		uniforms.specularFactor.value = material.specularFactor; // @THREE-Modification add specular factor for physical material
+
 		if ( material.roughnessMap ) {
 
 			uniforms.roughnessMap.value = material.roughnessMap;

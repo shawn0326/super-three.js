@@ -8,6 +8,7 @@ float geometryRoughness = max( max( dxy.x, dxy.y ), dxy.z );
 material.specularRoughness = max( roughnessFactor, 0.0525 );// 0.0525 corresponds to the base mip of a 256 cubemap.
 material.specularRoughness += geometryRoughness;
 material.specularRoughness = min( material.specularRoughness, 1.0 );
+material.specularFactor = specularFactor; // @THREE-Modification add specular factor for physical material
 
 #ifdef REFLECTIVITY
 

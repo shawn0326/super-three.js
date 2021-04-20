@@ -12,6 +12,7 @@ uniform vec3 emissive;
 uniform float roughness;
 uniform float metalness;
 uniform float opacity;
+uniform float specularFactor; // @THREE-Modification add specular factor for physical material
 
 #ifdef TRANSMISSION
 	uniform float transmission;

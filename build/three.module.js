@@ -16531,6 +16531,7 @@ float geometryRoughness = max( max( dxy.x, dxy.y ), dxy.z );
 material.specularRoughness = max( roughnessFactor, 0.0525 );// 0.0525 corresponds to the base mip of a 256 cubemap.
 material.specularRoughness += geometryRoughness;
 material.specularRoughness = min( material.specularRoughness, 1.0 );
+material.specularFactor = specularFactor; // @THREE-Modification add specular factor for physical material
 
 #ifdef REFLECTIVITY
 
@@ -16578,6 +16579,7 @@ struct PhysicalMaterial {
 
 	vec3 diffuseColor;
 	float specularRoughness;
+	float specularFactor; // @THREE-Modification add specular factor for physical material
 	vec3 specularColor;
 
 #ifdef CLEARCOAT
@@ -16684,7 +16686,7 @@ void RE_Direct_Physical( const in IncidentLight directLight, const in GeometricC
 			material.sheenColor
 		);
 	#else
-		reflectedLight.directSpecular += ( 1.0 - clearcoatDHR ) * irradiance * BRDF_Specular_GGX( directLight, geometry.viewDir, geometry.normal, material.specularColor, material.specularRoughness);
+		reflectedLight.directSpecular += specularFactor * ( 1.0 - clearcoatDHR ) * irradiance * BRDF_Specular_GGX( directLight, geometry.viewDir, geometry.normal, material.specularColor, material.specularRoughness); // @THREE-Modification add specular factor for physical material
 	#endif
 
 	reflectedLight.directDiffuse += ( 1.0 - clearcoatDHR ) * irradiance * BRDF_Diffuse_Lambert( material.diffuseColor );
@@ -19389,6 +19391,7 @@ uniform vec3 emissive;
 uniform float roughness;
 uniform float metalness;
 uniform float opacity;
+uniform float specularFactor; // @THREE-Modification add specular factor for physical material
 
 #ifdef TRANSMISSION
 	uniform float transmission;
@@ -20351,6 +20354,7 @@ const ShaderLib = {
 				emissive: { value: new Color( 0x000000 ) },
 				roughness: { value: 1.0 },
 				metalness: { value: 0.0 },
+				specularFactor: { value: 1.0 }, // @THREE-Modification add specular factor for physical material
 				envMapIntensity: { value: 1 } // temporary
 			}
 		] ),
@@ -30075,6 +30079,8 @@ function WebGLMaterials( properties ) {
 		uniforms.roughness.value = material.roughness;
 		uniforms.metalness.value = material.metalness;
 
+		uniforms.specularFactor.value = material.specularFactor; // @THREE-Modification add specular factor for physical material
+
 		if ( material.roughnessMap ) {
 
 			uniforms.roughnessMap.value = material.roughnessMap;
@@ -39172,6 +39178,8 @@ function MeshStandardMaterial( parameters ) {
 	this.roughness = 1.0;
 	this.metalness = 0.0;
 
+	this.specularFactor = 1; // @THREE-Modification add specular factor for physical material
+
 	this.map = null;
 
 	this.lightMap = null;
@@ -39236,6 +39244,8 @@ MeshStandardMaterial.prototype.copy = function ( source ) {
 	this.color.copy( source.color );
 	this.roughness = source.roughness;
 	this.metalness = source.metalness;
+
+	this.specularFactor = source.specularFactor; // @THREE-Modification add specular factor for physical material
 
 	this.map = source.map;
 
