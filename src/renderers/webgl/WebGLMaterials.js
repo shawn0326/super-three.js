@@ -32,6 +32,13 @@ function WebGLMaterials( properties ) {
 
 			refreshUniformsCommon( uniforms, material );
 
+			// @THREE-Modification Add emissive support for basic material
+			if ( material.emissiveMap ) {
+
+				uniforms.emissiveMap.value = material.emissiveMap;
+
+			}
+
 		} else if ( material.isMeshLambertMaterial ) {
 
 			refreshUniformsCommon( uniforms, material );

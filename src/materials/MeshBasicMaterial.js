@@ -50,6 +50,11 @@ function MeshBasicMaterial( parameters ) {
 	this.aoMap = null;
 	this.aoMapIntensity = 1.0;
 
+	// @THREE-Modification Add emissive support for basic material
+	this.emissive = new Color( 0x000000 );
+	this.emissiveIntensity = 1.0;
+	this.emissiveMap = null;
+
 	this.specularMap = null;
 
 	this.alphaMap = null;
@@ -89,6 +94,11 @@ MeshBasicMaterial.prototype.copy = function ( source ) {
 
 	this.aoMap = source.aoMap;
 	this.aoMapIntensity = source.aoMapIntensity;
+
+	// @THREE-Modification Add emissive support for basic material
+	this.emissive.copy( source.emissive );
+	this.emissiveMap = source.emissiveMap;
+	this.emissiveIntensity = source.emissiveIntensity;
 
 	this.specularMap = source.specularMap;
 

@@ -8,6 +8,9 @@ uniform float opacity;
 
 #endif
 
+// @THREE-Modification Add emissive support for basic material
+uniform vec3 emissive;
+
 #include <common>
 #include <dithering_pars_fragment>
 #include <color_pars_fragment>
@@ -26,6 +29,8 @@ uniform float opacity;
 #include <clipping_planes_pars_fragment>
 // @THREE-Modification
 #include <colormapping_pars_fragment>
+// @THREE-Modification Add emissive support for basic material
+#include <emissivemap_pars_fragment>
 
 void main() {
 
@@ -46,6 +51,9 @@ void main() {
 
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
 
+	// @THREE-Modification Add emissive support for basic material
+	vec3 totalEmissiveRadiance = emissive;
+
 	// accumulation (baked indirect lighting only)
 	#ifdef USE_LIGHTMAP
 	
@@ -61,9 +69,12 @@ void main() {
 	// modulation
 	#include <aomap_fragment>
 
+	// @THREE-Modification Add emissive support for basic material
+	#include <emissivemap_fragment>
+
 	reflectedLight.indirectDiffuse *= diffuseColor.rgb;
 
-	vec3 outgoingLight = reflectedLight.indirectDiffuse;
+	vec3 outgoingLight = reflectedLight.indirectDiffuse + totalEmissiveRadiance; // @THREE-Modification Add emissive support for basic material
 
 	#include <envmap_fragment>
 

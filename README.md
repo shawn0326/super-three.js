@@ -139,6 +139,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Add Material.useEnvironment decide whether to use scene.environment.
 * WebGLTextures: Fix empty cube texture binding.
 * MeshStandardMaterial: Add specularFactor, default is 1.
+* MeshBasicMaterial: Add emissive support.
 
 ### 开发规范 ###
 

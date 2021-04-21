@@ -18,7 +18,11 @@ const ShaderLib = {
 			UniformsLib.envmap,
 			UniformsLib.aomap,
 			UniformsLib.lightmap,
-			UniformsLib.fog
+			UniformsLib.emissivemap, // @THREE-Modification Add emissive support for basic material
+			UniformsLib.fog,
+			{ // @THREE-Modification Add emissive support for basic material
+				emissive: { value: new Color( 0x000000 ) }
+			}
 		] ),
 
 		vertexShader: ShaderChunk.meshbasic_vert,

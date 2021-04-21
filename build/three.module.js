@@ -9053,6 +9053,11 @@ function MeshBasicMaterial( parameters ) {
 	this.aoMap = null;
 	this.aoMapIntensity = 1.0;
 
+	// @THREE-Modification Add emissive support for basic material
+	this.emissive = new Color( 0x000000 );
+	this.emissiveIntensity = 1.0;
+	this.emissiveMap = null;
+
 	this.specularMap = null;
 
 	this.alphaMap = null;
@@ -9092,6 +9097,11 @@ MeshBasicMaterial.prototype.copy = function ( source ) {
 
 	this.aoMap = source.aoMap;
 	this.aoMapIntensity = source.aoMapIntensity;
+
+	// @THREE-Modification Add emissive support for basic material
+	this.emissive.copy( source.emissive );
+	this.emissiveMap = source.emissiveMap;
+	this.emissiveIntensity = source.emissiveIntensity;
 
 	this.specularMap = source.specularMap;
 
@@ -18673,6 +18683,9 @@ uniform float opacity;
 
 #endif
 
+// @THREE-Modification Add emissive support for basic material
+uniform vec3 emissive;
+
 #include <common>
 #include <dithering_pars_fragment>
 #include <color_pars_fragment>
@@ -18691,6 +18704,8 @@ uniform float opacity;
 #include <clipping_planes_pars_fragment>
 // @THREE-Modification
 #include <colormapping_pars_fragment>
+// @THREE-Modification Add emissive support for basic material
+#include <emissivemap_pars_fragment>
 
 void main() {
 
@@ -18711,6 +18726,9 @@ void main() {
 
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
 
+	// @THREE-Modification Add emissive support for basic material
+	vec3 totalEmissiveRadiance = emissive;
+
 	// accumulation (baked indirect lighting only)
 	#ifdef USE_LIGHTMAP
 	
@@ -18726,9 +18744,12 @@ void main() {
 	// modulation
 	#include <aomap_fragment>
 
+	// @THREE-Modification Add emissive support for basic material
+	#include <emissivemap_fragment>
+
 	reflectedLight.indirectDiffuse *= diffuseColor.rgb;
 
-	vec3 outgoingLight = reflectedLight.indirectDiffuse;
+	vec3 outgoingLight = reflectedLight.indirectDiffuse + totalEmissiveRadiance; // @THREE-Modification Add emissive support for basic material
 
 	#include <envmap_fragment>
 
@@ -20280,7 +20301,11 @@ const ShaderLib = {
 			UniformsLib.envmap,
 			UniformsLib.aomap,
 			UniformsLib.lightmap,
-			UniformsLib.fog
+			UniformsLib.emissivemap, // @THREE-Modification Add emissive support for basic material
+			UniformsLib.fog,
+			{ // @THREE-Modification Add emissive support for basic material
+				emissive: { value: new Color( 0x000000 ) }
+			}
 		] ),
 
 		vertexShader: ShaderChunk.meshbasic_vert,
@@ -29513,6 +29538,13 @@ function WebGLMaterials( properties ) {
 		if ( material.isMeshBasicMaterial ) {
 
 			refreshUniformsCommon( uniforms, material );
+
+			// @THREE-Modification Add emissive support for basic material
+			if ( material.emissiveMap ) {
+
+				uniforms.emissiveMap.value = material.emissiveMap;
+
+			}
 
 		} else if ( material.isMeshLambertMaterial ) {
 
