@@ -117,6 +117,7 @@ All modifications are marked by `// @THREE-Modification`.
 * ~~Mesh: Raycast method support TriangleStripDrawMode.~~(Mesh.drawMode has been moved in r112)
 * Mesh: Raycast method fix for group count infinity.
 * WebGLTextures: Support share webglDepthRenderbuffer.
+* WebGLTextures: Support share webglColorRenderbuffer. (for only WebGLMultisampleRenderTarget now)
 * WebGLTextures: Support input gl texture.
 * WebGLRenderer: Support render list dirty.
 * Sprite: If raycaster's camera not be set, skip raycast.

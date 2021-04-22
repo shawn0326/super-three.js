@@ -6,6 +6,8 @@ function WebGLMultisampleRenderTarget( width, height, options ) {
 
 	this.samples = 4;
 
+	// @THREE-Modification for share color render buffer
+	this.webglColorRenderbuffer = options ? options.webglColorRenderbuffer : null;
 	// @THREE-Modification for share depth render buffer
 	this.webglDepthRenderbuffer = options ? options.webglDepthRenderbuffer : null;
 
@@ -23,6 +25,8 @@ WebGLMultisampleRenderTarget.prototype = Object.assign( Object.create( WebGLRend
 
 		this.samples = source.samples;
 
+		// @THREE-Modification for share color render buffer
+		this.webglColorRenderbuffer = source.webglColorRenderbuffer;
 		// @THREE-Modification for share depth render buffer
 		this.webglDepthRenderbuffer = source.webglDepthRenderbuffer;
 

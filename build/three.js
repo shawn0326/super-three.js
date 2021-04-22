@@ -2544,6 +2544,8 @@
 
 		this.samples = 4;
 
+		// @THREE-Modification for share color render buffer
+		this.webglColorRenderbuffer = options ? options.webglColorRenderbuffer : null;
 		// @THREE-Modification for share depth render buffer
 		this.webglDepthRenderbuffer = options ? options.webglDepthRenderbuffer : null;
 
@@ -2561,6 +2563,8 @@
 
 			this.samples = source.samples;
 
+			// @THREE-Modification for share color render buffer
+			this.webglColorRenderbuffer = source.webglColorRenderbuffer;
 			// @THREE-Modification for share depth render buffer
 			this.webglDepthRenderbuffer = source.webglDepthRenderbuffer;
 
@@ -22230,7 +22234,9 @@
 				_gl.deleteFramebuffer( renderTargetProperties.__webglFramebuffer );
 				if ( renderTargetProperties.__webglDepthbuffer && ! renderTargetProperties.__shareDepthbuffer ) { _gl.deleteRenderbuffer( renderTargetProperties.__webglDepthbuffer ); } // @THREE-Modification dispose depth render buffer
 				if ( renderTargetProperties.__webglMultisampledFramebuffer ) { _gl.deleteFramebuffer( renderTargetProperties.__webglMultisampledFramebuffer ); }
-				if ( renderTargetProperties.__webglColorRenderbuffer ) { _gl.deleteRenderbuffer( renderTargetProperties.__webglColorRenderbuffer ); }
+
+				// @THREE-Modification dispose color sampling render buffer
+				if ( renderTargetProperties.__webglColorRenderbuffer && ! renderTargetProperties.__shareColorRenderbuffer ) { _gl.deleteRenderbuffer( renderTargetProperties.__webglColorRenderbuffer ); }
 
 				// @THREE-Modification dispose depth sampling render buffer
 				if ( renderTargetProperties.__webglDepthRenderbuffer && ! renderTargetProperties.__shareDepthRenderbuffer ) { _gl.deleteRenderbuffer( renderTargetProperties.__webglDepthRenderbuffer ); }
@@ -23037,7 +23043,18 @@
 					if ( isWebGL2 ) {
 
 						renderTargetProperties.__webglMultisampledFramebuffer = _gl.createFramebuffer();
-						renderTargetProperties.__webglColorRenderbuffer = _gl.createRenderbuffer();
+
+						// @THREE-Modification for share color render buffer
+						if ( renderTarget.webglColorRenderbuffer ) {
+
+							renderTargetProperties.__webglColorRenderbuffer = renderTarget.webglColorRenderbuffer;
+							renderTargetProperties.__shareColorRenderbuffer = true;
+
+						} else {
+
+							renderTargetProperties.__webglColorRenderbuffer = _gl.createRenderbuffer();
+
+						}
 
 						_gl.bindRenderbuffer( 36161, renderTargetProperties.__webglColorRenderbuffer );
 
