@@ -16696,7 +16696,7 @@ void RE_Direct_Physical( const in IncidentLight directLight, const in GeometricC
 			material.sheenColor
 		);
 	#else
-		reflectedLight.directSpecular += specularFactor * ( 1.0 - clearcoatDHR ) * irradiance * BRDF_Specular_GGX( directLight, geometry.viewDir, geometry.normal, material.specularColor, material.specularRoughness); // @THREE-Modification add specular factor for physical material
+		reflectedLight.directSpecular += material.specularFactor * ( 1.0 - clearcoatDHR ) * irradiance * BRDF_Specular_GGX( directLight, geometry.viewDir, geometry.normal, material.specularColor, material.specularRoughness); // @THREE-Modification add specular factor for physical material
 	#endif
 
 	reflectedLight.directDiffuse += ( 1.0 - clearcoatDHR ) * irradiance * BRDF_Diffuse_Lambert( material.diffuseColor );
