@@ -1791,6 +1791,7 @@ function WebGLRenderer( parameters ) {
 			if ( material.colorMapping ) {
 
 				p_uniforms.setValue( _gl, 'colorMapping', material.colorMapping, textures );
+				p_uniforms.setValue( _gl, 'colorMappingIntensity', material.colorMappingIntensity );
 
 			}
 

@@ -3,5 +3,6 @@
 export default /* glsl */`
   #ifdef COLOR_MAPPING
     uniform sampler2D colorMapping;
+    uniform float colorMappingIntensity;
   #endif
 `;

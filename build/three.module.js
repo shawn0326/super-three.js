@@ -8549,6 +8549,7 @@ function Material() {
 
 	// @THREE-Modification
 	this.colorMapping = null; // for color mapping
+	this.colorMappingIntensity = 1;
 	this.baseQuaternion = null; // for envMap rotation
 	this.uvTransform = null; // add Material.uvTransform to replace texture.matrix
 	this.uvTransform1 = null; // add Material.uvTransform to replace texture.matrix
@@ -8936,6 +8937,7 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		// @THREE-Modification
 		// for color mapping
 		this.colorMapping = source.colorMapping;
+		this.colorMappingIntensity = source.colorMappingIntensity;
 
 		// @THREE-Modification
 		// for env map roation
@@ -18288,7 +18290,7 @@ var worldpos_vertex = /* glsl */`
 var colormapping_fragment = /* glsl */`
   #ifdef COLOR_MAPPING
     float gray = clamp( dot( diffuseColor.rgb, vec3(0.333, 0.333, 0.333) ), 0.0, 1.0 );
-    diffuseColor.rgb = texture2D( colorMapping, vec2( gray, 0.5 ) ).rgb;
+    diffuseColor.rgb = mix( diffuseColor.rgb, texture2D( colorMapping, vec2( gray, 0.5 ) ).rgb, colorMappingIntensity );
   #endif
 `;
 
@@ -18297,6 +18299,7 @@ var colormapping_fragment = /* glsl */`
 var colormapping_pars_fragment = /* glsl */`
   #ifdef COLOR_MAPPING
     uniform sampler2D colorMapping;
+    uniform float colorMappingIntensity;
   #endif
 `;
 
@@ -32117,6 +32120,7 @@ function WebGLRenderer( parameters ) {
 			if ( material.colorMapping ) {
 
 				p_uniforms.setValue( _gl, 'colorMapping', material.colorMapping, textures );
+				p_uniforms.setValue( _gl, 'colorMappingIntensity', material.colorMappingIntensity );
 
 			}
 

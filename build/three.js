@@ -8533,6 +8533,7 @@
 
 		// @THREE-Modification
 		this.colorMapping = null; // for color mapping
+		this.colorMappingIntensity = 1;
 		this.baseQuaternion = null; // for envMap rotation
 		this.uvTransform = null; // add Material.uvTransform to replace texture.matrix
 		this.uvTransform1 = null; // add Material.uvTransform to replace texture.matrix
@@ -8920,6 +8921,7 @@
 			// @THREE-Modification
 			// for color mapping
 			this.colorMapping = source.colorMapping;
+			this.colorMappingIntensity = source.colorMappingIntensity;
 
 			// @THREE-Modification
 			// for env map roation
@@ -14648,11 +14650,11 @@
 
 	// @THREE-Modification
 	// for color mapping
-	var colormapping_fragment = /* glsl */"\n  #ifdef COLOR_MAPPING\n    float gray = clamp( dot( diffuseColor.rgb, vec3(0.333, 0.333, 0.333) ), 0.0, 1.0 );\n    diffuseColor.rgb = texture2D( colorMapping, vec2( gray, 0.5 ) ).rgb;\n  #endif\n";
+	var colormapping_fragment = /* glsl */"\n  #ifdef COLOR_MAPPING\n    float gray = clamp( dot( diffuseColor.rgb, vec3(0.333, 0.333, 0.333) ), 0.0, 1.0 );\n    diffuseColor.rgb = mix( diffuseColor.rgb, texture2D( colorMapping, vec2( gray, 0.5 ) ).rgb, colorMappingIntensity );\n  #endif\n";
 
 	// @THREE-Modification
 	// for color mapping
-	var colormapping_pars_fragment = /* glsl */"\n  #ifdef COLOR_MAPPING\n    uniform sampler2D colorMapping;\n  #endif\n";
+	var colormapping_pars_fragment = /* glsl */"\n  #ifdef COLOR_MAPPING\n    uniform sampler2D colorMapping;\n    uniform float colorMappingIntensity;\n  #endif\n";
 
 	// @THREE-Modification
 	// for baseQuaternion
@@ -26843,6 +26845,7 @@
 				if ( material.colorMapping ) {
 
 					p_uniforms.setValue( _gl, 'colorMapping', material.colorMapping, textures );
+					p_uniforms.setValue( _gl, 'colorMappingIntensity', material.colorMappingIntensity );
 
 				}
 
