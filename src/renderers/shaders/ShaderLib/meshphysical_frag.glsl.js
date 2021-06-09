@@ -62,7 +62,7 @@ varying vec3 vViewPosition;
 #include <cube_uv_reflection_fragment>
 
 // @THREE-Modification
-#include <baseQuaternion_pars_fragment>
+#include <env_quaternion_pars_fragment>
 
 #include <envmap_common_pars_fragment>
 #include <envmap_physical_pars_fragment>

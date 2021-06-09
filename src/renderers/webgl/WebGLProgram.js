@@ -678,8 +678,8 @@ function WebGLProgram( renderer, cacheKey, parameters, bindingStates ) {
 			// for color mapping
 			parameters.useColorMapping ? '#define COLOR_MAPPING' : '',
 			// @THREE-Modification
-			// for base quaternion
-			parameters.useBaseQuaternion ? '#define BASE_QUATERNION' : '',
+			// for env quaternion
+			parameters.useEnvQuaternion ? '#define ENV_QUATERNION' : '',
 
 			'\n'
 

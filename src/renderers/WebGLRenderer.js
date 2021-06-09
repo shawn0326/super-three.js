@@ -1507,6 +1507,8 @@ function WebGLRenderer( parameters ) {
 
 		materialProperties.logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer; // @THREE-Modification support logarithmicDepthBuffer state change
 
+		materialProperties.envQuaternion = !! scene.envQuaternion; // @THREE-Modification support logarithmicDepthBuffer state change
+
 	}
 
 	function setProgram( camera, scene, material, object ) {
@@ -1517,6 +1519,7 @@ function WebGLRenderer( parameters ) {
 
 		const fog = scene.fog;
 
+		const envQuaternion = scene.envQuaternion; // @THREE-Modification for global env map rotation
 		// @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
 		const environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null;
 		// @THREE-Modification remove this later
@@ -1573,6 +1576,10 @@ function WebGLRenderer( parameters ) {
 				initMaterial( material, scene, object );
 
 			} else if ( materialProperties.envMap !== envMap ) {
+
+				initMaterial( material, scene, object );
+
+			} else if ( materialProperties.envQuaternion !== !! envQuaternion ) { // @THREE-Modification for global env map rotation
 
 				initMaterial( material, scene, object );
 
@@ -1795,10 +1802,10 @@ function WebGLRenderer( parameters ) {
 
 			}
 
-			// @THREE-Modification for baseQuaternion
-			if ( material.baseQuaternion ) {
+			// @THREE-Modification for envQuaternion
+			if ( envQuaternion || material.baseQuaternion ) {
 
-				p_uniforms.setValue( _gl, 'baseQuaternion', material.baseQuaternion );
+				p_uniforms.setValue( _gl, 'envQuaternion', envQuaternion || material.baseQuaternion );
 
 			}
 

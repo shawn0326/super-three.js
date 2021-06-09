@@ -14,6 +14,8 @@ class Scene extends Object3D {
 		this.environment = null;
 		this.fog = null;
 
+		this.envQuaternion = null; // @THREE-Modification for global env map rotation
+
 		this.overrideMaterial = null;
 
 		this.autoUpdate = true; // checked by the renderer
@@ -33,6 +35,17 @@ class Scene extends Object3D {
 		if ( source.background !== null ) this.background = source.background.clone();
 		if ( source.environment !== null ) this.environment = source.environment.clone();
 		if ( source.fog !== null ) this.fog = source.fog.clone();
+
+		// @THREE-Modification for global env map rotation
+		if ( source.envQuaternion ) {
+
+			this.envQuaternion = source.envQuaternion.clone();
+
+		} else {
+
+			this.envQuaternion = null;
+
+		}
 
 		if ( source.overrideMaterial !== null ) this.overrideMaterial = source.overrideMaterial.clone();
 

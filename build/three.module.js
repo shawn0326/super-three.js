@@ -16306,16 +16306,16 @@ var envmap_physical_pars_fragment = /* glsl */`
 		vec3 worldNormal = inverseTransformDirection( geometry.normal, viewMatrix );
 		
 		// @THREE-Modification
-		#ifdef  BASE_QUATERNION
+		#ifdef  ENV_QUATERNION
 
-			vec3 newNormal = applyQuaternion(worldNormal, baseQuaternion);
+			vec3 newNormal = applyQuaternion(worldNormal, envQuaternion);
 
 		#endif
 
 		#ifdef ENVMAP_TYPE_CUBE
 
 			// @THREE-Modification
-			#ifdef  BASE_QUATERNION
+			#ifdef  ENV_QUATERNION
 			
 				vec3 queryVec = vec3( flipEnvMap * newNormal.x, newNormal.yz );
 				
@@ -16344,7 +16344,7 @@ var envmap_physical_pars_fragment = /* glsl */`
 		#elif defined( ENVMAP_TYPE_CUBE_UV )
 		
 			// @THREE-Modification
-			#ifdef  BASE_QUATERNION
+			#ifdef  ENV_QUATERNION
 			
 				vec3 queryVec = newNormal.xyz;
 				
@@ -16397,9 +16397,9 @@ var envmap_physical_pars_fragment = /* glsl */`
 		reflectVec = inverseTransformDirection( reflectVec, viewMatrix );
 		
 		// @THREE-Modification
-		#ifdef  BASE_QUATERNION
+		#ifdef  ENV_QUATERNION
 
-			reflectVec = applyQuaternion(reflectVec, baseQuaternion);
+			reflectVec = applyQuaternion(reflectVec, envQuaternion);
 				
 		#endif 
 
@@ -18304,10 +18304,10 @@ var colormapping_pars_fragment = /* glsl */`
 `;
 
 // @THREE-Modification
-// for baseQuaternion
-var baseQuaternion_pars_fragment = /* glsl */`
-  #ifdef BASE_QUATERNION
-    uniform vec4 baseQuaternion;
+// for envQuaternion
+var env_quaternion_pars_fragment = /* glsl */`
+  #ifdef ENV_QUATERNION
+    uniform vec4 envQuaternion;
   #endif
 `;
 
@@ -19469,7 +19469,7 @@ varying vec3 vViewPosition;
 #include <cube_uv_reflection_fragment>
 
 // @THREE-Modification
-#include <baseQuaternion_pars_fragment>
+#include <env_quaternion_pars_fragment>
 
 #include <envmap_common_pars_fragment>
 #include <envmap_physical_pars_fragment>
@@ -20048,7 +20048,7 @@ const ShaderChunk = {
 	// @THREE-Modification
 	colormapping_fragment: colormapping_fragment,
 	colormapping_pars_fragment: colormapping_pars_fragment,
-	baseQuaternion_pars_fragment: baseQuaternion_pars_fragment,
+	env_quaternion_pars_fragment: env_quaternion_pars_fragment,
 
 	background_frag: background_frag,
 	background_vert: background_vert,
@@ -24158,8 +24158,8 @@ function WebGLProgram( renderer, cacheKey, parameters, bindingStates ) {
 			// for color mapping
 			parameters.useColorMapping ? '#define COLOR_MAPPING' : '',
 			// @THREE-Modification
-			// for base quaternion
-			parameters.useBaseQuaternion ? '#define BASE_QUATERNION' : '',
+			// for env quaternion
+			parameters.useEnvQuaternion ? '#define ENV_QUATERNION' : '',
 
 			'\n'
 
@@ -24402,7 +24402,7 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 		"shadowMapEnabled", "shadowMapType", "toneMapping", 'physicallyCorrectLights',
 		"alphaTest", "doubleSided", "flipSided", "numClippingPlanes", "numClipIntersection", "depthPacking", "dithering",
 		"sheen", "transmissionMap",
-		"useColorMapping", "useBaseQuaternion" // @THREE-Modification
+		"useColorMapping", "useEnvQuaternion" // @THREE-Modification
 	];
 
 	function getMaxBones( object ) {
@@ -24475,6 +24475,7 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 
 		const fog = scene.fog;
 		const environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
+		const envQuaternion = scene.envQuaternion; // @THREE-Modification for global env map rotation
 
 		const envMap = cubemaps.get( material.envMap || environment );
 
@@ -24626,8 +24627,8 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 			// for color mapping
 			useColorMapping: !! material.colorMapping,
 			// @THREE-Modification
-			// for base quaternion
-			useBaseQuaternion: !! material.baseQuaternion,
+			// for env quaternion
+			useEnvQuaternion: !! envQuaternion || !! material.baseQuaternion,
 
 			depthPacking: ( material.depthPacking !== undefined ) ? material.depthPacking : false,
 
@@ -31836,6 +31837,8 @@ function WebGLRenderer( parameters ) {
 
 		materialProperties.logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer; // @THREE-Modification support logarithmicDepthBuffer state change
 
+		materialProperties.envQuaternion = !! scene.envQuaternion; // @THREE-Modification support logarithmicDepthBuffer state change
+
 	}
 
 	function setProgram( camera, scene, material, object ) {
@@ -31846,6 +31849,7 @@ function WebGLRenderer( parameters ) {
 
 		const fog = scene.fog;
 
+		const envQuaternion = scene.envQuaternion; // @THREE-Modification for global env map rotation
 		// @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
 		const environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null;
 		// @THREE-Modification remove this later
@@ -31902,6 +31906,10 @@ function WebGLRenderer( parameters ) {
 				initMaterial( material, scene, object );
 
 			} else if ( materialProperties.envMap !== envMap ) {
+
+				initMaterial( material, scene, object );
+
+			} else if ( materialProperties.envQuaternion !== !! envQuaternion ) { // @THREE-Modification for global env map rotation
 
 				initMaterial( material, scene, object );
 
@@ -32124,10 +32132,10 @@ function WebGLRenderer( parameters ) {
 
 			}
 
-			// @THREE-Modification for baseQuaternion
-			if ( material.baseQuaternion ) {
+			// @THREE-Modification for envQuaternion
+			if ( envQuaternion || material.baseQuaternion ) {
 
-				p_uniforms.setValue( _gl, 'baseQuaternion', material.baseQuaternion );
+				p_uniforms.setValue( _gl, 'envQuaternion', envQuaternion || material.baseQuaternion );
 
 			}
 
@@ -32561,6 +32569,8 @@ class Scene extends Object3D {
 		this.environment = null;
 		this.fog = null;
 
+		this.envQuaternion = null; // @THREE-Modification for global env map rotation
+
 		this.overrideMaterial = null;
 
 		this.autoUpdate = true; // checked by the renderer
@@ -32580,6 +32590,17 @@ class Scene extends Object3D {
 		if ( source.background !== null ) this.background = source.background.clone();
 		if ( source.environment !== null ) this.environment = source.environment.clone();
 		if ( source.fog !== null ) this.fog = source.fog.clone();
+
+		// @THREE-Modification for global env map rotation
+		if ( source.envQuaternion ) {
+
+			this.envQuaternion = source.envQuaternion.clone();
+
+		} else {
+
+			this.envQuaternion = null;
+
+		}
 
 		if ( source.overrideMaterial !== null ) this.overrideMaterial = source.overrideMaterial.clone();
 

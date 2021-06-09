@@ -47,7 +47,7 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 		"shadowMapEnabled", "shadowMapType", "toneMapping", 'physicallyCorrectLights',
 		"alphaTest", "doubleSided", "flipSided", "numClippingPlanes", "numClipIntersection", "depthPacking", "dithering",
 		"sheen", "transmissionMap",
-		"useColorMapping", "useBaseQuaternion" // @THREE-Modification
+		"useColorMapping", "useEnvQuaternion" // @THREE-Modification
 	];
 
 	function getMaxBones( object ) {
@@ -120,6 +120,7 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 
 		const fog = scene.fog;
 		const environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
+		const envQuaternion = scene.envQuaternion; // @THREE-Modification for global env map rotation
 
 		const envMap = cubemaps.get( material.envMap || environment );
 
@@ -271,8 +272,8 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 			// for color mapping
 			useColorMapping: !! material.colorMapping,
 			// @THREE-Modification
-			// for base quaternion
-			useBaseQuaternion: !! material.baseQuaternion,
+			// for env quaternion
+			useEnvQuaternion: !! envQuaternion || !! material.baseQuaternion,
 
 			depthPacking: ( material.depthPacking !== undefined ) ? material.depthPacking : false,
 

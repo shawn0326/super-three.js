@@ -10,16 +10,16 @@ export default /* glsl */`
 		vec3 worldNormal = inverseTransformDirection( geometry.normal, viewMatrix );
 		
 		// @THREE-Modification
-		#ifdef  BASE_QUATERNION
+		#ifdef  ENV_QUATERNION
 
-			vec3 newNormal = applyQuaternion(worldNormal, baseQuaternion);
+			vec3 newNormal = applyQuaternion(worldNormal, envQuaternion);
 
 		#endif
 
 		#ifdef ENVMAP_TYPE_CUBE
 
 			// @THREE-Modification
-			#ifdef  BASE_QUATERNION
+			#ifdef  ENV_QUATERNION
 			
 				vec3 queryVec = vec3( flipEnvMap * newNormal.x, newNormal.yz );
 				
@@ -48,7 +48,7 @@ export default /* glsl */`
 		#elif defined( ENVMAP_TYPE_CUBE_UV )
 		
 			// @THREE-Modification
-			#ifdef  BASE_QUATERNION
+			#ifdef  ENV_QUATERNION
 			
 				vec3 queryVec = newNormal.xyz;
 				
@@ -101,9 +101,9 @@ export default /* glsl */`
 		reflectVec = inverseTransformDirection( reflectVec, viewMatrix );
 		
 		// @THREE-Modification
-		#ifdef  BASE_QUATERNION
+		#ifdef  ENV_QUATERNION
 
-			reflectVec = applyQuaternion(reflectVec, baseQuaternion);
+			reflectVec = applyQuaternion(reflectVec, envQuaternion);
 				
 		#endif 
 

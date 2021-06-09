@@ -109,10 +109,10 @@ All modifications are marked by `// @THREE-Modification`.
 * Material: Support color mapping.
 * Material: Support Cartesian3 position. defines['USE_CARTESIAN3'].
 * UniformsUtils: Clone uniforms will not clone texture.
-* MeshStandardMaterial: Support envMap rotation. please use material.baseQuaternion.
+* MeshStandardMaterial: Add `.baseQuaternion` to support env map rotation. (remove this later)
+* Scene: Add `.envQuaternion` to support global env map rotation.
 * Object3D: Dispatch 'addedChild' event when add child.
 * Fog: Support fog alpha. please use fog.alpha.
-* Material: Support envMap rotation.
 * ~~InterleavedBufferAttribute: Override clone.~~(implemented in r117)
 * ~~Mesh: Raycast method support TriangleStripDrawMode.~~(Mesh.drawMode has been moved in r112)
 * Mesh: Raycast method fix for group count infinity.
