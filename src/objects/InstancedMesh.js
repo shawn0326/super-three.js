@@ -106,6 +106,14 @@ InstancedMesh.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
 	updateMorphTargets: function () {
 
+	},
+
+	// @THREE-Modification InstancedMesh: Add dispose().
+
+	dispose() {
+
+		this.dispatchEvent( { type: 'dispose' } );
+
 	}
 
 } );

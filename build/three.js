@@ -17247,6 +17247,12 @@
 
 			if ( object.isInstancedMesh ) {
 
+				if ( object.hasEventListener( 'dispose', onInstancedMeshDispose ) === false ) { // @THREE-Modification InstancedMesh: Add dispose().
+
+					object.addEventListener( 'dispose', onInstancedMeshDispose );
+
+				}
+
 				attributes.update( object.instanceMatrix, 34962 );
 
 				if ( object.instanceColor !== null ) {
@@ -17264,6 +17270,20 @@
 		function dispose() {
 
 			updateMap = new WeakMap();
+
+		}
+
+		// @THREE-Modification InstancedMesh: Add dispose().
+
+		function onInstancedMeshDispose( event ) {
+
+			var instancedMesh = event.target;
+
+			instancedMesh.removeEventListener( 'dispose', onInstancedMeshDispose );
+
+			attributes.remove( instancedMesh.instanceMatrix );
+
+			if ( instancedMesh.instanceColor !== null ) { attributes.remove( instancedMesh.instanceColor ); }
 
 		}
 
@@ -28657,6 +28677,14 @@
 		},
 
 		updateMorphTargets: function () {
+
+		},
+
+		// @THREE-Modification InstancedMesh: Add dispose().
+
+		dispose: function dispose() {
+
+			this.dispatchEvent( { type: 'dispose' } );
 
 		}
 

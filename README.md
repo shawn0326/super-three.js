@@ -141,6 +141,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLTextures: Fix empty cube texture binding.
 * MeshStandardMaterial: Add specularFactor, default is 1.
 * MeshBasicMaterial: Add emissive support.
+* InstancedMesh: Add dispose(). (will be implemented in r124)
 
 ### 开发规范 ###
 
