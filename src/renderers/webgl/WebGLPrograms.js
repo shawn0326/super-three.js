@@ -47,7 +47,7 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 		"shadowMapEnabled", "shadowMapType", "toneMapping", 'physicallyCorrectLights',
 		"alphaTest", "doubleSided", "flipSided", "numClippingPlanes", "numClipIntersection", "depthPacking", "dithering",
 		"sheen", "transmissionMap",
-		"useColorMapping", "useEnvQuaternion" // @THREE-Modification
+		"useColorMapping", "useEnvQuaternion", "useFresnel" // @THREE-Modification
 	];
 
 	function getMaxBones( object ) {
@@ -274,6 +274,8 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 			// @THREE-Modification
 			// for env quaternion
 			useEnvQuaternion: !! envQuaternion || !! material.baseQuaternion,
+			// @THREE-Modification fresnel
+			useFresnel: !! material.fresnelPower,
 
 			depthPacking: ( material.depthPacking !== undefined ) ? material.depthPacking : false,
 

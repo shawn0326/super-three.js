@@ -142,6 +142,7 @@ All modifications are marked by `// @THREE-Modification`.
 * MeshStandardMaterial: Add specularFactor, default is 1.
 * MeshBasicMaterial: Add emissive support.
 * InstancedMesh: Add dispose(). (will be implemented in r124)
+* MeshStandardMaterial: Add fresnelPower and fresnelInverse.
 
 ### 开发规范 ###
 

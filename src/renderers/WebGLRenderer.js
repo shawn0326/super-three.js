@@ -1809,6 +1809,14 @@ function WebGLRenderer( parameters ) {
 
 			}
 
+			// @THREE-Modification for envQuaternion
+			if ( !! material.fresnelPower ) {
+
+				p_uniforms.setValue( _gl, 'fresnelPower', material.fresnelPower );
+				p_uniforms.setValue( _gl, 'fresnelInverse', material.fresnelInverse );
+
+			}
+
 
 			if ( material.isShaderMaterial ) {
 

@@ -80,6 +80,11 @@ varying vec3 vViewPosition;
 // @THREE-Modification
 #include <colormapping_pars_fragment>
 
+// @THREE-Modification fresnel
+#ifdef FRESNEL
+	uniform float fresnelPower;
+	uniform bool fresnelInverse;
+#endif
 
 void main() {
 
@@ -128,6 +133,15 @@ void main() {
 	#endif
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+	// @THREE-Modification fresnel
+	#ifdef FRESNEL
+		if (fresnelInverse) {
+			gl_FragColor.a *= pow( abs( dot( normal, vec3(0., 0., 1.) ) ), fresnelPower );
+		} else {
+			gl_FragColor.a *= pow( 1.0 - abs( dot( normal, vec3(0., 0., 1.) ) ), fresnelPower );
+		}
+	#endif
 
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>

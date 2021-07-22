@@ -19487,6 +19487,11 @@ varying vec3 vViewPosition;
 // @THREE-Modification
 #include <colormapping_pars_fragment>
 
+// @THREE-Modification fresnel
+#ifdef FRESNEL
+	uniform float fresnelPower;
+	uniform bool fresnelInverse;
+#endif
 
 void main() {
 
@@ -19535,6 +19540,15 @@ void main() {
 	#endif
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+	// @THREE-Modification fresnel
+	#ifdef FRESNEL
+		if (fresnelInverse) {
+			gl_FragColor.a *= pow( abs( dot( normal, vec3(0., 0., 1.) ) ), fresnelPower );
+		} else {
+			gl_FragColor.a *= pow( 1.0 - abs( dot( normal, vec3(0., 0., 1.) ) ), fresnelPower );
+		}
+	#endif
 
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>
@@ -24180,6 +24194,8 @@ function WebGLProgram( renderer, cacheKey, parameters, bindingStates ) {
 			// @THREE-Modification
 			// for env quaternion
 			parameters.useEnvQuaternion ? '#define ENV_QUATERNION' : '',
+			// @THREE-Modification fresnel
+			parameters.useFresnel ? '#define FRESNEL' : '',
 
 			'\n'
 
@@ -24422,7 +24438,7 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 		"shadowMapEnabled", "shadowMapType", "toneMapping", 'physicallyCorrectLights',
 		"alphaTest", "doubleSided", "flipSided", "numClippingPlanes", "numClipIntersection", "depthPacking", "dithering",
 		"sheen", "transmissionMap",
-		"useColorMapping", "useEnvQuaternion" // @THREE-Modification
+		"useColorMapping", "useEnvQuaternion", "useFresnel" // @THREE-Modification
 	];
 
 	function getMaxBones( object ) {
@@ -24649,6 +24665,8 @@ function WebGLPrograms( renderer, cubemaps, extensions, capabilities, bindingSta
 			// @THREE-Modification
 			// for env quaternion
 			useEnvQuaternion: !! envQuaternion || !! material.baseQuaternion,
+			// @THREE-Modification fresnel
+			useFresnel: !! material.fresnelPower,
 
 			depthPacking: ( material.depthPacking !== undefined ) ? material.depthPacking : false,
 
@@ -32159,6 +32177,14 @@ function WebGLRenderer( parameters ) {
 
 			}
 
+			// @THREE-Modification for envQuaternion
+			if ( !! material.fresnelPower ) {
+
+				p_uniforms.setValue( _gl, 'fresnelPower', material.fresnelPower );
+				p_uniforms.setValue( _gl, 'fresnelInverse', material.fresnelInverse );
+
+			}
+
 
 			if ( material.isShaderMaterial ) {
 
@@ -39281,6 +39307,8 @@ function MeshStandardMaterial( parameters ) {
 	this.metalness = 0.0;
 
 	this.specularFactor = 1; // @THREE-Modification add specular factor for physical material
+	this.fresnelPower = 0; // @THREE-Modification fresnel
+	this.fresnelInverse = false; // @THREE-Modification fresnel
 
 	this.map = null;
 
@@ -39348,6 +39376,8 @@ MeshStandardMaterial.prototype.copy = function ( source ) {
 	this.metalness = source.metalness;
 
 	this.specularFactor = source.specularFactor; // @THREE-Modification add specular factor for physical material
+	this.fresnelPower = source.fresnelPower; // @THREE-Modification fresnel
+	this.fresnelInverse = source.fresnelInverse; // @THREE-Modification fresnel
 
 	this.map = source.map;
 

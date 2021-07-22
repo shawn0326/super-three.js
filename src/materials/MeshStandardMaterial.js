@@ -66,6 +66,8 @@ function MeshStandardMaterial( parameters ) {
 	this.metalness = 0.0;
 
 	this.specularFactor = 1; // @THREE-Modification add specular factor for physical material
+	this.fresnelPower = 0; // @THREE-Modification fresnel
+	this.fresnelInverse = false; // @THREE-Modification fresnel
 
 	this.map = null;
 
@@ -133,6 +135,8 @@ MeshStandardMaterial.prototype.copy = function ( source ) {
 	this.metalness = source.metalness;
 
 	this.specularFactor = source.specularFactor; // @THREE-Modification add specular factor for physical material
+	this.fresnelPower = source.fresnelPower; // @THREE-Modification fresnel
+	this.fresnelInverse = source.fresnelInverse; // @THREE-Modification fresnel
 
 	this.map = source.map;
 

@@ -680,6 +680,8 @@ function WebGLProgram( renderer, cacheKey, parameters, bindingStates ) {
 			// @THREE-Modification
 			// for env quaternion
 			parameters.useEnvQuaternion ? '#define ENV_QUATERNION' : '',
+			// @THREE-Modification fresnel
+			parameters.useFresnel ? '#define FRESNEL' : '',
 
 			'\n'
 
