@@ -11818,6 +11818,7 @@
 			}
 
 			var groups = geometry.groups;
+			var drawRange = geometry.drawRange; // @THREE-Modification fix for drawRange
 
 			if ( groups.length > 0 ) {
 
@@ -11825,8 +11826,10 @@
 
 					var group = groups[ i$1 ];
 
-					var start = group.start;
-					var count = group.count;
+					// @THREE-Modification fix for drawRange
+					var start = Math.max( group.start, drawRange.start );
+					var count = Math.min( group.count, drawRange.count );
+					count = Math.min( count, index.count - start );
 
 					for ( var j = start, jl = start + count; j < jl; j += 3 ) {
 
@@ -11846,9 +11849,13 @@
 
 			} else {
 
+				// @THREE-Modification fix for drawRange
+				var start$1 = Math.max( 0, drawRange.start );
+				var count$1 = Math.min( index.count - start$1, drawRange.count );
+
 				if ( index !== undefined ) {
 
-					for ( var i$2 = 0; i$2 < index.count; i$2 += 3 ) {
+					for ( var i$2 = start$1; i$2 < start$1 + count$1; i$2 += 3 ) {
 
 						addFace( index.getX( i$2 ), index.getX( i$2 + 1 ), index.getX( i$2 + 2 ) );
 

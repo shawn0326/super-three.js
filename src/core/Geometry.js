@@ -248,6 +248,7 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		}
 
 		const groups = geometry.groups;
+		const drawRange = geometry.drawRange; // @THREE-Modification fix for drawRange
 
 		if ( groups.length > 0 ) {
 
@@ -255,8 +256,10 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 				const group = groups[ i ];
 
-				const start = group.start;
-				const count = group.count;
+				// @THREE-Modification fix for drawRange
+				const start = Math.max( group.start, drawRange.start );
+				let count = Math.min( group.count, drawRange.count );
+				count = Math.min( count, index.count - start );
 
 				for ( let j = start, jl = start + count; j < jl; j += 3 ) {
 
@@ -276,9 +279,13 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		} else {
 
+			// @THREE-Modification fix for drawRange
+			const start = Math.max( 0, drawRange.start );
+			const count = Math.min( index.count - start, drawRange.count );
+
 			if ( index !== undefined ) {
 
-				for ( let i = 0; i < index.count; i += 3 ) {
+				for ( let i = start; i < start + count; i += 3 ) {
 
 					addFace( index.getX( i ), index.getX( i + 1 ), index.getX( i + 2 ) );
 
