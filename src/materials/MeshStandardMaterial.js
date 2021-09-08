@@ -68,6 +68,8 @@ function MeshStandardMaterial( parameters ) {
 	this.specularFactor = 1; // @THREE-Modification add specular factor for physical material
 	this.fresnelPower = 0; // @THREE-Modification fresnel
 	this.fresnelInverse = false; // @THREE-Modification fresnel
+	this.tintColor = new Color( 0x000000 ); // @THREE-Modification tint color
+	this.tintIntensity = 0; // @THREE-Modification tint color
 
 	this.map = null;
 
@@ -137,6 +139,8 @@ MeshStandardMaterial.prototype.copy = function ( source ) {
 	this.specularFactor = source.specularFactor; // @THREE-Modification add specular factor for physical material
 	this.fresnelPower = source.fresnelPower; // @THREE-Modification fresnel
 	this.fresnelInverse = source.fresnelInverse; // @THREE-Modification fresnel
+	this.tintColor.copy( source.tintColor ); // @THREE-Modification tint color
+	this.tintIntensity = source.tintIntensity; // @THREE-Modification tint color
 
 	this.map = source.map;
 

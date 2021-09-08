@@ -143,7 +143,8 @@ All modifications are marked by `// @THREE-Modification`.
 * MeshBasicMaterial: Add emissive support.
 * InstancedMesh: Add dispose(). (will be implemented in r124)
 * MeshStandardMaterial: Add fresnelPower and fresnelInverse.
-* Geometry.fromBufferGeometry: fix for drawRange
+* Geometry.fromBufferGeometry: fix for drawRange.
+* MeshStandardMaterial: Support tint color.
 
 ### 开发规范 ###
 

@@ -19427,6 +19427,8 @@ uniform float roughness;
 uniform float metalness;
 uniform float opacity;
 uniform float specularFactor; // @THREE-Modification add specular factor for physical material
+uniform vec3 tintColor; // @THREE-Modification tint color
+uniform float tintIntensity; // @THREE-Modification tint color
 
 #ifdef TRANSMISSION
 	uniform float transmission;
@@ -19562,6 +19564,9 @@ void main() {
 	#include <fog_fragment>
 	#include <premultiplied_alpha_fragment>
 	#include <dithering_fragment>
+
+	// @THREE-Modification tint color
+	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - tintIntensity ) + tintColor * tintIntensity;
 
 }
 `;
@@ -20408,6 +20413,8 @@ const ShaderLib = {
 				roughness: { value: 1.0 },
 				metalness: { value: 0.0 },
 				specularFactor: { value: 1.0 }, // @THREE-Modification add specular factor for physical material
+				tintColor: { value: new Color( 0x000000 ) }, // @THREE-Modification tint color
+				tintIntensity: { value: 0 }, // @THREE-Modification tint color
 				envMapIntensity: { value: 1 } // temporary
 			}
 		] ),
@@ -30178,6 +30185,8 @@ function WebGLMaterials( properties ) {
 		uniforms.metalness.value = material.metalness;
 
 		uniforms.specularFactor.value = material.specularFactor; // @THREE-Modification add specular factor for physical material
+		uniforms.tintColor.value.copy( material.tintColor ); // @THREE-Modification tint color
+		uniforms.tintIntensity.value = material.tintIntensity; // @THREE-Modification tint color
 
 		if ( material.roughnessMap ) {
 
@@ -39316,6 +39325,8 @@ function MeshStandardMaterial( parameters ) {
 	this.specularFactor = 1; // @THREE-Modification add specular factor for physical material
 	this.fresnelPower = 0; // @THREE-Modification fresnel
 	this.fresnelInverse = false; // @THREE-Modification fresnel
+	this.tintColor = new Color( 0x000000 ); // @THREE-Modification tint color
+	this.tintIntensity = 0; // @THREE-Modification tint color
 
 	this.map = null;
 
@@ -39385,6 +39396,8 @@ MeshStandardMaterial.prototype.copy = function ( source ) {
 	this.specularFactor = source.specularFactor; // @THREE-Modification add specular factor for physical material
 	this.fresnelPower = source.fresnelPower; // @THREE-Modification fresnel
 	this.fresnelInverse = source.fresnelInverse; // @THREE-Modification fresnel
+	this.tintColor.copy( source.tintColor ); // @THREE-Modification tint color
+	this.tintIntensity = source.tintIntensity; // @THREE-Modification tint color
 
 	this.map = source.map;
 

@@ -97,6 +97,8 @@ const ShaderLib = {
 				roughness: { value: 1.0 },
 				metalness: { value: 0.0 },
 				specularFactor: { value: 1.0 }, // @THREE-Modification add specular factor for physical material
+				tintColor: { value: new Color( 0x000000 ) }, // @THREE-Modification tint color
+				tintIntensity: { value: 0 }, // @THREE-Modification tint color
 				envMapIntensity: { value: 1 } // temporary
 			}
 		] ),

@@ -605,6 +605,8 @@ function WebGLMaterials( properties ) {
 		uniforms.metalness.value = material.metalness;
 
 		uniforms.specularFactor.value = material.specularFactor; // @THREE-Modification add specular factor for physical material
+		uniforms.tintColor.value.copy( material.tintColor ); // @THREE-Modification tint color
+		uniforms.tintIntensity.value = material.tintIntensity; // @THREE-Modification tint color
 
 		if ( material.roughnessMap ) {
 
