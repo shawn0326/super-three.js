@@ -55,6 +55,9 @@ function MeshBasicMaterial( parameters ) {
 	this.emissiveIntensity = 1.0;
 	this.emissiveMap = null;
 
+	this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
+	this.highlightIntensity = 0; // @THREE-Modification highlight color
+
 	this.specularMap = null;
 
 	this.alphaMap = null;
@@ -99,6 +102,9 @@ MeshBasicMaterial.prototype.copy = function ( source ) {
 	this.emissive.copy( source.emissive );
 	this.emissiveMap = source.emissiveMap;
 	this.emissiveIntensity = source.emissiveIntensity;
+
+	this.highlightColor.copy( source.highlightColor ); // @THREE-Modification highlight color
+	this.highlightIntensity = source.highlightIntensity; // @THREE-Modification highlight color
 
 	this.specularMap = source.specularMap;
 

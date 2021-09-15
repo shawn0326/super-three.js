@@ -10,6 +10,8 @@ uniform float opacity;
 
 // @THREE-Modification Add emissive support for basic material
 uniform vec3 emissive;
+uniform vec3 highlightColor; // @THREE-Modification highlight color
+uniform float highlightIntensity; // @THREE-Modification highlight color
 
 #include <common>
 #include <dithering_pars_fragment>
@@ -86,5 +88,7 @@ void main() {
 	#include <premultiplied_alpha_fragment>
 	#include <dithering_fragment>
 
+	// @THREE-Modification highlight color
+	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - highlightIntensity ) + highlightColor * highlightIntensity;
 }
 `;

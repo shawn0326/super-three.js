@@ -6,6 +6,8 @@ uniform vec3 emissive;
 uniform vec3 specular;
 uniform float shininess;
 uniform float opacity;
+uniform vec3 highlightColor; // @THREE-Modification highlight color
+uniform float highlightIntensity; // @THREE-Modification highlight color
 
 #include <common>
 #include <packing>
@@ -76,6 +78,9 @@ void main() {
 	#include <fog_fragment>
 	#include <premultiplied_alpha_fragment>
 	#include <dithering_fragment>
+
+	// @THREE-Modification highlight color
+	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - highlightIntensity ) + highlightColor * highlightIntensity;
 
 }
 `;

@@ -21,7 +21,9 @@ const ShaderLib = {
 			UniformsLib.emissivemap, // @THREE-Modification Add emissive support for basic material
 			UniformsLib.fog,
 			{ // @THREE-Modification Add emissive support for basic material
-				emissive: { value: new Color( 0x000000 ) }
+				emissive: { value: new Color( 0x000000 ) },
+				highlightColor: { value: new Color( 0x000000 ) }, // @THREE-Modification highlight color
+				highlightIntensity: { value: 0 } // @THREE-Modification highlight color
 			}
 		] ),
 
@@ -42,7 +44,9 @@ const ShaderLib = {
 			UniformsLib.fog,
 			UniformsLib.lights,
 			{
-				emissive: { value: new Color( 0x000000 ) }
+				emissive: { value: new Color( 0x000000 ) },
+				highlightColor: { value: new Color( 0x000000 ) }, // @THREE-Modification highlight color
+				highlightIntensity: { value: 0 } // @THREE-Modification highlight color
 			}
 		] ),
 
@@ -67,6 +71,8 @@ const ShaderLib = {
 			UniformsLib.lights,
 			{
 				emissive: { value: new Color( 0x000000 ) },
+				highlightColor: { value: new Color( 0x000000 ) }, // @THREE-Modification highlight color
+				highlightIntensity: { value: 0 }, // @THREE-Modification highlight color
 				specular: { value: new Color( 0x111111 ) },
 				shininess: { value: 30 }
 			}
@@ -97,8 +103,8 @@ const ShaderLib = {
 				roughness: { value: 1.0 },
 				metalness: { value: 0.0 },
 				specularFactor: { value: 1.0 }, // @THREE-Modification add specular factor for physical material
-				tintColor: { value: new Color( 0x000000 ) }, // @THREE-Modification tint color
-				tintIntensity: { value: 0 }, // @THREE-Modification tint color
+				highlightColor: { value: new Color( 0x000000 ) }, // @THREE-Modification highlight color
+				highlightIntensity: { value: 0 }, // @THREE-Modification highlight color
 				envMapIntensity: { value: 1 } // temporary
 			}
 		] ),

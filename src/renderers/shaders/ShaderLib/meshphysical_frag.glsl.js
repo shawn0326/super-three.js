@@ -13,8 +13,8 @@ uniform float roughness;
 uniform float metalness;
 uniform float opacity;
 uniform float specularFactor; // @THREE-Modification add specular factor for physical material
-uniform vec3 tintColor; // @THREE-Modification tint color
-uniform float tintIntensity; // @THREE-Modification tint color
+uniform vec3 highlightColor; // @THREE-Modification highlight color
+uniform float highlightIntensity; // @THREE-Modification highlight color
 
 #ifdef TRANSMISSION
 	uniform float transmission;
@@ -151,8 +151,8 @@ void main() {
 	#include <premultiplied_alpha_fragment>
 	#include <dithering_fragment>
 
-	// @THREE-Modification tint color
-	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - tintIntensity ) + tintColor * tintIntensity;
+	// @THREE-Modification highlight color
+	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - highlightIntensity ) + highlightColor * highlightIntensity;
 
 }
 `;

@@ -9064,6 +9064,9 @@ function MeshBasicMaterial( parameters ) {
 	this.emissiveIntensity = 1.0;
 	this.emissiveMap = null;
 
+	this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
+	this.highlightIntensity = 0; // @THREE-Modification highlight color
+
 	this.specularMap = null;
 
 	this.alphaMap = null;
@@ -9108,6 +9111,9 @@ MeshBasicMaterial.prototype.copy = function ( source ) {
 	this.emissive.copy( source.emissive );
 	this.emissiveMap = source.emissiveMap;
 	this.emissiveIntensity = source.emissiveIntensity;
+
+	this.highlightColor.copy( source.highlightColor ); // @THREE-Modification highlight color
+	this.highlightIntensity = source.highlightIntensity; // @THREE-Modification highlight color
 
 	this.specularMap = source.specularMap;
 
@@ -18698,6 +18704,8 @@ uniform float opacity;
 
 // @THREE-Modification Add emissive support for basic material
 uniform vec3 emissive;
+uniform vec3 highlightColor; // @THREE-Modification highlight color
+uniform float highlightIntensity; // @THREE-Modification highlight color
 
 #include <common>
 #include <dithering_pars_fragment>
@@ -18774,6 +18782,8 @@ void main() {
 	#include <premultiplied_alpha_fragment>
 	#include <dithering_fragment>
 
+	// @THREE-Modification highlight color
+	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - highlightIntensity ) + highlightColor * highlightIntensity;
 }
 `;
 
@@ -18856,6 +18866,8 @@ varying vec3 vIndirectFront;
 	varying vec3 vIndirectBack;
 #endif
 
+uniform vec3 highlightColor; // @THREE-Modification highlight color
+uniform float highlightIntensity; // @THREE-Modification highlight color
 
 #include <common>
 #include <packing>
@@ -18945,6 +18957,9 @@ void main() {
 	#include <fog_fragment>
 	#include <premultiplied_alpha_fragment>
 	#include <dithering_fragment>
+
+	// @THREE-Modification highlight color
+	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - highlightIntensity ) + highlightColor * highlightIntensity;
 }
 `;
 
@@ -19277,6 +19292,8 @@ uniform vec3 emissive;
 uniform vec3 specular;
 uniform float shininess;
 uniform float opacity;
+uniform vec3 highlightColor; // @THREE-Modification highlight color
+uniform float highlightIntensity; // @THREE-Modification highlight color
 
 #include <common>
 #include <packing>
@@ -19347,6 +19364,9 @@ void main() {
 	#include <fog_fragment>
 	#include <premultiplied_alpha_fragment>
 	#include <dithering_fragment>
+
+	// @THREE-Modification highlight color
+	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - highlightIntensity ) + highlightColor * highlightIntensity;
 
 }
 `;
@@ -19426,8 +19446,8 @@ uniform float roughness;
 uniform float metalness;
 uniform float opacity;
 uniform float specularFactor; // @THREE-Modification add specular factor for physical material
-uniform vec3 tintColor; // @THREE-Modification tint color
-uniform float tintIntensity; // @THREE-Modification tint color
+uniform vec3 highlightColor; // @THREE-Modification highlight color
+uniform float highlightIntensity; // @THREE-Modification highlight color
 
 #ifdef TRANSMISSION
 	uniform float transmission;
@@ -19564,8 +19584,8 @@ void main() {
 	#include <premultiplied_alpha_fragment>
 	#include <dithering_fragment>
 
-	// @THREE-Modification tint color
-	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - tintIntensity ) + tintColor * tintIntensity;
+	// @THREE-Modification highlight color
+	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - highlightIntensity ) + highlightColor * highlightIntensity;
 
 }
 `;
@@ -20336,7 +20356,9 @@ const ShaderLib = {
 			UniformsLib.emissivemap, // @THREE-Modification Add emissive support for basic material
 			UniformsLib.fog,
 			{ // @THREE-Modification Add emissive support for basic material
-				emissive: { value: new Color( 0x000000 ) }
+				emissive: { value: new Color( 0x000000 ) },
+				highlightColor: { value: new Color( 0x000000 ) }, // @THREE-Modification highlight color
+				highlightIntensity: { value: 0 } // @THREE-Modification highlight color
 			}
 		] ),
 
@@ -20357,7 +20379,9 @@ const ShaderLib = {
 			UniformsLib.fog,
 			UniformsLib.lights,
 			{
-				emissive: { value: new Color( 0x000000 ) }
+				emissive: { value: new Color( 0x000000 ) },
+				highlightColor: { value: new Color( 0x000000 ) }, // @THREE-Modification highlight color
+				highlightIntensity: { value: 0 } // @THREE-Modification highlight color
 			}
 		] ),
 
@@ -20382,6 +20406,8 @@ const ShaderLib = {
 			UniformsLib.lights,
 			{
 				emissive: { value: new Color( 0x000000 ) },
+				highlightColor: { value: new Color( 0x000000 ) }, // @THREE-Modification highlight color
+				highlightIntensity: { value: 0 }, // @THREE-Modification highlight color
 				specular: { value: new Color( 0x111111 ) },
 				shininess: { value: 30 }
 			}
@@ -20412,8 +20438,8 @@ const ShaderLib = {
 				roughness: { value: 1.0 },
 				metalness: { value: 0.0 },
 				specularFactor: { value: 1.0 }, // @THREE-Modification add specular factor for physical material
-				tintColor: { value: new Color( 0x000000 ) }, // @THREE-Modification tint color
-				tintIntensity: { value: 0 }, // @THREE-Modification tint color
+				highlightColor: { value: new Color( 0x000000 ) }, // @THREE-Modification highlight color
+				highlightIntensity: { value: 0 }, // @THREE-Modification highlight color
 				envMapIntensity: { value: 1 } // temporary
 			}
 		] ),
@@ -29618,6 +29644,9 @@ function WebGLMaterials( properties ) {
 
 			}
 
+			uniforms.highlightColor.value.copy( material.highlightColor ); // @THREE-Modification highlight color
+			uniforms.highlightIntensity.value = material.highlightIntensity; // @THREE-Modification highlight color
+
 		} else if ( material.isMeshLambertMaterial ) {
 
 			refreshUniformsCommon( uniforms, material );
@@ -30093,6 +30122,9 @@ function WebGLMaterials( properties ) {
 
 	function refreshUniformsLambert( uniforms, material ) {
 
+		uniforms.highlightColor.value.copy( material.highlightColor ); // @THREE-Modification highlight color
+		uniforms.highlightIntensity.value = material.highlightIntensity; // @THREE-Modification highlight color
+
 		if ( material.emissiveMap ) {
 
 			uniforms.emissiveMap.value = material.emissiveMap;
@@ -30105,6 +30137,8 @@ function WebGLMaterials( properties ) {
 
 		uniforms.specular.value.copy( material.specular );
 		uniforms.shininess.value = Math.max( material.shininess, 1e-4 ); // to prevent pow( 0.0, 0.0 )
+		uniforms.highlightColor.value.copy( material.highlightColor ); // @THREE-Modification highlight color
+		uniforms.highlightIntensity.value = material.highlightIntensity; // @THREE-Modification highlight color
 
 		if ( material.emissiveMap ) {
 
@@ -30184,8 +30218,8 @@ function WebGLMaterials( properties ) {
 		uniforms.metalness.value = material.metalness;
 
 		uniforms.specularFactor.value = material.specularFactor; // @THREE-Modification add specular factor for physical material
-		uniforms.tintColor.value.copy( material.tintColor ); // @THREE-Modification tint color
-		uniforms.tintIntensity.value = material.tintIntensity; // @THREE-Modification tint color
+		uniforms.highlightColor.value.copy( material.highlightColor ); // @THREE-Modification highlight color
+		uniforms.highlightIntensity.value = material.highlightIntensity; // @THREE-Modification highlight color
 
 		if ( material.roughnessMap ) {
 
@@ -39324,8 +39358,8 @@ function MeshStandardMaterial( parameters ) {
 	this.specularFactor = 1; // @THREE-Modification add specular factor for physical material
 	this.fresnelPower = 0; // @THREE-Modification fresnel
 	this.fresnelInverse = false; // @THREE-Modification fresnel
-	this.tintColor = new Color( 0x000000 ); // @THREE-Modification tint color
-	this.tintIntensity = 0; // @THREE-Modification tint color
+	this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
+	this.highlightIntensity = 0; // @THREE-Modification highlight color
 
 	this.map = null;
 
@@ -39395,8 +39429,8 @@ MeshStandardMaterial.prototype.copy = function ( source ) {
 	this.specularFactor = source.specularFactor; // @THREE-Modification add specular factor for physical material
 	this.fresnelPower = source.fresnelPower; // @THREE-Modification fresnel
 	this.fresnelInverse = source.fresnelInverse; // @THREE-Modification fresnel
-	this.tintColor.copy( source.tintColor ); // @THREE-Modification tint color
-	this.tintIntensity = source.tintIntensity; // @THREE-Modification tint color
+	this.highlightColor.copy( source.highlightColor ); // @THREE-Modification highlight color
+	this.highlightIntensity = source.highlightIntensity; // @THREE-Modification highlight color
 
 	this.map = source.map;
 
@@ -39608,6 +39642,9 @@ function MeshPhongMaterial( parameters ) {
 	this.emissiveIntensity = 1.0;
 	this.emissiveMap = null;
 
+	this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
+	this.highlightIntensity = 0; // @THREE-Modification highlight color
+
 	this.bumpMap = null;
 	this.bumpScale = 1;
 
@@ -39665,6 +39702,9 @@ MeshPhongMaterial.prototype.copy = function ( source ) {
 	this.emissive.copy( source.emissive );
 	this.emissiveMap = source.emissiveMap;
 	this.emissiveIntensity = source.emissiveIntensity;
+
+	this.highlightColor.copy( source.highlightColor ); // @THREE-Modification highlight color
+	this.highlightIntensity = source.highlightIntensity; // @THREE-Modification highlight color
 
 	this.bumpMap = source.bumpMap;
 	this.bumpScale = source.bumpScale;
@@ -39977,6 +40017,9 @@ function MeshLambertMaterial( parameters ) {
 	this.emissiveIntensity = 1.0;
 	this.emissiveMap = null;
 
+	this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
+	this.highlightIntensity = 0; // @THREE-Modification highlight color
+
 	this.specularMap = null;
 
 	this.alphaMap = null;
@@ -40021,6 +40064,9 @@ MeshLambertMaterial.prototype.copy = function ( source ) {
 	this.emissive.copy( source.emissive );
 	this.emissiveMap = source.emissiveMap;
 	this.emissiveIntensity = source.emissiveIntensity;
+
+	this.highlightColor.copy( source.highlightColor ); // @THREE-Modification highlight color
+	this.highlightIntensity = source.highlightIntensity; // @THREE-Modification highlight color
 
 	this.specularMap = source.specularMap;
 

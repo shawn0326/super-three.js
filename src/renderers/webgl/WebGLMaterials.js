@@ -39,6 +39,9 @@ function WebGLMaterials( properties ) {
 
 			}
 
+			uniforms.highlightColor.value.copy( material.highlightColor ); // @THREE-Modification highlight color
+			uniforms.highlightIntensity.value = material.highlightIntensity; // @THREE-Modification highlight color
+
 		} else if ( material.isMeshLambertMaterial ) {
 
 			refreshUniformsCommon( uniforms, material );
@@ -514,6 +517,9 @@ function WebGLMaterials( properties ) {
 
 	function refreshUniformsLambert( uniforms, material ) {
 
+		uniforms.highlightColor.value.copy( material.highlightColor ); // @THREE-Modification highlight color
+		uniforms.highlightIntensity.value = material.highlightIntensity; // @THREE-Modification highlight color
+
 		if ( material.emissiveMap ) {
 
 			uniforms.emissiveMap.value = material.emissiveMap;
@@ -526,6 +532,8 @@ function WebGLMaterials( properties ) {
 
 		uniforms.specular.value.copy( material.specular );
 		uniforms.shininess.value = Math.max( material.shininess, 1e-4 ); // to prevent pow( 0.0, 0.0 )
+		uniforms.highlightColor.value.copy( material.highlightColor ); // @THREE-Modification highlight color
+		uniforms.highlightIntensity.value = material.highlightIntensity; // @THREE-Modification highlight color
 
 		if ( material.emissiveMap ) {
 
@@ -605,8 +613,8 @@ function WebGLMaterials( properties ) {
 		uniforms.metalness.value = material.metalness;
 
 		uniforms.specularFactor.value = material.specularFactor; // @THREE-Modification add specular factor for physical material
-		uniforms.tintColor.value.copy( material.tintColor ); // @THREE-Modification tint color
-		uniforms.tintIntensity.value = material.tintIntensity; // @THREE-Modification tint color
+		uniforms.highlightColor.value.copy( material.highlightColor ); // @THREE-Modification highlight color
+		uniforms.highlightIntensity.value = material.highlightIntensity; // @THREE-Modification highlight color
 
 		if ( material.roughnessMap ) {
 

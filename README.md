@@ -144,7 +144,7 @@ All modifications are marked by `// @THREE-Modification`.
 * InstancedMesh: Add dispose(). (will be implemented in r124)
 * MeshStandardMaterial: Add fresnelPower and fresnelInverse.
 * Geometry.fromBufferGeometry: fix for drawRange.
-* MeshStandardMaterial: Support tint color.
+* Material: Support highlight color.
 
 ### 开发规范 ###
 
