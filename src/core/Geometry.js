@@ -258,8 +258,7 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 				// @THREE-Modification fix for drawRange
 				const start = Math.max( group.start, drawRange.start );
-				let count = Math.min( group.count, drawRange.count );
-				count = Math.min( count, index.count - start );
+				const count = Math.min( group.count, drawRange.count );
 
 				for ( let j = start, jl = start + count; j < jl; j += 3 ) {
 
@@ -279,11 +278,11 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		} else {
 
-			// @THREE-Modification fix for drawRange
-			const start = Math.max( 0, drawRange.start );
-			const count = Math.min( index.count - start, drawRange.count );
-
 			if ( index !== undefined ) {
+
+				// @THREE-Modification fix for drawRange
+				const start = Math.max( 0, drawRange.start );
+				const count = Math.min( index.count - start, drawRange.count );
 
 				for ( let i = start; i < start + count; i += 3 ) {
 

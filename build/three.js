@@ -11829,7 +11829,6 @@
 					// @THREE-Modification fix for drawRange
 					var start = Math.max( group.start, drawRange.start );
 					var count = Math.min( group.count, drawRange.count );
-					count = Math.min( count, index.count - start );
 
 					for ( var j = start, jl = start + count; j < jl; j += 3 ) {
 
@@ -11849,11 +11848,11 @@
 
 			} else {
 
-				// @THREE-Modification fix for drawRange
-				var start$1 = Math.max( 0, drawRange.start );
-				var count$1 = Math.min( index.count - start$1, drawRange.count );
-
 				if ( index !== undefined ) {
+
+					// @THREE-Modification fix for drawRange
+					var start$1 = Math.max( 0, drawRange.start );
+					var count$1 = Math.min( index.count - start$1, drawRange.count );
 
 					for ( var i$2 = start$1; i$2 < start$1 + count$1; i$2 += 3 ) {
 
