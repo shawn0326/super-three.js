@@ -145,6 +145,7 @@ All modifications are marked by `// @THREE-Modification`.
 * MeshStandardMaterial: Add fresnelPower and fresnelInverse.
 * Geometry.fromBufferGeometry: fix for drawRange.
 * Material: Support highlight color.
+* PointsMaterial: Support material.imageRatio.
 
 ### 开发规范 ###
 

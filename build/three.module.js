@@ -17067,7 +17067,21 @@ var map_pars_fragment = /* glsl */`
 var map_particle_fragment = /* glsl */`
 #if defined( USE_MAP ) || defined( USE_ALPHAMAP )
 
-	vec2 uv = ( uvTransform * vec3( gl_PointCoord.x, 1.0 - gl_PointCoord.y, 1 ) ).xy;
+	// vec2 uv = ( uvTransform * vec3( gl_PointCoord.x, 1.0 - gl_PointCoord.y, 1 ) ).xy;
+
+	// @THREE-Modification
+
+	vec2 uv;
+
+	if ( imageRatio > 1.0 ) {
+
+		uv = ( uvTransform * vec3( gl_PointCoord.x * imageRatio + ( 1.0 - imageRatio ) / 2.0, 1.0 - gl_PointCoord.y, 1.0 ) ).xy;
+
+	} else {
+
+		uv = ( uvTransform * vec3( gl_PointCoord.x, 1.0 - gl_PointCoord.y / imageRatio - ( 1.0 - 1.0 / imageRatio ) / 2.0, 1.0 ) ).xy;
+
+	}
 
 #endif
 
@@ -17089,6 +17103,9 @@ var map_particle_pars_fragment = /* glsl */`
 #if defined( USE_MAP ) || defined( USE_ALPHAMAP )
 
 	uniform mat3 uvTransform;
+
+	// @THREE-Modification
+	uniform float imageRatio;
 
 #endif
 
@@ -20322,6 +20339,7 @@ const UniformsLib = {
 		diffuse: { value: new Color( 0xeeeeee ) },
 		opacity: { value: 1.0 },
 		size: { value: 1.0 },
+		imageRatio: { value: 1.0 }, // @THREE-Modification
 		scale: { value: 1.0 },
 		map: { value: null },
 		alphaMap: { value: null },
@@ -30012,6 +30030,7 @@ function WebGLMaterials( properties ) {
 		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
 		uniforms.size.value = material.size * pixelRatio;
+		uniforms.imageRatio.value = material.imageRatio || 1; // @THREE-Modification
 		uniforms.scale.value = height * 0.5;
 
 		if ( material.map ) {
@@ -34488,6 +34507,7 @@ function PointsMaterial( parameters ) {
 	this.alphaMap = null;
 
 	this.size = 1;
+	this.imageRatio = 1; // @THREE-Modification
 	this.sizeAttenuation = true;
 
 	this.morphTargets = false;
@@ -34512,6 +34532,7 @@ PointsMaterial.prototype.copy = function ( source ) {
 	this.alphaMap = source.alphaMap;
 
 	this.size = source.size;
+	this.imageRatio = source.imageRatio; // @THREE-Modification
 	this.sizeAttenuation = source.sizeAttenuation;
 
 	this.morphTargets = source.morphTargets;

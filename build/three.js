@@ -14578,9 +14578,9 @@
 
 	var map_pars_fragment = /* glsl */"\n#ifdef USE_MAP\n\n\tuniform sampler2D map;\n\n#endif\n";
 
-	var map_particle_fragment = /* glsl */"\n#if defined( USE_MAP ) || defined( USE_ALPHAMAP )\n\n\tvec2 uv = ( uvTransform * vec3( gl_PointCoord.x, 1.0 - gl_PointCoord.y, 1 ) ).xy;\n\n#endif\n\n#ifdef USE_MAP\n\n\tvec4 mapTexel = texture2D( map, uv );\n\tdiffuseColor *= mapTexelToLinear( mapTexel );\n\n#endif\n\n#ifdef USE_ALPHAMAP\n\n\tdiffuseColor.a *= texture2D( alphaMap, uv ).g;\n\n#endif\n";
+	var map_particle_fragment = /* glsl */"\n#if defined( USE_MAP ) || defined( USE_ALPHAMAP )\n\n\t// vec2 uv = ( uvTransform * vec3( gl_PointCoord.x, 1.0 - gl_PointCoord.y, 1 ) ).xy;\n\n\t// @THREE-Modification\n\n\tvec2 uv;\n\n\tif ( imageRatio > 1.0 ) {\n\n\t\tuv = ( uvTransform * vec3( gl_PointCoord.x * imageRatio + ( 1.0 - imageRatio ) / 2.0, 1.0 - gl_PointCoord.y, 1.0 ) ).xy;\n\n\t} else {\n\n\t\tuv = ( uvTransform * vec3( gl_PointCoord.x, 1.0 - gl_PointCoord.y / imageRatio - ( 1.0 - 1.0 / imageRatio ) / 2.0, 1.0 ) ).xy;\n\n\t}\n\n#endif\n\n#ifdef USE_MAP\n\n\tvec4 mapTexel = texture2D( map, uv );\n\tdiffuseColor *= mapTexelToLinear( mapTexel );\n\n#endif\n\n#ifdef USE_ALPHAMAP\n\n\tdiffuseColor.a *= texture2D( alphaMap, uv ).g;\n\n#endif\n";
 
-	var map_particle_pars_fragment = /* glsl */"\n#if defined( USE_MAP ) || defined( USE_ALPHAMAP )\n\n\tuniform mat3 uvTransform;\n\n#endif\n\n#ifdef USE_MAP\n\n\tuniform sampler2D map;\n\n#endif\n\n#ifdef USE_ALPHAMAP\n\n\tuniform sampler2D alphaMap;\n\n#endif\n";
+	var map_particle_pars_fragment = /* glsl */"\n#if defined( USE_MAP ) || defined( USE_ALPHAMAP )\n\n\tuniform mat3 uvTransform;\n\n\t// @THREE-Modification\n\tuniform float imageRatio;\n\n#endif\n\n#ifdef USE_MAP\n\n\tuniform sampler2D map;\n\n#endif\n\n#ifdef USE_ALPHAMAP\n\n\tuniform sampler2D alphaMap;\n\n#endif\n";
 
 	var metalnessmap_fragment = /* glsl */"\nfloat metalnessFactor = metalness;\n\n#ifdef USE_METALNESSMAP\n\n\tvec4 texelMetalness = texture2D( metalnessMap, vUv );\n\n\t// reads channel B, compatible with a combined OcclusionRoughnessMetallic (RGB) texture\n\tmetalnessFactor *= texelMetalness.b;\n\n#endif\n";
 
@@ -15067,6 +15067,7 @@
 			diffuse: { value: new Color( 0xeeeeee ) },
 			opacity: { value: 1.0 },
 			size: { value: 1.0 },
+			imageRatio: { value: 1.0 }, // @THREE-Modification
 			scale: { value: 1.0 },
 			map: { value: null },
 			alphaMap: { value: null },
@@ -24704,6 +24705,7 @@
 			uniforms.diffuse.value.copy( material.color );
 			uniforms.opacity.value = material.opacity;
 			uniforms.size.value = material.size * pixelRatio;
+			uniforms.imageRatio.value = material.imageRatio || 1; // @THREE-Modification
 			uniforms.scale.value = height * 0.5;
 
 			if ( material.map ) {
@@ -29179,6 +29181,7 @@
 		this.alphaMap = null;
 
 		this.size = 1;
+		this.imageRatio = 1; // @THREE-Modification
 		this.sizeAttenuation = true;
 
 		this.morphTargets = false;
@@ -29203,6 +29206,7 @@
 		this.alphaMap = source.alphaMap;
 
 		this.size = source.size;
+		this.imageRatio = source.imageRatio; // @THREE-Modification
 		this.sizeAttenuation = source.sizeAttenuation;
 
 		this.morphTargets = source.morphTargets;

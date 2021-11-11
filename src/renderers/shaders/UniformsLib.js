@@ -195,6 +195,7 @@ const UniformsLib = {
 		diffuse: { value: new Color( 0xeeeeee ) },
 		opacity: { value: 1.0 },
 		size: { value: 1.0 },
+		imageRatio: { value: 1.0 }, // @THREE-Modification
 		scale: { value: 1.0 },
 		map: { value: null },
 		alphaMap: { value: null },

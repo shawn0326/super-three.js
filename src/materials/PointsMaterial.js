@@ -28,6 +28,7 @@ function PointsMaterial( parameters ) {
 	this.alphaMap = null;
 
 	this.size = 1;
+	this.imageRatio = 1; // @THREE-Modification
 	this.sizeAttenuation = true;
 
 	this.morphTargets = false;
@@ -52,6 +53,7 @@ PointsMaterial.prototype.copy = function ( source ) {
 	this.alphaMap = source.alphaMap;
 
 	this.size = source.size;
+	this.imageRatio = source.imageRatio; // @THREE-Modification
 	this.sizeAttenuation = source.sizeAttenuation;
 
 	this.morphTargets = source.morphTargets;

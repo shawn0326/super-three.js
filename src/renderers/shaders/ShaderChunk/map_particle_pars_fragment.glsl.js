@@ -3,6 +3,9 @@ export default /* glsl */`
 
 	uniform mat3 uvTransform;
 
+	// @THREE-Modification
+	uniform float imageRatio;
+
 #endif
 
 #ifdef USE_MAP

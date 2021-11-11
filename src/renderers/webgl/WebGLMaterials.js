@@ -407,6 +407,7 @@ function WebGLMaterials( properties ) {
 		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
 		uniforms.size.value = material.size * pixelRatio;
+		uniforms.imageRatio.value = material.imageRatio || 1; // @THREE-Modification
 		uniforms.scale.value = height * 0.5;
 
 		if ( material.map ) {
