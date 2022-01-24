@@ -5,8 +5,6 @@ class Vector3 {
 
 	constructor( x = 0, y = 0, z = 0 ) {
 
-		Object.defineProperty( this, 'isVector3', { value: true } );
-
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -719,6 +717,7 @@ class Vector3 {
 	}
 
 }
+Vector3.prototype.isVector3 = true; // @THREE-Modification
 
 const _vector = new Vector3();
 const _quaternion = new Quaternion();

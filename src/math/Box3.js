@@ -4,8 +4,6 @@ class Box3 {
 
 	constructor( min, max ) {
 
-		Object.defineProperty( this, 'isBox3', { value: true } );
-
 		this.min = ( min !== undefined ) ? min : new Vector3( + Infinity, + Infinity, + Infinity );
 		this.max = ( max !== undefined ) ? max : new Vector3( - Infinity, - Infinity, - Infinity );
 
@@ -491,6 +489,7 @@ class Box3 {
 	}
 
 }
+Box3.prototype.isBox3 = true; // @THREE-Modification
 
 function satForAxes( axes, v0, v1, v2, extents ) {
 
