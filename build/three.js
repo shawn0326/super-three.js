@@ -1,7 +1,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(global = global || self, factory(global.THREE = {}));
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.THREE = {}));
 }(this, (function (exports) { 'use strict';
 
 	// Polyfills
@@ -6859,7 +6859,8 @@
 
 			}
 
-			this.updateMatrixWorld( true );
+			// @THREE-Modification
+			this.updateWorldMatrix( true, false );
 
 			return target.setFromMatrixPosition( this.matrixWorld );
 
@@ -6874,7 +6875,8 @@
 
 			}
 
-			this.updateMatrixWorld( true );
+			// @THREE-Modification
+			this.updateWorldMatrix( true, false );
 
 			this.matrixWorld.decompose( _position, target, _scale );
 
@@ -6891,7 +6893,8 @@
 
 			}
 
-			this.updateMatrixWorld( true );
+			// @THREE-Modification
+			this.updateWorldMatrix( true, false );
 
 			this.matrixWorld.decompose( _position, _quaternion$2, target );
 
@@ -6908,7 +6911,8 @@
 
 			}
 
-			this.updateMatrixWorld( true );
+			// @THREE-Modification
+			this.updateWorldMatrix( true, false );
 
 			var e = this.matrixWorld.elements;
 
