@@ -19,7 +19,8 @@ let textureId = 0;
 
 function Texture( image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding ) {
 
-	Object.defineProperty( this, 'id', { value: textureId ++ } );
+	// @THREE-Modification Remove Object.defineProperty
+	this.id = textureId ++;
 
 	this.uuid = MathUtils.generateUUID();
 

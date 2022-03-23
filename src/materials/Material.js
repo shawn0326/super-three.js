@@ -6,7 +6,8 @@ let materialId = 0;
 
 function Material() {
 
-	Object.defineProperty( this, 'id', { value: materialId ++ } );
+	// @THREE-Modification Remove Object.defineProperty
+	this.id = materialId ++;
 
 	this.uuid = MathUtils.generateUUID();
 

@@ -602,8 +602,6 @@
 		if ( y === void 0 ) y = 0;
 
 
-		Object.defineProperty( this, 'isVector2', { value: true } );
-
 		this.x = x;
 		this.y = y;
 
@@ -1080,10 +1078,9 @@
 	};
 
 	Object.defineProperties( Vector2.prototype, prototypeAccessors );
+	Vector2.prototype.isVector2 = true; // @THREE-Modification
 
 	var Matrix3 = function Matrix3() {
-
-		Object.defineProperty( this, 'isMatrix3', { value: true } );
 
 		this.elements = [
 
@@ -1424,6 +1421,7 @@
 		return array;
 
 	};
+	Matrix3.prototype.isMatrix3 = true; // @THREE-Modification
 
 	var _canvas;
 
@@ -1490,7 +1488,8 @@
 
 	function Texture( image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding ) {
 
-		Object.defineProperty( this, 'id', { value: textureId ++ } );
+		// @THREE-Modification Remove Object.defineProperty
+		this.id = textureId ++;
 
 		this.uuid = MathUtils.generateUUID();
 
@@ -1803,8 +1802,6 @@
 		if ( z === void 0 ) z = 0;
 		if ( w === void 0 ) w = 1;
 
-
-		Object.defineProperty( this, 'isVector4', { value: true } );
 
 		this.x = x;
 		this.y = y;
@@ -2449,6 +2446,7 @@
 	};
 
 	Object.defineProperties( Vector4.prototype, prototypeAccessors$1 );
+	Vector4.prototype.isVector4 = true; // @THREE-Modification
 
 	/*
 	 In options, we can specify:
@@ -2580,8 +2578,6 @@
 		if ( z === void 0 ) z = 0;
 		if ( w === void 0 ) w = 1;
 
-
-		Object.defineProperty( this, 'isQuaternion', { value: true } );
 
 		this._x = x;
 		this._y = y;
@@ -3219,14 +3215,13 @@
 	Quaternion.prototype._onChangeCallback = function _onChangeCallback () {};
 
 	Object.defineProperties( Quaternion.prototype, prototypeAccessors$2 );
+	Quaternion.prototype.isQuaternion = true; // @THREE-Modification
 
 	var Vector3 = function Vector3( x, y, z ) {
 		if ( x === void 0 ) x = 0;
 		if ( y === void 0 ) y = 0;
 		if ( z === void 0 ) z = 0;
 
-
-		Object.defineProperty( this, 'isVector3', { value: true } );
 
 		this.x = x;
 		this.y = y;
@@ -3938,13 +3933,12 @@
 		return this;
 
 	};
+	Vector3.prototype.isVector3 = true; // @THREE-Modification
 
 	var _vector = new Vector3();
 	var _quaternion = new Quaternion();
 
 	var Box3 = function Box3( min, max ) {
-
-		Object.defineProperty( this, 'isBox3', { value: true } );
 
 		this.min = ( min !== undefined ) ? min : new Vector3( + Infinity, + Infinity, + Infinity );
 		this.max = ( max !== undefined ) ? max : new Vector3( - Infinity, - Infinity, - Infinity );
@@ -4429,6 +4423,7 @@
 		return box.min.equals( this.min ) && box.max.equals( this.max );
 
 	};
+	Box3.prototype.isBox3 = true; // @THREE-Modification
 
 	function satForAxes( axes, v0, v1, v2, extents ) {
 
@@ -5171,8 +5166,6 @@
 	};
 
 	var Matrix4 = function Matrix4() {
-
-		Object.defineProperty( this, 'isMatrix4', { value: true } );
 
 		this.elements = [
 
@@ -6034,6 +6027,8 @@
 		return array;
 
 	};
+	Matrix4.prototype.isMatrix4 = true; // @THREE-Modification
+
 
 	var _v1$1 = new Vector3();
 	var _m1 = new Matrix4();
@@ -6049,8 +6044,6 @@
 		if ( z === void 0 ) z = 0;
 		if ( order === void 0 ) order = Euler.DefaultOrder;
 
-
-		Object.defineProperty( this, 'isEuler', { value: true } );
 
 		this._x = x;
 		this._y = y;
@@ -6364,6 +6357,7 @@
 	Euler.prototype._onChangeCallback = function _onChangeCallback () {};
 
 	Object.defineProperties( Euler.prototype, prototypeAccessors$3 );
+	Euler.prototype.isEuler = true; // @THREE-Modification
 
 	Euler.DefaultOrder = 'XYZ';
 	Euler.RotationOrders = [ 'XYZ', 'YZX', 'ZXY', 'XZY', 'YXZ', 'ZYX' ];
@@ -6439,7 +6433,8 @@
 
 	function Object3D() {
 
-		Object.defineProperty( this, 'id', { value: _object3DId ++ } );
+		// @THREE-Modification Remove Object.defineProperty
+		this.id = _object3DId ++;
 
 		this.uuid = MathUtils.generateUUID();
 
@@ -6471,34 +6466,14 @@
 		rotation._onChange( onRotationChange );
 		quaternion._onChange( onQuaternionChange );
 
-		Object.defineProperties( this, {
-			position: {
-				configurable: true,
-				enumerable: true,
-				value: position
-			},
-			rotation: {
-				configurable: true,
-				enumerable: true,
-				value: rotation
-			},
-			quaternion: {
-				configurable: true,
-				enumerable: true,
-				value: quaternion
-			},
-			scale: {
-				configurable: true,
-				enumerable: true,
-				value: scale
-			},
-			modelViewMatrix: {
-				value: new Matrix4()
-			},
-			normalMatrix: {
-				value: new Matrix3()
-			}
-		} );
+		// @THREE-Modification Remove Object.defineProperty
+
+		this.position = position;
+		this.rotation = rotation;
+		this.quaternion = quaternion;
+		this.scale = scale;
+		this.modelViewMatrix = new Matrix4();
+		this.normalMatrix = new Matrix3();
 
 		this.matrix = new Matrix4();
 		this.matrixWorld = new Matrix4();
@@ -7286,8 +7261,6 @@
 
 	var Plane = function Plane( normal, constant ) {
 
-		Object.defineProperty( this, 'isPlane', { value: true } );
-
 		// normal is assumed to be normalized
 
 		this.normal = ( normal !== undefined ) ? normal : new Vector3( 1, 0, 0 );
@@ -7497,6 +7470,7 @@
 		return plane.normal.equals( this.normal ) && ( plane.constant === this.constant );
 
 	};
+	Plane.prototype.isPlane = true; // @THREE-Modification
 
 	var _v0$1 = new Vector3();
 	var _v1$3 = new Vector3();
@@ -7868,7 +7842,6 @@
 
 	var Color = function Color( r, g, b ) {
 
-		Object.defineProperty( this, 'isColor', { value: true } );
 
 		if ( g === undefined && b === undefined ) {
 
@@ -8417,6 +8390,7 @@
 	Color.prototype.r = 1;
 	Color.prototype.g = 1;
 	Color.prototype.b = 1;
+	Color.prototype.isColor = true; // @THREE-Modification
 
 	var Face3 = function Face3( a, b, c, normal, color, materialIndex ) {
 
@@ -8471,7 +8445,8 @@
 
 	function Material() {
 
-		Object.defineProperty( this, 'id', { value: materialId ++ } );
+		// @THREE-Modification Remove Object.defineProperty
+		this.id = materialId ++;
 
 		this.uuid = MathUtils.generateUUID();
 
@@ -9922,7 +9897,8 @@
 
 	function BufferGeometry() {
 
-		Object.defineProperty( this, 'id', { value: _bufferGeometryId += 2 } );
+		// @THREE-Modification Remove Object.defineProperty
+		this.id = _bufferGeometryId += 2;
 
 		this.uuid = MathUtils.generateUUID();
 
@@ -40723,8 +40699,6 @@
 
 	var SphericalHarmonics3 = function SphericalHarmonics3() {
 
-		Object.defineProperty( this, 'isSphericalHarmonics3', { value: true } );
-
 		this.coefficients = [];
 
 		for ( var i = 0; i < 9; i ++ ) {
@@ -40951,6 +40925,7 @@
 		shBasis[ 8 ] = 0.546274 * ( x * x - y * y );
 
 	};
+	SphericalHarmonics3.prototype.isSphericalHarmonics3 = true; // @THREE-Modification
 
 	function LightProbe( sh, intensity ) {
 
@@ -47405,8 +47380,6 @@
 
 	var Box2 = function Box2( min, max ) {
 
-		Object.defineProperty( this, 'isBox2', { value: true } );
-
 		this.min = ( min !== undefined ) ? min : new Vector2( + Infinity, + Infinity );
 		this.max = ( max !== undefined ) ? max : new Vector2( - Infinity, - Infinity );
 
@@ -47624,6 +47597,7 @@
 		return box.min.equals( this.min ) && box.max.equals( this.max );
 
 	};
+	Box2.prototype.isBox2 = true; // @THREE-Modification
 
 	var _startP = new Vector3();
 	var _startEnd = new Vector3();

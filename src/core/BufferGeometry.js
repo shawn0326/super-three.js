@@ -21,7 +21,8 @@ const _vector = new Vector3();
 
 function BufferGeometry() {
 
-	Object.defineProperty( this, 'id', { value: _bufferGeometryId += 2 } );
+	// @THREE-Modification Remove Object.defineProperty
+	this.id = _bufferGeometryId += 2;
 
 	this.uuid = MathUtils.generateUUID();
 

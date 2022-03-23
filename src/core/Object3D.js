@@ -27,7 +27,8 @@ const _removedEvent = { type: 'removed' };
 
 function Object3D() {
 
-	Object.defineProperty( this, 'id', { value: _object3DId ++ } );
+	// @THREE-Modification Remove Object.defineProperty
+	this.id = _object3DId ++;
 
 	this.uuid = MathUtils.generateUUID();
 
@@ -59,34 +60,14 @@ function Object3D() {
 	rotation._onChange( onRotationChange );
 	quaternion._onChange( onQuaternionChange );
 
-	Object.defineProperties( this, {
-		position: {
-			configurable: true,
-			enumerable: true,
-			value: position
-		},
-		rotation: {
-			configurable: true,
-			enumerable: true,
-			value: rotation
-		},
-		quaternion: {
-			configurable: true,
-			enumerable: true,
-			value: quaternion
-		},
-		scale: {
-			configurable: true,
-			enumerable: true,
-			value: scale
-		},
-		modelViewMatrix: {
-			value: new Matrix4()
-		},
-		normalMatrix: {
-			value: new Matrix3()
-		}
-	} );
+	// @THREE-Modification Remove Object.defineProperty
+
+	this.position = position;
+	this.rotation = rotation;
+	this.quaternion = quaternion;
+	this.scale = scale;
+	this.modelViewMatrix = new Matrix4();
+	this.normalMatrix = new Matrix3();
 
 	this.matrix = new Matrix4();
 	this.matrixWorld = new Matrix4();
