@@ -4,8 +4,6 @@ class Matrix4 {
 
 	constructor() {
 
-		Object.defineProperty( this, 'isMatrix4', { value: true } );
-
 		this.elements = [
 
 			1, 0, 0, 0,
@@ -868,6 +866,8 @@ class Matrix4 {
 	}
 
 }
+Matrix4.prototype.isMatrix4 = true; // @THREE-Modification
+
 
 const _v1 = new Vector3();
 const _m1 = new Matrix4();

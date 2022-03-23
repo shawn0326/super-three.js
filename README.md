@@ -146,6 +146,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Geometry.fromBufferGeometry: fix for drawRange.
 * Material: Support highlight color.
 * PointsMaterial: Support material.imageRatio.
+* Math: Removes the poor performance of Object.defineProperty
 * Object3D: Fix getWorldXXX().
 
 ### 开发规范 ###

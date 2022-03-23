@@ -2,8 +2,6 @@ class Matrix3 {
 
 	constructor() {
 
-		Object.defineProperty( this, 'isMatrix3', { value: true } );
-
 		this.elements = [
 
 			1, 0, 0,
@@ -345,6 +343,7 @@ class Matrix3 {
 	}
 
 }
+Matrix3.prototype.isMatrix3 = true; // @THREE-Modification
 
 
 export { Matrix3 };

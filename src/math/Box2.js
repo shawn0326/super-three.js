@@ -6,8 +6,6 @@ class Box2 {
 
 	constructor( min, max ) {
 
-		Object.defineProperty( this, 'isBox2', { value: true } );
-
 		this.min = ( min !== undefined ) ? min : new Vector2( + Infinity, + Infinity );
 		this.max = ( max !== undefined ) ? max : new Vector2( - Infinity, - Infinity );
 
@@ -227,6 +225,6 @@ class Box2 {
 	}
 
 }
-
+Box2.prototype.isBox2 = true; // @THREE-Modification
 
 export { Box2 };
