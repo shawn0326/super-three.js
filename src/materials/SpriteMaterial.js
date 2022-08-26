@@ -29,6 +29,9 @@ function SpriteMaterial( parameters ) {
 
 	this.transparent = true;
 
+	this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
+	this.highlightIntensity = 0; // @THREE-Modification highlight color
+
 	this.setValues( parameters );
 
 }
@@ -51,8 +54,8 @@ SpriteMaterial.prototype.copy = function ( source ) {
 
 	this.sizeAttenuation = source.sizeAttenuation;
 
-	this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
-	this.highlightIntensity = 0; // @THREE-Modification highlight color
+	this.highlightColor.copy( source.highlightColor ); // @THREE-Modification highlight color
+	this.highlightIntensity = source.highlightIntensity; // @THREE-Modification highlight color
 
 	return this;
 

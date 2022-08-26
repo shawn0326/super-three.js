@@ -27838,6 +27838,9 @@
 
 		this.transparent = true;
 
+		this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
+		this.highlightIntensity = 0; // @THREE-Modification highlight color
+
 		this.setValues( parameters );
 
 	}
@@ -27860,8 +27863,8 @@
 
 		this.sizeAttenuation = source.sizeAttenuation;
 
-		this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
-		this.highlightIntensity = 0; // @THREE-Modification highlight color
+		this.highlightColor.copy( source.highlightColor ); // @THREE-Modification highlight color
+		this.highlightIntensity = source.highlightIntensity; // @THREE-Modification highlight color
 
 		return this;
 
