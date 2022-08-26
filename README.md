@@ -148,6 +148,7 @@ All modifications are marked by `// @THREE-Modification`.
 * PointsMaterial: Support material.imageRatio.
 * Remove some frequently executed `Object.defineProperty`
 * Object3D: Fix getWorldXXX().
+* SpriteMaterial: Support highlightColor and highlightIntensity.
 
 ### 开发规范 ###
 
