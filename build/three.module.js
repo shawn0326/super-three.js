@@ -19912,6 +19912,9 @@ var sprite_frag = /* glsl */`
 uniform vec3 diffuse;
 uniform float opacity;
 
+uniform vec3 highlightColor; // @THREE-Modification highlight color
+uniform float highlightIntensity; // @THREE-Modification highlight color
+
 #include <common>
 #include <uv_pars_fragment>
 #include <map_pars_fragment>
@@ -19940,6 +19943,8 @@ void main() {
 	#include <encodings_fragment>
 	#include <fog_fragment>
 
+	// @THREE-Modification highlight color
+	gl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - highlightIntensity ) + highlightColor * highlightIntensity;
 }
 `;
 
@@ -20550,7 +20555,11 @@ const ShaderLib = {
 
 		uniforms: mergeUniforms( [
 			UniformsLib.sprite,
-			UniformsLib.fog
+			UniformsLib.fog,
+			{
+				highlightColor: { value: new Color( 0x000000 ) }, // @THREE-Modification highlight color
+				highlightIntensity: { value: 0 } // @THREE-Modification highlight color
+			}
 		] ),
 
 		vertexShader: ShaderChunk.sprite_vert,
@@ -30069,6 +30078,9 @@ function WebGLMaterials( properties ) {
 		uniforms.opacity.value = material.opacity;
 		// uniforms.rotation.value = material.rotation; // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
 
+		uniforms.highlightColor.value.copy( material.highlightColor ); // @THREE-Modification highlight color
+		uniforms.highlightIntensity.value = material.highlightIntensity; // @THREE-Modification highlight color
+
 		if ( material.map ) {
 
 			uniforms.map.value = material.map;
@@ -33178,6 +33190,9 @@ SpriteMaterial.prototype.copy = function ( source ) {
 	this.rotation = source.rotation;
 
 	this.sizeAttenuation = source.sizeAttenuation;
+
+	this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
+	this.highlightIntensity = 0; // @THREE-Modification highlight color
 
 	return this;
 
