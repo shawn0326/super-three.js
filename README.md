@@ -148,6 +148,7 @@ All modifications are marked by `// @THREE-Modification`.
 * PointsMaterial: Support material.imageRatio.
 * Remove some frequently executed `Object.defineProperty`
 * Object3D: Fix getWorldXXX().
+* Mesh: Fix recursive for copy method.
 
 ### 开发规范 ###
 
