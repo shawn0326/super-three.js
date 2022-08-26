@@ -466,6 +466,9 @@ function WebGLMaterials( properties ) {
 		uniforms.opacity.value = material.opacity;
 		// uniforms.rotation.value = material.rotation; // @THREE-Modification Move SpriteMaterial.rotation to Sprite.spriteRotation
 
+		uniforms.highlightColor.value.copy( material.highlightColor ); // @THREE-Modification highlight color
+		uniforms.highlightIntensity.value = material.highlightIntensity; // @THREE-Modification highlight color
+
 		if ( material.map ) {
 
 			uniforms.map.value = material.map;

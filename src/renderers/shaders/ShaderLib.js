@@ -217,7 +217,11 @@ const ShaderLib = {
 
 		uniforms: mergeUniforms( [
 			UniformsLib.sprite,
-			UniformsLib.fog
+			UniformsLib.fog,
+			{
+				highlightColor: { value: new Color( 0x000000 ) }, // @THREE-Modification highlight color
+				highlightIntensity: { value: 0 } // @THREE-Modification highlight color
+			}
 		] ),
 
 		vertexShader: ShaderChunk.sprite_vert,
