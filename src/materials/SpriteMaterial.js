@@ -51,6 +51,9 @@ SpriteMaterial.prototype.copy = function ( source ) {
 
 	this.sizeAttenuation = source.sizeAttenuation;
 
+	this.highlightColor = new Color( 0x000000 ); // @THREE-Modification highlight color
+	this.highlightIntensity = 0; // @THREE-Modification highlight color
+
 	return this;
 
 };
