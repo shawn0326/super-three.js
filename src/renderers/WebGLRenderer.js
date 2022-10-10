@@ -1827,6 +1827,24 @@ function WebGLRenderer( parameters ) {
 		}
 
 		// @THREE-Modification
+		// for 3dTiles
+		if ( material.enableObjectification ) {
+
+			if ( material.batchTexture ) {
+
+				p_uniforms.setValue( _gl, 'batchTexture', material.batchTexture, textures );
+
+			}
+
+			if ( material.batchTextureStep ) {
+
+				p_uniforms.setValue( _gl, 'batchTextureStep', material.batchTextureStep );
+
+			}
+
+		}
+
+		// @THREE-Modification
 		// for gup picker
 		p_uniforms.setValue( _gl, 'baseId', material.baseId );
 
