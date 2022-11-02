@@ -150,6 +150,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Object3D: Fix getWorldXXX().
 * Mesh: Fix recursive for copy method.
 * WebGLRenderer: Support material.enableObjectification for 3dtiles.
+* TextureLoader: Use RGBAFormat by default.
 
 ### 开发规范 ###
 
