@@ -2375,7 +2375,7 @@ var GLTFLoader = ( function () {
 				pointsMaterial = new PointsMaterial();
 				Material.prototype.copy.call( pointsMaterial, material );
 				pointsMaterial.color.copy( material.color );
-				pointsMaterial.map = material.map;
+				pointsMaterial.map = material.map;	// @THREE-Modification
 				pointsMaterial.sizeAttenuation = false; // glTF spec says points should be 1px
 
 				this.cache.add( cacheKey, pointsMaterial );

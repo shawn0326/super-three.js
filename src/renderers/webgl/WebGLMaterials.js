@@ -392,6 +392,8 @@ function WebGLMaterials( properties ) {
 		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
 
+		// @THREE-Modification
+
 		if ( material.map ) {
 
 			uniforms.map.value = material.map;

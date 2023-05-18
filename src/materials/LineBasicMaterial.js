@@ -20,7 +20,7 @@ function LineBasicMaterial( parameters ) {
 
 	this.color = new Color( 0xffffff );
 
-	this.map = null;
+	this.map = null;	// @THREE-Modification
 
 	this.linewidth = 1;
 	this.linecap = 'round';
@@ -43,7 +43,7 @@ LineBasicMaterial.prototype.copy = function ( source ) {
 
 	this.color.copy( source.color );
 
-	this.map = source.map;
+	this.map = source.map;	// @THREE-Modification
 
 	this.linewidth = source.linewidth;
 	this.linecap = source.linecap;

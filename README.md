@@ -151,6 +151,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Mesh: Fix recursive for copy method.
 * WebGLRenderer: Support material.enableObjectification for 3dtiles.
 * TextureLoader: Use RGBAFormat by default.
+* LineBasicMaterial: Support set the map texture.
 
 ### 开发规范 ###
 

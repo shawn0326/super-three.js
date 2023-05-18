@@ -1,3 +1,5 @@
+// @THREE-Modification
+
 export default /* glsl */`
 uniform float scale;
 attribute float lineDistance;
