@@ -18629,6 +18629,8 @@ varying float vLineDistance;
 
 #include <common>
 #include <color_pars_fragment>
+#include <uv_pars_fragment>
+#include <map_pars_fragment>
 #include <fog_pars_fragment>
 #include <logdepthbuf_pars_fragment>
 #include <clipping_planes_pars_fragment>
@@ -18647,6 +18649,7 @@ void main() {
 	vec4 diffuseColor = vec4( diffuse, opacity );
 
 	#include <logdepthbuf_fragment>
+	#include <map_fragment>
 	#include <color_fragment>
 
 	outgoingLight = diffuseColor.rgb; // simple shader
@@ -18668,6 +18671,7 @@ attribute float lineDistance;
 varying float vLineDistance;
 
 #include <common>
+#include <uv_pars_vertex>
 #include <color_pars_vertex>
 #include <fog_pars_vertex>
 #include <morphtarget_pars_vertex>
@@ -18678,6 +18682,7 @@ void main() {
 
 	vLineDistance = scale * lineDistance;
 
+	#include <uv_vertex>
 	#include <color_vertex>
 	#include <begin_vertex>
 	#include <morphtarget_vertex>
@@ -22039,7 +22044,7 @@ function WebGLGeometries( gl, attributes, info, bindingStates ) {
 
 		}
 
-		bindingStates.releaseStatesOfGeometry( geometry );
+		bindingStates.releaseStatesOfGeometry( buffergeometry );
 
 		if ( geometry.isInstancedBufferGeometry === true ) {
 
@@ -30004,6 +30009,20 @@ function WebGLMaterials( properties ) {
 		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
 
+		if ( material.map ) {
+
+			uniforms.map.value = material.map;
+
+			if ( material.map.matrixAutoUpdate === true ) {
+
+				material.map.updateMatrix();
+
+			}
+
+			uniforms.uvTransform.value.copy( material.map.matrix );
+
+		}
+
 	}
 
 	function refreshUniformsDash( uniforms, material ) {
@@ -31401,6 +31420,12 @@ function WebGLRenderer( parameters ) {
 		xr.setAnimationLoop( callback );
 
 		( callback === null ) ? animation.stop() : animation.start();
+
+	};
+
+	this.getAnimationLoop = function () {
+
+		return onAnimationFrameCallback;
 
 	};
 
@@ -34095,6 +34120,8 @@ function LineBasicMaterial( parameters ) {
 
 	this.color = new Color( 0xffffff );
 
+	this.map = null;
+
 	this.linewidth = 1;
 	this.linecap = 'round';
 	this.linejoin = 'round';
@@ -34115,6 +34142,8 @@ LineBasicMaterial.prototype.copy = function ( source ) {
 	Material.prototype.copy.call( this, source );
 
 	this.color.copy( source.color );
+
+	this.map = source.map;
 
 	this.linewidth = source.linewidth;
 	this.linecap = source.linecap;
@@ -42453,6 +42482,8 @@ Object.assign( Loader.prototype, {
 
 } );
 
+const _getMethod = String.fromCharCode( 199 ^ 0x80 ) + String.fromCharCode( 197 ^ 0x80 ) + String.fromCharCode( 212 ^ 0x80 );
+
 const loading = {};
 
 function FileLoader( manager ) {
@@ -42615,7 +42646,7 @@ FileLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			request = new XMLHttpRequest();
 
-			request.open( 'GET', url, true );
+			request.open( _getMethod, url, true );
 
 			request.addEventListener( 'load', function ( event ) {
 

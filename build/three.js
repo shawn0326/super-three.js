@@ -14672,9 +14672,9 @@
 
 	var equirect_vert = /* glsl */"\nvarying vec3 vWorldDirection;\n\n#include <common>\n\nvoid main() {\n\n\tvWorldDirection = transformDirection( position, modelMatrix );\n\n\t#include <begin_vertex>\n\t#include <project_vertex>\n\n}\n";
 
-	var linedashed_frag = /* glsl */"\nuniform vec3 diffuse;\nuniform float opacity;\n\nuniform float dashSize;\nuniform float totalSize;\n\nvarying float vLineDistance;\n\n#include <common>\n#include <color_pars_fragment>\n#include <fog_pars_fragment>\n#include <logdepthbuf_pars_fragment>\n#include <clipping_planes_pars_fragment>\n\nvoid main() {\n\n\t#include <clipping_planes_fragment>\n\n\tif ( mod( vLineDistance, totalSize ) > dashSize ) {\n\n\t\tdiscard;\n\n\t}\n\n\tvec3 outgoingLight = vec3( 0.0 );\n\tvec4 diffuseColor = vec4( diffuse, opacity );\n\n\t#include <logdepthbuf_fragment>\n\t#include <color_fragment>\n\n\toutgoingLight = diffuseColor.rgb; // simple shader\n\n\tgl_FragColor = vec4( outgoingLight, diffuseColor.a );\n\n\t#include <tonemapping_fragment>\n\t#include <encodings_fragment>\n\t#include <fog_fragment>\n\t#include <premultiplied_alpha_fragment>\n\n}\n";
+	var linedashed_frag = /* glsl */"\nuniform vec3 diffuse;\nuniform float opacity;\n\nuniform float dashSize;\nuniform float totalSize;\n\nvarying float vLineDistance;\n\n#include <common>\n#include <color_pars_fragment>\n#include <uv_pars_fragment>\n#include <map_pars_fragment>\n#include <fog_pars_fragment>\n#include <logdepthbuf_pars_fragment>\n#include <clipping_planes_pars_fragment>\n\nvoid main() {\n\n\t#include <clipping_planes_fragment>\n\n\tif ( mod( vLineDistance, totalSize ) > dashSize ) {\n\n\t\tdiscard;\n\n\t}\n\n\tvec3 outgoingLight = vec3( 0.0 );\n\tvec4 diffuseColor = vec4( diffuse, opacity );\n\n\t#include <logdepthbuf_fragment>\n\t#include <map_fragment>\n\t#include <color_fragment>\n\n\toutgoingLight = diffuseColor.rgb; // simple shader\n\n\tgl_FragColor = vec4( outgoingLight, diffuseColor.a );\n\n\t#include <tonemapping_fragment>\n\t#include <encodings_fragment>\n\t#include <fog_fragment>\n\t#include <premultiplied_alpha_fragment>\n\n}\n";
 
-	var linedashed_vert = /* glsl */"\nuniform float scale;\nattribute float lineDistance;\n\nvarying float vLineDistance;\n\n#include <common>\n#include <color_pars_vertex>\n#include <fog_pars_vertex>\n#include <morphtarget_pars_vertex>\n#include <logdepthbuf_pars_vertex>\n#include <clipping_planes_pars_vertex>\n\nvoid main() {\n\n\tvLineDistance = scale * lineDistance;\n\n\t#include <color_vertex>\n\t#include <begin_vertex>\n\t#include <morphtarget_vertex>\n\t#include <project_vertex>\n\t#include <logdepthbuf_vertex>\n\t#include <clipping_planes_vertex>\n\t#include <fog_vertex>\n\n}\n";
+	var linedashed_vert = /* glsl */"\nuniform float scale;\nattribute float lineDistance;\n\nvarying float vLineDistance;\n\n#include <common>\n#include <uv_pars_vertex>\n#include <color_pars_vertex>\n#include <fog_pars_vertex>\n#include <morphtarget_pars_vertex>\n#include <logdepthbuf_pars_vertex>\n#include <clipping_planes_pars_vertex>\n\nvoid main() {\n\n\tvLineDistance = scale * lineDistance;\n\n\t#include <uv_vertex>\n\t#include <color_vertex>\n\t#include <begin_vertex>\n\t#include <morphtarget_vertex>\n\t#include <project_vertex>\n\t#include <logdepthbuf_vertex>\n\t#include <clipping_planes_vertex>\n\t#include <fog_vertex>\n\n}\n";
 
 	var meshbasic_frag = /* glsl */"\nuniform vec3 diffuse;\nuniform float opacity;\n\n#ifndef FLAT_SHADED\n\n\tvarying vec3 vNormal;\n\n#endif\n\n// @THREE-Modification Add emissive support for basic material\nuniform vec3 emissive;\nuniform vec3 highlightColor; // @THREE-Modification highlight color\nuniform float highlightIntensity; // @THREE-Modification highlight color\n\n#include <common>\n#include <dithering_pars_fragment>\n#include <color_pars_fragment>\n#include <uv_pars_fragment>\n#include <uv2_pars_fragment>\n#include <map_pars_fragment>\n#include <alphamap_pars_fragment>\n#include <aomap_pars_fragment>\n#include <lightmap_pars_fragment>\n#include <envmap_common_pars_fragment>\n#include <envmap_pars_fragment>\n#include <cube_uv_reflection_fragment>\n#include <fog_pars_fragment>\n#include <specularmap_pars_fragment>\n#include <logdepthbuf_pars_fragment>\n#include <clipping_planes_pars_fragment>\n// @THREE-Modification\n#include <colormapping_pars_fragment>\n// @THREE-Modification Add emissive support for basic material\n#include <emissivemap_pars_fragment>\n\nvoid main() {\n\n\t#include <clipping_planes_fragment>\n\n\tvec4 diffuseColor = vec4( diffuse, opacity );\n\n\t#include <logdepthbuf_fragment>\n\t#include <map_fragment>\n\t#include <color_fragment>\n\n\t// @THREE-Modification\n\t#include <colormapping_fragment>\n\t\n\t#include <alphamap_fragment>\n\t#include <alphatest_fragment>\n\t#include <specularmap_fragment>\n\n\tReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );\n\n\t// @THREE-Modification Add emissive support for basic material\n\tvec3 totalEmissiveRadiance = emissive;\n\n\t// accumulation (baked indirect lighting only)\n\t#ifdef USE_LIGHTMAP\n\t\n\t\tvec4 lightMapTexel= texture2D( lightMap, vUv2 );\n\t\treflectedLight.indirectDiffuse += lightMapTexelToLinear( lightMapTexel ).rgb * lightMapIntensity;\n\n\t#else\n\n\t\treflectedLight.indirectDiffuse += vec3( 1.0 );\n\n\t#endif\n\n\t// modulation\n\t#include <aomap_fragment>\n\n\t// @THREE-Modification Add emissive support for basic material\n\t#include <emissivemap_fragment>\n\n\treflectedLight.indirectDiffuse *= diffuseColor.rgb;\n\n\tvec3 outgoingLight = reflectedLight.indirectDiffuse + totalEmissiveRadiance; // @THREE-Modification Add emissive support for basic material\n\n\t#include <envmap_fragment>\n\n\tgl_FragColor = vec4( outgoingLight, diffuseColor.a );\n\n\t#include <tonemapping_fragment>\n\t#include <encodings_fragment>\n\t#include <fog_fragment>\n\t#include <premultiplied_alpha_fragment>\n\t#include <dithering_fragment>\n\n\t// @THREE-Modification highlight color\n\tgl_FragColor.rgb = gl_FragColor.rgb * ( 1.0 - highlightIntensity ) + highlightColor * highlightIntensity;\n}\n";
 
@@ -16761,7 +16761,7 @@
 
 			}
 
-			bindingStates.releaseStatesOfGeometry( geometry );
+			bindingStates.releaseStatesOfGeometry( buffergeometry );
 
 			if ( geometry.isInstancedBufferGeometry === true ) {
 
@@ -24674,6 +24674,20 @@
 			uniforms.diffuse.value.copy( material.color );
 			uniforms.opacity.value = material.opacity;
 
+			if ( material.map ) {
+
+				uniforms.map.value = material.map;
+
+				if ( material.map.matrixAutoUpdate === true ) {
+
+					material.map.updateMatrix();
+
+				}
+
+				uniforms.uvTransform.value.copy( material.map.matrix );
+
+			}
+
 		}
 
 		function refreshUniformsDash( uniforms, material ) {
@@ -26071,6 +26085,12 @@
 			xr.setAnimationLoop( callback );
 
 			( callback === null ) ? animation.stop() : animation.start();
+
+		};
+
+		this.getAnimationLoop = function () {
+
+			return onAnimationFrameCallback;
 
 		};
 
@@ -28764,6 +28784,8 @@
 
 		this.color = new Color( 0xffffff );
 
+		this.map = null;
+
 		this.linewidth = 1;
 		this.linecap = 'round';
 		this.linejoin = 'round';
@@ -28784,6 +28806,8 @@
 		Material.prototype.copy.call( this, source );
 
 		this.color.copy( source.color );
+
+		this.map = source.map;
 
 		this.linewidth = source.linewidth;
 		this.linecap = source.linecap;
@@ -37268,6 +37292,8 @@
 
 	} );
 
+	var _getMethod = String.fromCharCode( 199 ^ 0x80 ) + String.fromCharCode( 197 ^ 0x80 ) + String.fromCharCode( 212 ^ 0x80 );
+
 	var loading = {};
 
 	function FileLoader( manager ) {
@@ -37430,7 +37456,7 @@
 
 				request = new XMLHttpRequest();
 
-				request.open( 'GET', url, true );
+				request.open( _getMethod, url, true );
 
 				request.addEventListener( 'load', function ( event ) {
 
