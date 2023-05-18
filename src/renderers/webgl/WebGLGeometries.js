@@ -37,7 +37,7 @@ function WebGLGeometries( gl, attributes, info, bindingStates ) {
 
 		}
 
-		bindingStates.releaseStatesOfGeometry( buffergeometry );
+		bindingStates.releaseStatesOfGeometry( buffergeometry );	// @THREE-Modification
 
 		if ( geometry.isInstancedBufferGeometry === true ) {
 

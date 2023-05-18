@@ -154,6 +154,7 @@ All modifications are marked by `// @THREE-Modification`.
 * LineBasicMaterial: Support set the map texture.
 * FileLoader: Encrypted 'GET' characters.
 * WebGLRenderer: Add getAnimationLoop function.
+* WebGeometries: Fix onGeometryDispose.
 
 ### 开发规范 ###
 
