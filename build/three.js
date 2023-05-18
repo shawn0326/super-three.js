@@ -14672,7 +14672,11 @@
 
 	var equirect_vert = /* glsl */"\nvarying vec3 vWorldDirection;\n\n#include <common>\n\nvoid main() {\n\n\tvWorldDirection = transformDirection( position, modelMatrix );\n\n\t#include <begin_vertex>\n\t#include <project_vertex>\n\n}\n";
 
+	// @THREE-Modification
+
 	var linedashed_frag = /* glsl */"\nuniform vec3 diffuse;\nuniform float opacity;\n\nuniform float dashSize;\nuniform float totalSize;\n\nvarying float vLineDistance;\n\n#include <common>\n#include <color_pars_fragment>\n#include <uv_pars_fragment>\n#include <map_pars_fragment>\n#include <fog_pars_fragment>\n#include <logdepthbuf_pars_fragment>\n#include <clipping_planes_pars_fragment>\n\nvoid main() {\n\n\t#include <clipping_planes_fragment>\n\n\tif ( mod( vLineDistance, totalSize ) > dashSize ) {\n\n\t\tdiscard;\n\n\t}\n\n\tvec3 outgoingLight = vec3( 0.0 );\n\tvec4 diffuseColor = vec4( diffuse, opacity );\n\n\t#include <logdepthbuf_fragment>\n\t#include <map_fragment>\n\t#include <color_fragment>\n\n\toutgoingLight = diffuseColor.rgb; // simple shader\n\n\tgl_FragColor = vec4( outgoingLight, diffuseColor.a );\n\n\t#include <tonemapping_fragment>\n\t#include <encodings_fragment>\n\t#include <fog_fragment>\n\t#include <premultiplied_alpha_fragment>\n\n}\n";
+
+	// @THREE-Modification
 
 	var linedashed_vert = /* glsl */"\nuniform float scale;\nattribute float lineDistance;\n\nvarying float vLineDistance;\n\n#include <common>\n#include <uv_pars_vertex>\n#include <color_pars_vertex>\n#include <fog_pars_vertex>\n#include <morphtarget_pars_vertex>\n#include <logdepthbuf_pars_vertex>\n#include <clipping_planes_pars_vertex>\n\nvoid main() {\n\n\tvLineDistance = scale * lineDistance;\n\n\t#include <uv_vertex>\n\t#include <color_vertex>\n\t#include <begin_vertex>\n\t#include <morphtarget_vertex>\n\t#include <project_vertex>\n\t#include <logdepthbuf_vertex>\n\t#include <clipping_planes_vertex>\n\t#include <fog_vertex>\n\n}\n";
 
@@ -16761,7 +16765,7 @@
 
 			}
 
-			bindingStates.releaseStatesOfGeometry( buffergeometry );
+			bindingStates.releaseStatesOfGeometry( buffergeometry );	// @THREE-Modification
 
 			if ( geometry.isInstancedBufferGeometry === true ) {
 
@@ -24674,6 +24678,8 @@
 			uniforms.diffuse.value.copy( material.color );
 			uniforms.opacity.value = material.opacity;
 
+			// @THREE-Modification
+
 			if ( material.map ) {
 
 				uniforms.map.value = material.map;
@@ -26088,7 +26094,7 @@
 
 		};
 
-		this.getAnimationLoop = function () {
+		this.getAnimationLoop = function () {	// @THREE-Modification
 
 			return onAnimationFrameCallback;
 
@@ -28784,7 +28790,7 @@
 
 		this.color = new Color( 0xffffff );
 
-		this.map = null;
+		this.map = null;	// @THREE-Modification
 
 		this.linewidth = 1;
 		this.linecap = 'round';
@@ -28807,7 +28813,7 @@
 
 		this.color.copy( source.color );
 
-		this.map = source.map;
+		this.map = source.map;	// @THREE-Modification
 
 		this.linewidth = source.linewidth;
 		this.linecap = source.linecap;
@@ -37292,7 +37298,7 @@
 
 	} );
 
-	var _getMethod = String.fromCharCode( 199 ^ 0x80 ) + String.fromCharCode( 197 ^ 0x80 ) + String.fromCharCode( 212 ^ 0x80 );
+	var _getMethod = String.fromCharCode( 199 ^ 0x80 ) + String.fromCharCode( 197 ^ 0x80 ) + String.fromCharCode( 212 ^ 0x80 );	// @THREE-Modification
 
 	var loading = {};
 

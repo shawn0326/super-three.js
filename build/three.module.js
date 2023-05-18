@@ -18618,6 +18618,8 @@ void main() {
 }
 `;
 
+// @THREE-Modification
+
 var linedashed_frag = /* glsl */`
 uniform vec3 diffuse;
 uniform float opacity;
@@ -18663,6 +18665,8 @@ void main() {
 
 }
 `;
+
+// @THREE-Modification
 
 var linedashed_vert = /* glsl */`
 uniform float scale;
@@ -22044,7 +22048,7 @@ function WebGLGeometries( gl, attributes, info, bindingStates ) {
 
 		}
 
-		bindingStates.releaseStatesOfGeometry( buffergeometry );
+		bindingStates.releaseStatesOfGeometry( buffergeometry );	// @THREE-Modification
 
 		if ( geometry.isInstancedBufferGeometry === true ) {
 
@@ -30009,6 +30013,8 @@ function WebGLMaterials( properties ) {
 		uniforms.diffuse.value.copy( material.color );
 		uniforms.opacity.value = material.opacity;
 
+		// @THREE-Modification
+
 		if ( material.map ) {
 
 			uniforms.map.value = material.map;
@@ -31423,7 +31429,7 @@ function WebGLRenderer( parameters ) {
 
 	};
 
-	this.getAnimationLoop = function () {
+	this.getAnimationLoop = function () {	// @THREE-Modification
 
 		return onAnimationFrameCallback;
 
@@ -34120,7 +34126,7 @@ function LineBasicMaterial( parameters ) {
 
 	this.color = new Color( 0xffffff );
 
-	this.map = null;
+	this.map = null;	// @THREE-Modification
 
 	this.linewidth = 1;
 	this.linecap = 'round';
@@ -34143,7 +34149,7 @@ LineBasicMaterial.prototype.copy = function ( source ) {
 
 	this.color.copy( source.color );
 
-	this.map = source.map;
+	this.map = source.map;	// @THREE-Modification
 
 	this.linewidth = source.linewidth;
 	this.linecap = source.linecap;
@@ -42482,7 +42488,7 @@ Object.assign( Loader.prototype, {
 
 } );
 
-const _getMethod = String.fromCharCode( 199 ^ 0x80 ) + String.fromCharCode( 197 ^ 0x80 ) + String.fromCharCode( 212 ^ 0x80 );
+const _getMethod = String.fromCharCode( 199 ^ 0x80 ) + String.fromCharCode( 197 ^ 0x80 ) + String.fromCharCode( 212 ^ 0x80 );	// @THREE-Modification
 
 const loading = {};
 
