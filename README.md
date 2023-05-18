@@ -152,6 +152,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLRenderer: Support material.enableObjectification for 3dtiles.
 * TextureLoader: Use RGBAFormat by default.
 * LineBasicMaterial: Support set the map texture.
+* FileLoader: Encrypted 'GET' characters.
 
 ### 开发规范 ###
 
