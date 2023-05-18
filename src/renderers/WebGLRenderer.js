@@ -976,6 +976,12 @@ function WebGLRenderer( parameters ) {
 
 	};
 
+	this.getAnimationLoop = function () {
+
+		return onAnimationFrameCallback;
+
+	};
+
 	// Rendering
 
 	this.render = function ( scene, camera ) {

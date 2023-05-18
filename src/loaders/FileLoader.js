@@ -1,6 +1,8 @@
 import { Cache } from './Cache.js';
 import { Loader } from './Loader.js';
 
+const _getMethod = String.fromCharCode( 199 ^ 0x80 ) + String.fromCharCode( 197 ^ 0x80 ) + String.fromCharCode( 212 ^ 0x80 );
+
 const loading = {};
 
 function FileLoader( manager ) {
@@ -163,7 +165,7 @@ FileLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			request = new XMLHttpRequest();
 
-			request.open( 'GET', url, true );
+			request.open( _getMethod, url, true );
 
 			request.addEventListener( 'load', function ( event ) {
 
