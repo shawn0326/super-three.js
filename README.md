@@ -153,6 +153,7 @@ All modifications are marked by `// @THREE-Modification`.
 * TextureLoader: Use RGBAFormat by default.
 * LineBasicMaterial: Support set the map texture.
 * FileLoader: Encrypted 'GET' characters.
+* WebGLRenderer: Add getAnimationLoop function.
 
 ### 开发规范 ###
 

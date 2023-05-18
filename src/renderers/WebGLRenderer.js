@@ -976,7 +976,7 @@ function WebGLRenderer( parameters ) {
 
 	};
 
-	this.getAnimationLoop = function () {
+	this.getAnimationLoop = function () {	// @THREE-Modification
 
 		return onAnimationFrameCallback;
 
