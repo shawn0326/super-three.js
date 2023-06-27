@@ -155,6 +155,7 @@ All modifications are marked by `// @THREE-Modification`.
 * FileLoader: Encrypted 'GET' characters.
 * WebGLRenderer: Add getAnimationLoop function.
 * WebGeometries: Fix onGeometryDispose.
+* Mesh: Optimize clone performance.
 
 ### 开发规范 ###
 

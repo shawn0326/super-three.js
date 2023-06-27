@@ -11148,10 +11148,14 @@
 
 		this.type = 'Mesh';
 
-		this.geometry = geometry !== undefined ? geometry : new BufferGeometry();
-		this.material = material !== undefined ? material : new MeshBasicMaterial();
+		this.geometry = geometry;	// @THREE-Modification optimize clone performance
+		this.material = material;
 
-		this.updateMorphTargets();
+		if ( this.geometry ) {
+
+			this.updateMorphTargets();
+
+		}
 
 	}
 
