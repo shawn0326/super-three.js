@@ -156,6 +156,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGLRenderer: Add getAnimationLoop function.
 * WebGeometries: Fix onGeometryDispose.
 * Mesh: Optimize clone performance.
+* Material: Optimize userData clone.
 
 ### 开发规范 ###
 

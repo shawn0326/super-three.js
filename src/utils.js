@@ -30,4 +30,26 @@ function arrayMax( array ) {
 
 }
 
-export { arrayMin, arrayMax };
+function isEmptyObject( obj ) {	// @THREE-Modification optimize userData clone.
+
+	if ( ! obj ) {
+
+		return false;
+
+	}
+
+	for ( const prop in obj ) {
+
+		if ( Object.hasOwn( obj, prop ) ) {
+
+			return false;
+
+		}
+
+	}
+
+	return true;
+
+}
+
+export { arrayMin, arrayMax, isEmptyObject };

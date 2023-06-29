@@ -1,6 +1,7 @@
 import { EventDispatcher } from '../core/EventDispatcher.js';
 import { FrontSide, FlatShading, NormalBlending, LessEqualDepth, AddEquation, OneMinusSrcAlphaFactor, SrcAlphaFactor, AlwaysStencilFunc, KeepStencilOp } from '../constants.js';
 import { MathUtils } from '../math/MathUtils.js';
+import { isEmptyObject } from '../utils.js';
 
 let materialId = 0;
 
@@ -456,7 +457,20 @@ Material.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		this.toneMapped = source.toneMapped;
 
-		this.userData = JSON.parse( JSON.stringify( source.userData ) );
+		const userData = source.userData;	// @THREE-Modification optimize userData clone.
+		if ( ! isEmptyObject( userData ) ) {
+
+			if ( ! isEmptyObject( userData.gltfExtensions ) ) {
+
+				this.userData = JSON.parse( JSON.stringify( userData ) );
+
+			} else {
+
+				this.userData.gltfExtensions = {};
+
+			}
+
+		}
 
 		// @THREE-Modification
 		// for color mapping

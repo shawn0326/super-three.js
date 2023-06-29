@@ -8441,6 +8441,44 @@
 
 	};
 
+	function arrayMax( array ) {
+
+		if ( array.length === 0 ) { return - Infinity; }
+
+		var max = array[ 0 ];
+
+		for ( var i = 1, l = array.length; i < l; ++ i ) {
+
+			if ( array[ i ] > max ) { max = array[ i ]; }
+
+		}
+
+		return max;
+
+	}
+
+	function isEmptyObject( obj ) {	// @THREE-Modification optimize userData clone.
+
+		if ( ! obj ) {
+
+			return false;
+
+		}
+
+		for ( var prop in obj ) {
+
+			if ( Object.hasOwn( obj, prop ) ) {
+
+				return false;
+
+			}
+
+		}
+
+		return true;
+
+	}
+
 	var materialId = 0;
 
 	function Material() {
@@ -8895,7 +8933,20 @@
 
 			this.toneMapped = source.toneMapped;
 
-			this.userData = JSON.parse( JSON.stringify( source.userData ) );
+			var userData = source.userData;	// @THREE-Modification optimize userData clone.
+			if ( ! isEmptyObject( userData ) ) {
+
+				if ( ! isEmptyObject( userData.gltfExtensions ) ) {
+
+					this.userData = JSON.parse( JSON.stringify( userData ) );
+
+				} else {
+
+					this.userData.gltfExtensions = {};
+
+				}
+
+			}
 
 			// @THREE-Modification
 			// for color mapping
@@ -9869,22 +9920,6 @@
 		return this;
 
 	};
-
-	function arrayMax( array ) {
-
-		if ( array.length === 0 ) { return - Infinity; }
-
-		var max = array[ 0 ];
-
-		for ( var i = 1, l = array.length; i < l; ++ i ) {
-
-			if ( array[ i ] > max ) { max = array[ i ]; }
-
-		}
-
-		return max;
-
-	}
 
 	var _bufferGeometryId = 1; // BufferGeometry uses odd numbers as Id
 
