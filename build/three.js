@@ -8467,7 +8467,7 @@
 
 		for ( var prop in obj ) {
 
-			if ( Object.hasOwn( obj, prop ) ) {
+			if ( obj.hasOwnProperty( prop ) ) {
 
 				return false;
 

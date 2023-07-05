@@ -8483,7 +8483,7 @@ function isEmptyObject( obj ) {	// @THREE-Modification optimize userData clone.
 
 	for ( const prop in obj ) {
 
-		if ( Object.hasOwn( obj, prop ) ) {
+		if ( obj.hasOwnProperty( prop ) ) {
 
 			return false;
 
