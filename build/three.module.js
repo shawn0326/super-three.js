@@ -31383,6 +31383,7 @@ function WebGLRenderer( parameters ) {
 	};
 
 	// Compile
+	// @THREE-Modification: Modified compile to support compile shader and upload data.
 
 	this.compile = function ( scene, camera ) {
 
@@ -31391,7 +31392,7 @@ function WebGLRenderer( parameters ) {
 
 		scene.traverse( function ( object ) {
 
-			if ( object.isLight ) {
+			if ( object.isLight && object.visible === true ) {
 
 				currentRenderState.pushLight( object );
 
@@ -31407,33 +31408,35 @@ function WebGLRenderer( parameters ) {
 
 		currentRenderState.setupLights( camera );
 
-		const compiled = new WeakMap();
-
+		const that = this;
 		scene.traverse( function ( object ) {
 
-			const material = object.material;
+			var material = object.material;
 
 			if ( material ) {
 
+				const geometry = objects.update( object );
+
 				if ( Array.isArray( material ) ) {
 
-					for ( let i = 0; i < material.length; i ++ ) {
+					for ( var i = 0; i < material.length; i ++ ) {
 
-						const material2 = material[ i ];
+						const groups = geometry.groups;
 
-						if ( compiled.has( material2 ) === false ) {
+						for ( let i = 0, l = groups.length; i < l; i ++ ) {
 
-							initMaterial( material2, scene, object );
-							compiled.set( material2 );
+							const group = groups[ i ];
+							const groupMaterial = material[ group.materialIndex ];
+
+							that.renderBufferDirect( camera, scene, geometry, groupMaterial, object, group );
 
 						}
 
 					}
 
-				} else if ( compiled.has( material ) === false ) {
+				} else {
 
-					initMaterial( material, scene, object );
-					compiled.set( material );
+					that.renderBufferDirect( camera, scene, geometry, material, object, null );
 
 				}
 

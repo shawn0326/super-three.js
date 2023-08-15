@@ -157,6 +157,7 @@ All modifications are marked by `// @THREE-Modification`.
 * WebGeometries: Fix onGeometryDispose.
 * Mesh: Optimize clone performance.
 * Material: Optimize userData clone.
+* WebGLRenderer: Modified compile to support compile shader and upload data.
 
 ### 开发规范 ###
 
