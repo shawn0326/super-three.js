@@ -1417,6 +1417,12 @@ function WebGLRenderer( parameters ) {
 		let program = materialProperties.program;
 		let programChange = true;
 
+		// @THREE-Modification always update environment and fog - changing these trigger an getProgram call, but it's possible that the program doesn't change.
+
+		materialProperties.environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
+		materialProperties.fog = scene.fog;
+		materialProperties.envMap = cubemaps.get( material.envMap || materialProperties.environment );
+
 		if ( program === undefined ) {
 
 			// new material
@@ -1432,11 +1438,6 @@ function WebGLRenderer( parameters ) {
 			programChange = false;
 
 		} else if ( parameters.shaderID !== undefined ) {
-
-			// same glsl and uniform list, envMap still needs the update here to avoid a frame-late effect
-
-			const environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
-			materialProperties.envMap = cubemaps.get( material.envMap || environment );
 
 			return;
 
@@ -1472,10 +1473,6 @@ function WebGLRenderer( parameters ) {
 			uniforms.clippingPlanes = clipping.uniform;
 
 		}
-
-		materialProperties.environment = ( material.useEnvironment !== null ? material.useEnvironment : material.isMeshStandardMaterial ) ? scene.environment : null; // @THREE-Modification add Material.useEnvironment decide whether to use scene.environment
-		materialProperties.fog = scene.fog;
-		materialProperties.envMap = cubemaps.get( material.envMap || materialProperties.environment );
 
 		// store the light setup it was created for
 

@@ -158,6 +158,7 @@ All modifications are marked by `// @THREE-Modification`.
 * Mesh: Optimize clone performance.
 * Material: Optimize userData clone.
 * WebGLRenderer: Modified compile to support compile shader and upload data.
+* WebGLRenderer: Fix a bug in initMaterial: always update environment and fog - changing these trigger an getProgram call, but it's possible that the program doesn't change.
 
 ### 开发规范 ###
 
