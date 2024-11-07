@@ -872,6 +872,14 @@ function WebGLTextures( _gl, extensions, state, properties, capabilities, utils,
 
 			let glInternalFormat = _gl.DEPTH_COMPONENT16;
 
+			// @THREE-Modification for depth render buffer format
+			if ( renderTarget.depthBufferFormat ) {
+
+				glInternalFormat = renderTarget.depthBufferFormat;
+
+			}
+
+
 			if ( isMultisample ) {
 
 				const depthTexture = renderTarget.depthTexture;

@@ -22903,6 +22903,14 @@
 
 				var glInternalFormat = 33189;
 
+				// @THREE-Modification for depth render buffer format
+				if ( renderTarget.depthBufferFormat ) {
+
+					glInternalFormat = renderTarget.depthBufferFormat;
+
+				}
+
+
 				if ( isMultisample ) {
 
 					var depthTexture = renderTarget.depthTexture;
